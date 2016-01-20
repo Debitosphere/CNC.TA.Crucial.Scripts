@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.18
+// @version     1.0.19
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.18";
+var CrucialScriptVersion = "1.0.19";
 
 var GM_SuperValue = new function () {
 
@@ -1306,7 +1306,7 @@ End of Multisession login
 							var UpdateFixes;
 							var VerNumb;
 							var ScriptUrl;
-							var CrucialScriptVersion = "1.0.18";
+							var CrucialScriptVersion = "1.0.19";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -28224,6 +28224,34 @@ if (Disable_V2_Sim == true){
 							} else { //old
 								   cntWave = this.ArmySetupAttackBar.getMainContainer().getChildren()[(i + 4)];
 							}
+							this._Application = qx.core.Init.getApplication();
+							this._PlayArea = this._Application.getPlayArea();
+							this._armyBarContainer = this._Application.getArmySetupAttackBar();
+							this._armyBar = this._Application.getUIItem(ClientLib.Data.Missions.PATH.BAR_ATTACKSETUP);
+							
+							if (PerforceChangelist >= 443425) { // 16.1 patch
+								for (var i in this._armyBarContainer) {
+									if (typeof this._armyBarContainer[i] == "object" && this._armyBarContainer[i] != null && this._armyBarContainer[i].objid == "btn_disable") {
+										console.log(this._armyBarContainer[i].objid);
+										var nativeSimBarDisableButton = this._armyBarContainer[i];
+										break;
+									}
+								}
+								var armyBarChildren = this._armyBar.getChildren();
+								for (var i in armyBarChildren) {
+									if (armyBarChildren[i].$$user_decorator == "pane-armysetup-right") {
+										console.log(armyBarChildren[i].$$user_decorator)
+										var armySetupRight = armyBarChildren[i];
+										armySetupRight.removeAt(1);
+										armySetupRight.addAt(nativeSimBarDisableButton, 1);
+										break;
+									}
+								}
+							}
+							
+							
+							
+							
 							cntWave._removeAll();
 							cntWave._setLayout(new qx.ui.layout.HBox());
 							cntWave._add(this.newSideButton(TABS.RES.IMG.Flip.H, this.tr("Mirrors units horizontally."), this.onClick_btnMirror, "h", i));
