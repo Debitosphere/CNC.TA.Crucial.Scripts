@@ -17657,6 +17657,7 @@ if (Disable_InfoSticker == true){
                         infoSticker: null,
                         mcvPopup: null,
                         mcvTimerLabel: null,
+						mcvResearchLabel: null,
                         mcvInfoLabel: null,
                         mcvPane: null,
                         
@@ -17709,6 +17710,7 @@ if (Disable_InfoSticker == true){
                         repairHide: false,
                         resourceHide: false,
                         productionHide: false,
+						contProductionHide: false,
                         stickerBackground: null,
                         
                         mcvPane: null,
@@ -18045,7 +18047,16 @@ if (Disable_InfoSticker == true){
                                 this.mcvInfoLabel = new qx.ui.basic.Label();
                                 this.mcvTimerLabel = new qx.ui.basic.Label().set({
                                     font: qx.bom.Font.fromString('bold').set({
-                                            size: 18
+                                            size: 15
+                                        }),
+                                    textColor: '#282828',
+                                    height: 20,
+                                    width: 114,
+                                    textAlign: 'center'
+                                });
+                                this.mcvResearchLabel = new qx.ui.basic.Label().set({
+                                    font: qx.bom.Font.fromString('bold').set({
+                                            size: 15
                                         }),
                                     textColor: '#282828',
                                     height: 20,
@@ -18069,6 +18080,7 @@ if (Disable_InfoSticker == true){
                                 
                                 var pane = this.createSection(b3, this.mcvInfoLabel, !this.mcvHide, "mcvHide");
                                 pane.add(this.mcvTimerLabel);
+								pane.add(this.mcvResearchLabel);
                                 pane.add(this.mcvTimerCreditProdLabel);
                                 this.mcvPane = this.lastPane;
                                 this.lastPane.setMarginLeft(7);
@@ -18258,7 +18270,7 @@ if (Disable_InfoSticker == true){
     ////////////////////////////----------------------------------------------------------
     
                                 this.productionTitleLabel = new qx.ui.basic.Label();
-                                this.productionTitleLabel.setValue("Productions");
+                                this.productionTitleLabel.setValue("db.Produce");
                                 
                                 var productionStyle = {
                                     font: qx.bom.Font.fromString('bold').set({
@@ -18266,19 +18278,80 @@ if (Disable_InfoSticker == true){
                                     }),
                                     textColor: '#282828',
                                     height: 20,
-                                    width: 60,
+                                    width: 85,
                                     textAlign: 'right',
                                     marginTop: 2,
                                     marginBottom: -2
                                 };
-                                this.productionLabelPower = new qx.ui.basic.Label().set(productionStyle);
+								this.productionLabelTiberium = new qx.ui.basic.Label().set(productionStyle);
+								this.productionLabelCrystal = new qx.ui.basic.Label().set(productionStyle);
+                                
+								this.productionLabelPower1 = new qx.ui.basic.Label().set(productionStyle);
                                 this.productionLabelCredit = new qx.ui.basic.Label().set(productionStyle);
                                 
                                 var pane4 = this.createSection(this.mcvPopup, this.productionTitleLabel, !this.productionHide, "productionHide");
-                                pane4.add(this.createHBox(this.createImage(this.powIcon), this.productionLabelPower));
+                                pane4.add(this.createHBox(this.createImage(this.tibIcon), this.productionLabelTiberium));
+                                pane4.add(this.createHBox(this.createImage(this.cryIcon), this.productionLabelCrystal));
+								
+								pane4.add(this.createHBox(this.createImage(this.powIcon), this.productionLabelPower1));
                                 pane4.add(this.createHBox(this.createImage(this.creditIcon), this.productionLabelCredit));
     ////////////////////////////----------------------------------------------------------
-                            } catch(e) {
+	
+								this.contProductionTitleLabel = new qx.ui.basic.Label();
+                                this.contProductionTitleLabel.setValue("Cont'+Ally");
+                                
+                                var contProductionStyle = {
+                                    font: qx.bom.Font.fromString('bold').set({
+                                        size: 13
+                                    }),
+                                    textColor: '#282828',
+                                    height: 20,
+                                    width: 85,
+                                    textAlign: 'right',
+                                    marginTop: 2,
+                                    marginBottom: -2
+                                };
+								this.contProductionLabelTiberium = new qx.ui.basic.Label().set(contProductionStyle);
+								this.contProductionLabelCrystal = new qx.ui.basic.Label().set(contProductionStyle);
+                                this.contProductionLabelPower = new qx.ui.basic.Label().set(contProductionStyle);
+								
+                                this.contProductionLabelCredit = new qx.ui.basic.Label().set(contProductionStyle);
+                                
+                                var pane5 = this.createSection(this.mcvPopup, this.contProductionTitleLabel, !this.contProductionHide, "contProductionHide");
+                                pane5.add(this.createHBox(this.createImage(this.tibIcon), this.contProductionLabelTiberium));
+                                pane5.add(this.createHBox(this.createImage(this.cryIcon), this.contProductionLabelCrystal));
+								pane5.add(this.createHBox(this.createImage(this.powIcon), this.contProductionLabelPower));
+                                pane5.add(this.createHBox(this.createImage(this.creditIcon), this.contProductionLabelCredit));
+////////////////////////////----------------------------------------------------------								
+								 this.repairTimeTitleLabel = new qx.ui.basic.Label();
+                                 this.repairTimeTitleLabel.setValue("RepairTimes");
+                                
+                                this.repairTimeStyle = {
+                                    font: qx.bom.Font.fromString('bold').set({
+                                        size: 13
+                                    }),
+                                    textColor: '#282828',
+                                    height: 20,
+                                    width: 85,
+                                    textAlign: 'center',
+                                    marginTop: 2,
+                                    marginBottom: -2
+                                };
+								
+								this.repairTimeLabel0 = new qx.ui.basic.Label().set(this.repairTimeStyle);
+								this.repairTimeLabel1 = new qx.ui.basic.Label().set(this.repairTimeStyle);
+                                this.repairTimeLabel2 = new qx.ui.basic.Label().set(this.repairTimeStyle);
+                                
+                                var pane6 = this.createSection(this.mcvPopup, this.repairTimeTitleLabel, !this.rtHide, "repairHide");
+                                pane6.add(this.createHBox(this.createImage(this.repairIcon), this.repairTimeLabel0));
+                                pane6.add(this.createHBox(this.createImage(this.repairIcon), this.repairTimeLabel1));
+								pane6.add(this.createHBox(this.createImage(this.repairIcon), this.repairTimeLabel2));
+                                //pane6.add(this.createHBox(this.createImage(this.creditIcon), this.productionLabelCredit));
+    ////////////////////////////----------------------------------------------------------
+
+
+
+							} catch(e) {
                                 console.log("InfoSticker: createMCVPopup", e.toString());
                             }
                         },
@@ -18376,8 +18449,10 @@ if (Disable_InfoSticker == true){
                                         }
                                         this.mcvHide = localStorage["infoSticker-mcvHide"] == "true";
                                         this.repairHide = localStorage["infoSticker-repairHide"] == "true";
+										this.rtHide = localStorage["infoSticker-repairHide"] == "true";
                                         this.resourceHide = localStorage["infoSticker-resourceHide"] == "true";
                                         this.productionHide = localStorage["infoSticker-productionHide"] == "true";
+										this.contProductionHide = localStorage["infoSticker-contProductionHide"] == "true";
                                     }
                                     
                                     
@@ -18435,6 +18510,7 @@ if (Disable_InfoSticker == true){
                                         //this.mcvInfoLabel.setValue("MCV ($???)");
                                         this.mcvInfoLabel.setValue("MCV<br>$???");
                                         this.mcvTimerLabel.setValue("Loading");
+										this.mcvResearchLabel.setValue("Loading");
                                     }
                                 } else {
                                     var nextLevelInfo = cd.get_NextLevelInfo_Obj();
@@ -18444,19 +18520,22 @@ if (Disable_InfoSticker == true){
                                             resourcesNeeded[nextLevelInfo.rr[i].t] = nextLevelInfo.rr[i].c;
                                         }
                                     }
-                                    //var researchNeeded = resourcesNeeded[ClientLib.Base.EResourceType.ResearchPoints];
-                                    //var currentResearchPoints = player.get_ResearchPoints();
+                                    var researchNeeded = resourcesNeeded[ClientLib.Base.EResourceType.ResearchPoints];
+                                    var currentResearchPoints = player.get_ResearchPoints();
+									var XY = 100 / researchNeeded;
+									var XYX = currentResearchPoints;
+									var PercentageOfResearchPoints = XYX * XY;
                                     var creditsNeeded = resourcesNeeded[ClientLib.Base.EResourceType.Gold];
                                     var creditsResourceData = player.get_Credits();
                                     var creditGrowthPerHour = (creditsResourceData.Delta + creditsResourceData.ExtraBonusDelta) * ClientLib.Data.MainData.GetInstance().get_Time().get_StepsPerHour();
                                     var creditTimeLeftInHours = (creditsNeeded - player.GetCreditsCount()) / creditGrowthPerHour;
                                     this.mcvInfoLabel.setValue("MCV ($ " + this.formatNumbersCompact(creditsNeeded) + ")");
                                     //this.mcvInfoLabel.setValue("MCV<br>$" + this.formatNumbersCompact(creditsNeeded));
-                                    this.mcvTimerCreditProdLabel.setValue("at " + this.formatNumbersCompact(creditGrowthPerHour) + "/h");
+                                    this.mcvTimerCreditProdLabel.setValue("at " + this.formatNumbersCompact(creditGrowthPerHour*24) + "/1d");
                                     if (creditTimeLeftInHours <= 0) {
                                         this.mcvTimerLabel.setValue("Ready");
                                     } else if (creditGrowthPerHour == 0) {
-                                        this.mcvTimerLabel.setValue("Never");
+                                        this.mcvTimerLabel.setValue("No Production");
                                     } else {
                                         if(creditTimeLeftInHours >= 24 * 100) {
                                             this.mcvTimerLabel.setValue("> 99 days");
@@ -18464,15 +18543,23 @@ if (Disable_InfoSticker == true){
                                             this.mcvTimerLabel.setValue(this.FormatTimespan(creditTimeLeftInHours * 60 * 60));
                                         }
                                     }
+									
+									if (PercentageOfResearchPoints >= 100) {
+										this.mcvResearchLabel.setValue("RP: 100%");
+									} else {
+										this.mcvResearchLabel.setValue("RP: " + (PercentageOfResearchPoints).toFixed(2) + "%");
+									}
                                 }
 
                                 var ncity = ClientLib.Data.MainData.GetInstance().get_Cities().get_CurrentOwnCity();
                                 if (ncity == null) {
                                     if (this.mcvPopup) {
-                                        this.repairTimerLabel.setValue("Select a base");
-
-                                        this.resourceLabel1.setValue("N/A");
-                                        this.resourceLabel2.setValue("N/A");
+                                        this.repairTimerLabel.setValue("Select a base"); 
+										this.repairTimeLabel0.setValue("Select a base");
+                                        this.repairTimeLabel1.setValue("Select a base");
+										this.repairTimeLabel2.setValue("Select a base");
+										this.resourceLabel1.setValue("N/A");
+										this.resourceLabel2.setValue("N/A");
                                         this.resourceLabel3.setValue("N/A");
                                     }
                                 } else {
@@ -18485,6 +18572,29 @@ if (Disable_InfoSticker == true){
                                     } else {
                                         this.repairTimerLabel.setValue(this.FormatTimespan(rt));
                                     }
+									
+									var airRT = ncity.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Aircraft, false);
+									if (ncity.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Aircraft, false) == 0) {
+										this.repairTimeLabel0.setValue("No birds");
+                                    } else {
+                                        this.repairTimeLabel0.setValue(this.FormatTimespan(airRT) + " AIR");
+                                    }
+									
+									var vehRT = ncity.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Vehicle, false);
+									if (ncity.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Vehicle, false) == 0) {
+										this.repairTimeLabel1.setValue("No cars");
+                                    } else {
+                                        this.repairTimeLabel1.setValue(this.FormatTimespan(vehRT) + " VEH");
+                                    }
+									var infRT = ncity.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Infantry, false);
+									if (ncity.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Aircraft, false) == 0) {
+										this.repairTimeLabel2.setValue("No dudes");
+                                    } else {
+                                        this.repairTimeLabel2.setValue(this.FormatTimespan(infRT) + " INF");
+                                    }
+									//this.repairTimerLabel0.setValue(this.FormatTimespan(airRT));
+									//this.repairTimerLabel1.setValue(this.FormatTimespan(vehRT));
+									//this.repairTimerLabel2.setValue(this.FormatTimespan(infRT));
 
                                     var tib = ncity.GetResourceCount(ClientLib.Base.EResourceType.Tiberium);
                                     var tibMax = ncity.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium);
@@ -18507,18 +18617,69 @@ if (Disable_InfoSticker == true){
                                     this.resourceLabel3.setValue(this.formatNumbersCompact(power));
                                     this.resourceLabel3per.setValue(this.formatPercent(powerRatio));
 
-                                    var powerCont = ncity.GetResourceGrowPerHour(ClientLib.Base.EResourceType.Power, false, false);
+                                    
+									var powerCont = ncity.GetResourceGrowPerHour(ClientLib.Base.EResourceType.Power, false, false);
                                     var powerBonus = ncity.GetResourceBonusGrowPerHour(ClientLib.Base.EResourceType.Power);
                                     var alliance = ClientLib.Data.MainData.GetInstance().get_Alliance();
                                     var powerAlly = alliance.GetPOIBonusFromResourceType(ClientLib.Base.EResourceType.Power);
-                                    var powerProd = powerCont + powerBonus + powerAlly;
+                                    var powerProd = (powerCont + powerAlly);
+									var powerPac = (powerCont + powerAlly + powerBonus)*6;
+									if(powerRatio >= 1){
+									powerProd = 0;
+									powerPac = (powerBonus)*6;
+									
+									}
+									
+									
+									var tiberiumCont = ncity.GetResourceGrowPerHour(ClientLib.Base.EResourceType.Tiberium, false, false);
+                                    var tiberiumBonus = ncity.GetResourceBonusGrowPerHour(ClientLib.Base.EResourceType.Tiberium);
+                                    //var alliance = ClientLib.Data.MainData.GetInstance().get_Alliance();
+                                    var tiberiumAlly = alliance.GetPOIBonusFromResourceType(ClientLib.Base.EResourceType.Tiberium);
+									var tiberiumPac = (tiberiumCont + tiberiumAlly + tiberiumBonus)*6;
+									var tiberiumProd = (tiberiumCont + tiberiumAlly);
+									if(tibRatio >= 1){
+									tiberiumProd = 0;
+									tiberiumPac = (tiberiumBonus)*6;
+									
+									}
+									
+									var crystalCont = ncity.GetResourceGrowPerHour(ClientLib.Base.EResourceType.Crystal, false, false);
+                                    var crystalBonus = ncity.GetResourceBonusGrowPerHour(ClientLib.Base.EResourceType.Crystal);
+                                    //var alliance = ClientLib.Data.MainData.GetInstance().get_Alliance();
+                                    var crystalAlly = alliance.GetPOIBonusFromResourceType(ClientLib.Base.EResourceType.Crystal);
+									var crystalPac = (crystalCont + crystalAlly + crystalBonus)*6;
+									var crystalProd = (crystalCont + crystalAlly);
+									
+									if(cryRatio >= 1){
+									crystalProd = 0;
+									crystalPac = (crystalBonus)*6;
+									
+									}
+									
 
                                     var creditCont = ClientLib.Base.Resource.GetResourceGrowPerHour(ncity.get_CityCreditsProduction(), false);
                                     var creditBonus = ClientLib.Base.Resource.GetResourceBonusGrowPerHour(ncity.get_CityCreditsProduction(), false);
-                                    var creditProd = creditCont + creditBonus;
+                                    var creditProd = (creditCont + creditBonus)*6;
+									
+									if( ncity.get_hasCooldown() == true){
+									
+									powerPac = (powerCont + powerAlly)*6 ;
+									creditProd = (creditCont)*6;
+									crystalPac = (crystalCont + crystalAlly )*6;
+									tiberiumPac = (tiberiumCont + tiberiumAlly)*6;
+									}
 
-                                    this.productionLabelPower.setValue(this.formatNumbersCompact(powerProd) + "/h");
-                                    this.productionLabelCredit.setValue(this.formatNumbersCompact(creditProd) + "/h");
+									this.productionLabelTiberium.setValue(this.formatNumbersCompact(tiberiumPac) + "/6h");
+									this.productionLabelCrystal.setValue(this.formatNumbersCompact(crystalPac) + "/6h");
+                                    this.productionLabelPower1.setValue(this.formatNumbersCompact(powerPac) + "/6h");
+									this.productionLabelCredit.setValue(this.formatNumbersCompact(creditProd) + "/6h");
+									
+									this.contProductionLabelTiberium.setValue(this.formatNumbersCompact(tiberiumProd) + "/h");
+									this.contProductionLabelCrystal.setValue(this.formatNumbersCompact(crystalProd) + "/h");
+                                    this.contProductionLabelPower.setValue(this.formatNumbersCompact(powerProd) + "/h");
+									this.contProductionLabelCredit.setValue(this.formatNumbersCompact(creditCont) + "/h");
+									
+									
                                 }
                             } catch (e) {
                                 console.log("InfoSticker.calculateInfoData", e.toString());
