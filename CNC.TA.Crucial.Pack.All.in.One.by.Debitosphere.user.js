@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.22
+// @version     1.0.23
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.22";
+var CrucialScriptVersion = "1.0.23";
 
 var GM_SuperValue = new function () {
 
@@ -1330,7 +1330,7 @@ End of Multisession login
 							var UpdateFixes;
 							var VerNumb;
 							var ScriptUrl;
-							var CrucialScriptVersion = "1.0.22";
+							var CrucialScriptVersion = "1.0.23";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -18995,7 +18995,7 @@ if (Disable_Maelstrom_Status_Color == true){
         function MaelstromTools_CityOnlineStateColorerInclude_checkIfLoaded() {
             try {
                 if (typeof ClientLib !== "undefined" && ClientLib.Vis !== undefined && ClientLib.Vis.Region !== undefined && ClientLib.Vis.Region.RegionCity !== undefined) {
-                    window.setTimeout(CityOnlineStateColorerInclude, 130000);
+                    window.setTimeout(CityOnlineStateColorerInclude, 30000);
                 } else {
                     window.setTimeout(MaelstromTools_CityOnlineStateColorerInclude_checkIfLoaded, 1000);
                 }
@@ -19012,9 +19012,10 @@ if (Disable_Maelstrom_Status_Color == true){
                 console.log("MaelstromTools_CityOnlineStateColorerTool_checkIfLoaded: ", ex);
             }
         }
+
         if (/commandandconquer\.com/i.test(document.domain)) {
             window.setTimeout(MaelstromTools_CityOnlineStateColorerInclude_checkIfLoaded, 1000);
-            window.setTimeout(MaelstromTools_CityOnlineStateColorerTool_checkIfLoaded, 100000);
+            window.setTimeout(MaelstromTools_CityOnlineStateColorerTool_checkIfLoaded, 30000);
         }
     }
     try {
@@ -22121,6 +22122,7 @@ End of Fluniks
 Start of TACS
 */
 if (Disable_TACS3_Sim == true){
+window.TACS_version = GM_info.script.version;
 (function () {
 	'use strict';
 	var TASuite_mainFunction = function () {
@@ -22151,8 +22153,8 @@ if (Disable_TACS3_Sim == true){
 			"Construction Yard:" : ["Şantiye:", "Bauhof:", "Estaleiro:", "Cantiere:", "Bouwplaats:", "Központ:", "Chantier De Construction:", "Rakennustukikohta:"],
 			"Defense Facility:" : ["Savunma Tesisi:", "Verteidigungseinrichtung:", "Instalações de Defesa:", "Stazione di Difesa:", "Defensiefaciliteit:", "Védelmi Bázis:", "Complexe De Défense:", "Puolustuslaitos:"],
 			"Command Center:" : ["Komuta Merkezi:", "Kommandozentrale:", "Centro de Comando:", "Centro di Comando:", "Commandocentrum:", "Parancsnoki központ:", "Centre De Commandement:", "Komentokeskus:"],
-			"Available Repair:" : ["Mevcut Onarım:", "", "", "", "", "", "", "Korjausaikaa jäljellä:"],
-			"Available Attacks:" : ["Mevcut Saldırılar:", "", "", "", "", "", "", "Hyökkäyksiä:"],
+			"Available Repair:" : ["Mevcut Onarım:", "Verfügbare Reparaturen", "", "", "", "", "", "Korjausaikaa jäljellä:"],
+			"Available Attacks:" : ["Mevcut Saldırılar:", "Verfügbare Angriffe", "", "", "", "", "", "Hyökkäyksiä:"],
 			"Overall:" : ["Tüm Birlikler:", "Gesamt:", "Geral:", "Totale:", "Totaal:", "Áttekintés:", "Total:", "Yhteensä:"],
 			"Infantry:" : ["Piyadeler:", "Infanterie:", "Infantaria:", "Fanteria:", "Infanterie:", "Gyalogság:", "Infanterie:", "Jalkaväki:"],
 			"Vehicle:" : ["Motorlu Birlikler:", "Fahrzeuge:", "Veículos:", "Veicoli:", "Voertuigen:", "Jármu:", "Véhicules:", "Ajoneuvot:"],
@@ -22172,7 +22174,7 @@ if (Disable_TACS3_Sim == true){
 			"Forums" : ["Forum", "Forum", "Fóruns", "Forum", "Forums", "Fórum", "Forums", "Keskustelupalsta"],
 			"Spoils" : ["Ganimetler", "Rohstoffausbeute", "Espólios", "Bottino", "Opbrengst", "Zsákmény", "Butin", "Sotasaalis"],
 			"Options" : ["Seçenekler", "Optionen", "Opções:", "Opzioni:", "Opties:", "Opciók:", "Options:", "Asetukset"],
-			"TACS Options": ["TACS Seçenekleri", "", "", "", "", "", "", ""],
+			"TACS Options": ["TACS Seçenekleri", "TACS Optionen", "", "", "", "", "", ""],
 			"Auto display stats" : ["İstatistik penceresini otomatik olarak göster", "Dieses Fenster automatisch öffnen", "Mostrar esta caixa automaticamente", "Apri automaticamente la finestra Strumenti", "Dit venster automatisch weergeven", "Ezen ablak autómatikus megjelenítése", "Affich. Auto. de cette Fenêtre", "Näytä simuloinnin tiedot automaattisesti"], // need to change translations
 			"Show shift buttons" : ["Kaydırma tuşlarını göster", "Bewegungstasten anzeigen", "Mostrar botões de deslocamento", "Mostra i pulsanti di spostamento", "Verschuifknoppen weergeven", "Eltoló gombok megjelenítése", "Affich. Auto. Boutons de Déplacement", "Näytä armeijan siirtopainikkeet"],
 			"Warning!" : ["Uyarı!", "Warnung!", "Aviso!", "Attenzione!", "Waarschuwing!", "Figyelem!", "Attention!", "Varoitus!"],
@@ -22200,14 +22202,14 @@ if (Disable_TACS3_Sim == true){
 			"Locks:" : ["Kilitler:", "Freigabe", "Bloquear:", "", "Vergrendelingen:", "", "Vérouiller:", "Varmistimet:"],
 			"Attack" : ["Saldırı", "Angriff", "Atacar", "", "Aanvallen", "", "Attaquer", "Hyökkäys"],
 			"Repair" : ["Onarım", "Reparatur", "Reparar", "", "Repareren", "", "Réparer", "Korjaus"],
-			"Reset" : ["Sıfırla", "", "", "", "", "", "", "Palauta"],
+			"Reset" : ["Sıfırla", "Zurücksetzen", "", "", "", "", "", "Palauta"],
 			"Simulation will be based on most recently refreshed stats!" : ["Simulasyon en son güncellenen istatistiklere göre yapılacaktır!", "Die Simulation basiert auf den zuletzt aktualisierten Stand", "A simulação vai ser baseada na mais recente data!", "", "Simulatie zal gebaseerd worden op meest recentelijke ververste statistieken!", "", "La Simulation sera basée en fonction des dernières stats actualisées !", "Simulaatio suoritetaan viimeisimmän päivityksen tiedoilla!"],
 			"Unlock Attack Button" : ["Saldırı Düğmesinin Kilidini Aç", "Angriffsbutton freigeben", "Desbloquear o botão de ataque", "Sblocca pulsante d'attacco", "Ontgrendel Aanvalsknop", "a Támadás gomb feloldása", "Débloquer Le Bouton d'Attaque", "Poista hyökkäusnapin lukitus"],
 			"Unlock Repair Button" : ["Onarım Düğmesinin Kilidini Aç", "Reparaturbutton freigeben", "Desbloquear botão de reparação", "", "Ontgrendel Repareerknop", "", "Débloquer Le Bouton de Réparation", "Poista korjausnapin lukitus"],
 			"Unlock Reset Button" : ["Sıfırlama Düğmesinin Kilidini Aç", "", "", "", "", "", "", "Avaa Tyhjennä nappi"],
-			"SKIP": ["ATLA", "", "", "", "", "", "", ""],
+			"SKIP": ["ATLA", "Überspringen", "", "", "", "", "", ""],
 			"Skip to end" : ["Simulasyonu atla", "Zum Ende Vorspringen", "", "", "", "", "", "Mene loppuun"],
-			"Reset Formation" : ["Dizilişi Sıfırla", "", "", "", "", "", "", "Palauta armeijan oletusasetelma"],
+			"Reset Formation" : ["Dizilişi Sıfırla", "Formation zurücksetzen", "", "", "", "", "", "Palauta armeijan oletusasetelma"],
 			"Flip Horizontal" : ["Yatay Çevir", "Horizontal Spiegeln", "", "", "", "", "", "Käännä vaakasuunnassa"],
 			"Flip Vertical" : ["Dikey Çevir", "Vertikal Spiegeln", "", "", "", "", "", "Käännä pystysuunnassa"],
 			"Activate All" : ["Hepsini Aktifleştir", "Alle Aktivieren", "", "", "", "", "", "Aktivoi kaikki"],
@@ -22223,15 +22225,16 @@ if (Disable_TACS3_Sim == true){
 			"Version: " : ["Sürüm: ", "", "", "", "", "", "", "Versio: "],
 			"Mark saved targets on region map" : ["Kaydedilmiş hedefleri haritada işaretle", "Gespeicherte Ziele auf der Karte Markieren", "", "", "", "", "", "Merkitse tallennetut kohteet alue kartalle"], // region view
 			"Enable 'Double-click to (De)activate units'" : ["Çift-tıklama ile birlikleri (de)aktifleştirmeyi etkinleştir", "Doppel-Klick zum Einheiten (De)-Aktivieren ", "", "", "", "", "", "Tuplaklikkaus aktivoi/deaktivoi yksiköt"],
-			"Show Stats During Attack" : ["İstatistikleri saldırı sırasında göster", "", "", "", "", "", "", "Näytä tiedot -ikkuna hyökkäyksen aikana"],
-			"Show Stats During Simulation" : ["İstatistikleri simulasyondayken göster", "", "", "", "", "", "", "Näytä tiedot -ikkuna simuloinnin aikana"],
-			"Skip Victory-Popup After Battle" : ["Savaş Bitiminde Zafer Bildirimini Atla", "", "", "", "", "", "", "Ohita taistelun jälkeinen voittoruutu"],
-			"Stats Window Opacity" : ["İstatistik Penceresi Saydamlığı", "", "", "", "", "", "", "Tiedot -ikkunan läpinäkyvyys"],
+			"Show Loot Summary" : ["", "Zeige Beute-Zusammenfassung", "", "", "", "", "", ""],
+			"Show Stats During Attack" : ["İstatistikleri saldırı sırasında göster", "Zeige Statistik während des Angriffs", "", "", "", "", "", "Näytä tiedot -ikkuna hyökkäyksen aikana"],
+			"Show Stats During Simulation" : ["İstatistikleri simulasyondayken göster", "Zeige Statistik während der Simulation", "", "", "", "", "", "Näytä tiedot -ikkuna simuloinnin aikana"],
+			"Skip Victory-Popup After Battle" : ["Savaş Bitiminde Zafer Bildirimini Atla", "Siegesbildschirm überspringen", "", "", "", "", "", "Ohita taistelun jälkeinen voittoruutu"],
+			"Stats Window Opacity" : ["İstatistik Penceresi Saydamlığı", "Transparenz des Statistik-Fenster", "", "", "", "", "", "Tiedot -ikkunan läpinäkyvyys"],
 			"Disable Unit Tooltips In Army Formation Manager" : ["Ordu Dizilişi Yöneticisinde Birlik İpuçlarını Gizle", "", "", "", "", "", "", "Poista käytöstä yksiköiden työkaluvihjeet armeijan muodostamisikkunassa"],
 			"Disable Tooltips In Attack Preparation View" : ["Saldırı Hazırlık Görünümünde İpuçlarını Gizle", "", "", "", "", "", "", "Poista työkaluvihjeet käytöstä hyökkäyksen valmisteluikkunassa"],
 			"Undo" : ["Geri Al", "", "", "", "", "", "", "Kumoa"],
 			"Redo" : ["İleri Al", "", "", "", "", "", "", "Tee uudelleen"],
-			"Open Stats Window" : ["İstatistik Penceresini Aç", "", "", "", "", "", "", "Avaa tiedot -ikkuna"]
+			"Open Stats Window" : ["İstatistik Penceresini Aç", "Statistik öffnen", "", "", "", "", "", "Avaa tiedot -ikkuna"]
 		};
 
 		function lang(text) {
@@ -22259,7 +22262,6 @@ if (Disable_TACS3_Sim == true){
 				type : "singleton",
 				extend : qx.core.Object,
 				members : {
-					version : "3.13b",
 					// Default settings
 					saveObj : {
 						// section.option
@@ -22271,6 +22273,7 @@ if (Disable_TACS3_Sim == true){
 							battleResultsBoxTop : 125
 						},
 						checkbox : {
+							showLootSummary : true,
 							showStatsDuringAttack : true,
 							showStatsDuringSimulation : true,
 							skipVictoryPopup : false,
@@ -22361,6 +22364,12 @@ if (Disable_TACS3_Sim == true){
 							},
 							overall : null // lastEnemyPercentage
 						},
+						resourcesummary : {
+							research : null,
+							credits : null,
+							crystal : null,
+							tiberium : null
+						},
 						time : null,
 						supportLevel : null
 					},
@@ -22397,6 +22406,12 @@ if (Disable_TACS3_Sim == true){
 							overall : null, // enemyTroopStrengthLabel
 							outcome : null // simVictoryLabel
 						},
+						resourcesummary : {
+							research : null,
+							credits : null,
+							crystal : null,
+							tiberium : null
+						},
 						time : null, // simTimeLabel
 						supportLevel : null, // enemySupportLevelLabel
 						countDown : null // countDownLabel
@@ -22428,6 +22443,7 @@ if (Disable_TACS3_Sim == true){
 						repairLock : null,
 						markSavedTargets : null,
 						dblClick2DeActivate : null,
+						showLootSummary : null,
 						showStatsDuringAttack : null,
 						showStatsDuringSimulation : null,
 						skipVictoryPopup : null,
@@ -22452,7 +22468,7 @@ if (Disable_TACS3_Sim == true){
 					_armyBar : null,
 					attacker_modules : null,
 					defender_modules : null,
-
+					resourceSummaryVerticalBox : null,
 					battleResultsBox : null,
 					optionsWindow : null,
 					statsPage : null,
@@ -22568,6 +22584,7 @@ if (Disable_TACS3_Sim == true){
 
 							// Event Handlers
 							phe.cnc.Util.attachNetEvent(ClientLib.API.Battleground.GetInstance(), "OnSimulateBattleFinished", ClientLib.API.OnSimulateBattleFinished, this, this.onSimulateBattleFinishedEvent);
+							phe.cnc.Util.attachNetEvent(ClientLib.API.Battleground.GetInstance(), "OnSimulateCombatReport", ClientLib.API.OnSimulateCombatReport, this, this.OnSimulateCombatReportEvent);
 							phe.cnc.Util.attachNetEvent(this._VisMain, "ViewModeChange", ClientLib.Vis.ViewModeChange, this, this.viewChangeHandler);
 							phe.cnc.Util.attachNetEvent(this._MainData.get_Cities(), "CurrentOwnChange", ClientLib.Data.CurrentOwnCityChange, this, this.ownCityChangeHandler);
 
@@ -22756,9 +22773,10 @@ if (Disable_TACS3_Sim == true){
 							this.initializeInfo(tabView);
 							this.initializeOptions();
 							this.setupInterface();
+							this.createHasAttackFormationFunction();
 							this.createBasePlateFunction(ClientLib.Vis.Region.RegionNPCCamp);
 							this.createBasePlateFunction(ClientLib.Vis.Region.RegionNPCBase);
-							//this.createBasePlateFunction(ClientLib.Vis.Region.RegionCity);
+							this.createBasePlateFunction(ClientLib.Vis.Region.RegionCity);
 
 							// Fix armyBar container divs, the mouse has a horrible offset in the armybar when this is enabled
 							// if this worked it would essentially fix a layout bug, shame... using zIndex instead
@@ -23046,6 +23064,43 @@ if (Disable_TACS3_Sim == true){
 								row : 1,
 								column : 1
 							});
+							
+							// Resource Summary Vertical Box
+							this.resourceSummaryVerticalBox = new qx.ui.container.Composite();
+							var layout = new qx.ui.layout.Grid();
+							layout.setColumnAlign(1, "right", "middle");
+							layout.setColumnWidth(0, 90);
+							this.resourceSummaryVerticalBox.setLayout(layout);
+							this.resourceSummaryVerticalBox.setThemedFont("bold");
+							this.resourceSummaryVerticalBox.setThemedBackgroundColor("#eef");
+							if (this.saveObj.checkbox.showLootSummary) {
+								this.statsPage.add(this.resourceSummaryVerticalBox);
+							}
+							
+							// Research Icon/Label
+							this.labels.resourcesummary.research = new qx.ui.basic.Atom("0", "webfrontend/ui/common/icn_res_research_mission.png");
+							this.resourceSummaryVerticalBox.add(this.labels.resourcesummary.research, {
+								row : 0,
+								column : 0
+							});
+							// Tiberium Icon/Label
+							this.labels.resourcesummary.tiberium = new qx.ui.basic.Atom("0", "webfrontend/ui/common/icn_res_tiberium.png");
+							this.resourceSummaryVerticalBox.add(this.labels.resourcesummary.tiberium, {
+								row : 0,
+								column : 1
+							});
+							// Credits Icon/Label
+							this.labels.resourcesummary.credits = new qx.ui.basic.Atom("0", "webfrontend/ui/common/icn_res_dollar.png");
+							this.resourceSummaryVerticalBox.add(this.labels.resourcesummary.credits, {
+								row : 1,
+								column : 0
+							});
+							// Crystal Icon/Label
+							this.labels.resourcesummary.crystal = new qx.ui.basic.Atom("0", "webfrontend/ui/common/icn_res_chrystal.png");
+							this.resourceSummaryVerticalBox.add(this.labels.resourcesummary.crystal, {
+								row : 1,
+								column : 1
+							});
 						} catch (e) {
 							console.log(e);
 						}
@@ -23298,7 +23353,7 @@ if (Disable_TACS3_Sim == true){
 							pssVBox.setThemedFont("bold");
 							pssVBox.setThemedBackgroundColor("#eef");
 							options.add(pssVBox);
-							pssVBox.add(new qx.ui.basic.Label(lang("Version: ") + "3.01b"), {
+							pssVBox.add(new qx.ui.basic.Label(lang("Version: ") + window.TACS_version), {
 								row : 0,
 								column : 0,
 								colSpan : 3
@@ -23432,13 +23487,24 @@ if (Disable_TACS3_Sim == true){
 								column : 2
 							});
 
+							// showLootSummary Checkbox
+							this.options.showLootSummary = new qx.ui.form.CheckBox(lang("Show Loot Summary"));
+							this.options.showLootSummary.saveLocation = "showLootSummary";
+							this.options.showLootSummary.setValue(this.saveObj.checkbox.showLootSummary);
+							this.options.showLootSummary.addListener("click", this.toggleCheckboxOption, this);
+							pssVBox.add(this.options.showLootSummary, {
+								row : 7,
+								column : 0,
+								colSpan : 3
+							});
+							
 							// showStatsDuringAttack Checkbox
 							this.options.showStatsDuringAttack = new qx.ui.form.CheckBox(lang("Show Stats During Attack"));
 							this.options.showStatsDuringAttack.saveLocation = "showStatsDuringAttack";
 							this.options.showStatsDuringAttack.setValue(this.saveObj.checkbox.showStatsDuringAttack);
 							this.options.showStatsDuringAttack.addListener("click", this.toggleCheckboxOption, this);
 							pssVBox.add(this.options.showStatsDuringAttack, {
-								row : 7,
+								row : 8,
 								column : 0,
 								colSpan : 3
 							});
@@ -23449,7 +23515,7 @@ if (Disable_TACS3_Sim == true){
 							this.options.showStatsDuringSimulation.setValue(this.saveObj.checkbox.showStatsDuringSimulation);
 							this.options.showStatsDuringSimulation.addListener("click", this.toggleCheckboxOption, this);
 							pssVBox.add(this.options.showStatsDuringSimulation, {
-								row : 8,
+								row : 9,
 								column : 0,
 								colSpan : 3
 							});
@@ -23460,7 +23526,7 @@ if (Disable_TACS3_Sim == true){
 							this.options.skipVictoryPopup.setValue(this.saveObj.checkbox.skipVictoryPopup);
 							this.options.skipVictoryPopup.addListener("click", this.toggleCheckboxOption, this);
 							pssVBox.add(this.options.skipVictoryPopup, {
-								row : 9,
+								row : 10,
 								column : 0,
 								colSpan : 3
 							});
@@ -23482,7 +23548,7 @@ if (Disable_TACS3_Sim == true){
 							this.options.disableAttackPreparationTooltips.setValue(this.saveObj.checkbox.disableAttackPreparationTooltips);
 							this.options.disableAttackPreparationTooltips.addListener("click", this.toggleCheckboxOption, this);
 							pssVBox.add(this.options.disableAttackPreparationTooltips, {
-								row : 10,
+								row : 11,
 								column : 0,
 								colSpan : 3
 							});
@@ -23493,7 +23559,7 @@ if (Disable_TACS3_Sim == true){
 							this.options.disableArmyFormationManagerTooltips.setValue(this.saveObj.checkbox.disableArmyFormationManagerTooltips);
 							this.options.disableArmyFormationManagerTooltips.addListener("click", this.toggleCheckboxOption, this);
 							pssVBox.add(this.options.disableArmyFormationManagerTooltips, {
-								row : 11,
+								row : 12,
 								column : 0,
 								colSpan : 3
 							});
@@ -23501,14 +23567,14 @@ if (Disable_TACS3_Sim == true){
 							this.options.statsOpacityLabel = new qx.ui.basic.Label(lang("Stats Window Opacity"));
 							this.options.statsOpacityLabel.setMarginTop(10);
 							pssVBox.add(this.options.statsOpacityLabel, {
-								row : 12,
+								row : 13,
 								column : 0,
 								colSpan : 3
 							});
 
 							this.options.statsOpacity = new qx.ui.form.Slider();
 							pssVBox.add(this.options.statsOpacity, {
-								row : 13,
+								row : 14,
 								column : 1,
 								colSpan : 2
 							});
@@ -23516,7 +23582,7 @@ if (Disable_TACS3_Sim == true){
 
 							this.options.statsOpacityOutput = new qx.ui.basic.Label(String(this.saveObj.slider.statsOpacity));
 							pssVBox.add(this.options.statsOpacityOutput, {
-								row : 13,
+								row : 14,
 								column : 0
 							});
 
@@ -23552,88 +23618,76 @@ if (Disable_TACS3_Sim == true){
 						this.saveObj.checkbox[tgt.saveLocation] = val;
 						//console.log("this.saveObj.checkbox[\"" + tgt.saveLocation + "\"] = " + this.saveObj.checkbox[tgt.saveLocation]);
 						//console.log("val = " + val);
+						if (tgt == this.options.showLootSummary) {
+							if (this.saveObj.checkbox.showLootSummary) {
+								this.statsPage.add(this.resourceSummaryVerticalBox);
+							} else {
+								this.statsPage.remove(this.resourceSummaryVerticalBox);
+							}
+						}
 						this.saveData();
 					},
-					createBasePlateFunction : function (r) {
-						var BPDebug = false;
+					createHasAttackFormationFunction : function () {
 						try {
-							var regionObject = r.prototype;
-							//              regionObject.disu =
-							// if (r === ClientLib.Vis.Region.RegionNPCCamp || r === ClientLib.Vis.Region.RegionNPCBase) {
-							for (var key in regionObject) {
-								if (typeof regionObject[key] === 'function') {
-									strFunction = regionObject[key].toString();
-									if (strFunction.indexOf("region_city_owner") > -1) {
-										if (BPDebug)
-											console.log("1: " + strFunction);
-
-										var re = /[A-Z]{6}\=\(new \$I.[A-Z]{6}\).[A-Z]{6}\(this.[A-Z]{6}\(\)/;
-										//HZNOUV=(new $I.SRJRXT).QBXKKV(this.SMGAYW(),
-
-										//var re = /[A-Z]{6}\=\(new \$I.[A-Z]{6}\).[A-Z]{6}\(\$I.[A-Z]{6}.Black/;
-										//IWZRVB=(new $I.ISZOKO).FDXTHE($I.GIBPLN.Black
-										var strFunction = strFunction.match(re).toString();
-										var basePlate = strFunction.slice(0, 6);
-										if (BPDebug)
-											console.log("2: " + basePlate + " // The obfuscated basePlate location in the visObject");
-
-										if (r === ClientLib.Vis.Region.RegionNPCCamp) {
-											if (BPDebug)
-												console.log("3: " + strFunction + " // The part which creates a new base plate");
-											var toStrFunction = "return " + strFunction.slice(12, 21) + ".prototype." + strFunction.slice(23, 29) + ".toString()" + ";";
-											var fn = Function('', toStrFunction);
-											strFunction = fn();
-											if (BPDebug)
-												console.log("4: " + strFunction + " // (" + toStrFunction + ")");
-
-											//$I.CNDDJD.prototype.ECWGAG
-											re = /.I.[A-Z]{6}.prototype.[A-Z]{6}/;
-
-											//$I.CNDDJD.prototype
-											var re2 = /.I.[A-Z]{6}.prototype/;
-											var newFuncLocation = strFunction.match(re2).toString();
-											if (BPDebug)
-												console.log("5: " + newFuncLocation + " // this is where the new setPlateColor function will be placed");
-
-											strFunction = strFunction.match(re).toString();
-											toStrFunction = "return " + strFunction + ".toString()" + ";";
-											//var strProtos = strFunction.match(re2).toString();
-											fn = Function('', toStrFunction);
-											strFunction = fn();
-											if (BPDebug)
-												console.log("6: " + strFunction + " // (" + toStrFunction + ")");
-
-											//this.QDRXMK=a
-											var re3 = /this.[A-Z]{6}=a/;
-											var plateColor = strFunction.match(re3).toString();
-											plateColor = "this." + plateColor.slice(5, 11) + "=a;";
-											if (BPDebug)
-												console.log("7: " + plateColor + " // this holds the color value (ClientLib.Vis.EBackgroundPlateColor)");
-
-											//this.BFZGMK()
-											var re4 = /this.[A-Z]{6}\(\)/;
-											var update = strFunction.match(re4).toString();
-											update = "this." + update.slice(5, 13) + ";";
-											if (BPDebug)
-												console.log("8: " + update + " // the obfuscated baseplate update function");
-
-											var functionBody = newFuncLocation + ".setPlateColor = function(a){" + plateColor + update + "};regionObject.get_BasePlate = function(){return this." + basePlate + ";}";
-											fn = Function('regionObject', functionBody);
-											if (BPDebug)
-												console.log("9: " + fn.toString() + " // creates a setPlateColor function and a getter function for the base plate");
-											fn(regionObject);
-										} else {
-											var functionBody = "regionObject.get_BasePlate = function(){return this." + basePlate + ";}";
-											fn = Function('regionObject', functionBody);
-											if (BPDebug)
-												console.log("3b: " + fn.toString() + " // a getter function for the base plate");
-											fn(regionObject);
+							ClientLib.Data.City.prototype.HasAttackFormation = function (targetCity) {
+								var $createHelper;
+								var ownCity = this.get_Id();
+								if (TACS.getInstance().layouts.all.hasOwnProperty(targetCity)) {
+									if (TACS.getInstance().layouts.all[targetCity].hasOwnProperty(ownCity)) {
+										var count = 0;
+										for (var key in TACS.getInstance().layouts.all[targetCity][ownCity]) {
+											if (TACS.getInstance().layouts.all[targetCity][ownCity].hasOwnProperty(key)) {
+												count++;
+											}
 										}
-										break;
+									if (count > 0)
+										return true;
+									} else {
+										return false;
 									}
 								}
 							}
-							//\// }
+						} catch (e) {
+							console.log(e);
+						}
+					},
+					createBasePlateFunction : function (r) {
+						try {
+							var regionObject = r.prototype;
+							for (var key in regionObject) {
+								if (typeof regionObject[key] === 'function') {
+									var strFunction = regionObject[key].toString();
+									if (strFunction.indexOf("Blue") > -1 && strFunction.indexOf("Black") > -1 ) {
+										if (r == ClientLib.Vis.Region.RegionNPCCamp || r == ClientLib.Vis.Region.RegionNPCBase) {
+											regionObject[key]=function () {
+												var $createHelper;
+												var basePlateColor = ClientLib.Vis.EBackgroundPlateColor.Black;
+												if ((ClientLib.Data.MainData.GetInstance().get_Cities().get_CurrentOwnCity() != null) && ClientLib.Data.MainData.GetInstance().get_Cities().get_CurrentOwnCity().HasAttackFormation(this.get_Id())) {
+													var playerFaction = ClientLib.Data.MainData.GetInstance().get_Player().get_Faction();
+													basePlateColor = ((this.get_PlayerFaction() == 1) ? ClientLib.Vis.EBackgroundPlateColor.Orange : ClientLib.Vis.EBackgroundPlateColor.Cyan);
+												}
+												return basePlateColor;
+											}
+											break;
+										} else {
+											regionObject[key]=function () {
+												var $createHelper;
+												var basePlateColor = ClientLib.Vis.EBackgroundPlateColor.Black;
+												if (this.get_Type() == ClientLib.Vis.Region.RegionCity.ERegionCityType.Own) {
+													basePlateColor = ((this.get_PlayerFaction() == 1) ? ClientLib.Vis.EBackgroundPlateColor.Cyan : ClientLib.Vis.EBackgroundPlateColor.Orange);
+												} else {
+													basePlateColor = ClientLib.Vis.EBackgroundPlateColor.Black;
+												}
+												if (((this.get_Type() != ClientLib.Vis.Region.RegionCity.ERegionCityType.Own) && (ClientLib.Data.MainData.GetInstance().get_Cities().get_CurrentOwnCity() != null)) && ClientLib.Data.MainData.GetInstance().get_Cities().get_CurrentOwnCity().HasAttackFormation(this.get_Id())) {
+													basePlateColor = ((this.get_PlayerFaction() == 1) ? ClientLib.Vis.EBackgroundPlateColor.Orange : ClientLib.Vis.EBackgroundPlateColor.Cyan);
+												}
+												return basePlateColor;
+											}
+											break;
+										}
+									}
+								}
+							}
 						} catch (e) {
 							console.log(e);
 						}
@@ -24649,7 +24703,6 @@ if (Disable_TACS3_Sim == true){
 							this.onCityLoadComplete();
 							this.resetDisableButtons();
 						}
-						this.updateSaveMarkers();
 					},
 					//onViewChange
 					viewChangeHandler : function (oldMode, newMode) {
@@ -24892,6 +24945,24 @@ if (Disable_TACS3_Sim == true){
 							console.log(e);
 						}
 					},
+					OnSimulateCombatReportEvent : function (data) {
+						// console.log(data);
+						this.timerEnd("OnSimulateCombatReportEvent");
+						try {
+							// Resource Summary
+							this.stats.resourcesummary.research = data.GetAttackerTotalResourceReceived(ClientLib.Base.EResourceType.ResearchPoints);
+							this.stats.resourcesummary.credits = data.GetAttackerTotalResourceReceived(ClientLib.Base.EResourceType.Gold);
+							this.stats.resourcesummary.crystal = data.GetAttackerTotalResourceReceived(ClientLib.Base.EResourceType.Crystal);
+							this.stats.resourcesummary.tiberium = data.GetAttackerTotalResourceReceived(ClientLib.Base.EResourceType.Tiberium);
+
+							this.labels.resourcesummary.research.setLabel(phe.cnc.gui.util.Numbers.formatNumbersCompact(this.stats.resourcesummary.research));
+							this.labels.resourcesummary.credits.setLabel(phe.cnc.gui.util.Numbers.formatNumbersCompact(this.stats.resourcesummary.credits));
+							this.labels.resourcesummary.crystal.setLabel(phe.cnc.gui.util.Numbers.formatNumbersCompact(this.stats.resourcesummary.crystal));
+							this.labels.resourcesummary.tiberium.setLabel(phe.cnc.gui.util.Numbers.formatNumbersCompact(this.stats.resourcesummary.tiberium));
+						} catch (e) {
+							console.log('OnSimulateCombatReportEvent()', e);
+						}
+					},
 					onSimulateBattleFinishedEvent : function (data) {
 						//console.log("data:");
 						//console.log(data);
@@ -25126,7 +25197,6 @@ if (Disable_TACS3_Sim == true){
 									delete this.layouts.current[lid];
 									this.saveLayouts();
 									this.updateLayoutsList();
-									this.updateSaveMarkers();
 								}
 							}
 						} catch (e) {
@@ -25169,7 +25239,6 @@ if (Disable_TACS3_Sim == true){
 
 							this.saveLayouts();
 							this.updateLayoutsList();
-							this.updateSaveMarkers();
 							this.layouts.label.setValue("");
 						} catch (e) {
 							console.log(e);
@@ -25569,64 +25638,6 @@ if (Disable_TACS3_Sim == true){
 							console.log(e);
 						}
 					},
-					updateSaveMarkers : function () {
-						try {
-							if (this.options.markSavedTargets.getValue()) {
-								var currCity = this._MainData.get_Cities().get_CurrentOwnCity();
-								var base_city = currCity.get_Id();
-								var x = currCity.get_X();
-								var y = currCity.get_Y();
-								var region = this._VisMain.get_Region();
-								var attackDistance = this._MainData.get_Server().get_MaxAttackDistance() + 0.1;
-								var playerFaction = this._MainData.get_Player().get_Faction();
-								switch (playerFaction) {
-								case ClientLib.Base.EFactionType.GDIFaction:
-									var saveColor = ClientLib.Vis.EBackgroundPlateColor.Orange;
-									break;
-								case ClientLib.Base.EFactionType.NODFaction:
-									var saveColor = ClientLib.Vis.EBackgroundPlateColor.Cyan;
-									break;
-								}
-
-								for (var i = x - (attackDistance); i < (x + attackDistance); i++) {
-									for (var j = y - attackDistance; j < (y + attackDistance); j++) {
-										var visObject = region.GetObjectFromPosition(i * region.get_GridWidth(), j * region.get_GridHeight());
-										if (visObject != null) {
-											if (visObject.get_VisObjectType() == ClientLib.Vis.VisObject.EObjectType.RegionNPCCamp ||
-												visObject.get_VisObjectType() == ClientLib.Vis.VisObject.EObjectType.RegionCityType ||
-												visObject.get_VisObjectType() == ClientLib.Vis.VisObject.EObjectType.RegionNPCBase) {
-												if (visObject.get_VisObjectType() == ClientLib.Vis.VisObject.EObjectType.RegionNPCCamp) {
-													if (visObject.get_IsDestroyed())
-														continue;
-												}
-												if (visObject.get_VisObjectType() == ClientLib.Vis.VisObject.EObjectType.RegionCityType) {
-													if (visObject.IsOwnBase())
-														continue;
-												}
-
-												visObject.get_BasePlate().setPlateColor(ClientLib.Vis.EBackgroundPlateColor.Black);
-												var target_city = visObject.get_Id();
-												if (this.layouts.all.hasOwnProperty(target_city)) {
-													if (this.layouts.all[target_city].hasOwnProperty(base_city)) {
-														var count = 0;
-														for (var key in this.layouts.all[target_city][base_city]) {
-															if (this.layouts.all[target_city][base_city].hasOwnProperty(key)) {
-																count++;
-															}
-														}
-														if (count > 0)
-															visObject.get_BasePlate().setPlateColor(saveColor);
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						} catch (e) {
-							console.log(e);
-						}
-					},
 					//Util
 					getDateFromMillis : function (ms) {
 						return new Date(ms);
@@ -25715,8 +25726,14 @@ if (Disable_TACS3_Sim == true){
 									if (strFunction.indexOf(",-1,0,0,0);") > -1) {
 										strFunction = strFunction.substring(strFunction.indexOf("{") + 1, strFunction.lastIndexOf("}"));
 										var re = /.I.[A-Z]{6}.[A-Z]{6}\(.I.[A-Z]{6}.[a-zA-Z]+,-1,0,0,0\)\;/;
+										//$I.QPYKHN.IVAYJF($I.XIMKGT.pavmCombatSimulation,-1,0,0,0);
 										strFunction = strFunction.replace(re, "");
-										console.log(strFunction);
+										var re2 = /.I.[A-Z]{6}.[A-Z]{6}\(\).[A-Z]{6}\(\).[A-Z]{6}\([a-z].[a-z]\)\;/;
+										//$I.BFALSI.DZYMBX().JLBGOK().KLRGNI(b.d);
+										var temp = strFunction.match(re2).toString();
+										console.log(temp);
+										strFunction = strFunction.replace(re2, "");
+										strFunction = strFunction.replace("}}", "}}" + temp);
 										var fn = Function('a,b', strFunction);
 										ClientLib.API.Battleground.prototype[key] = fn;
 										break;
@@ -25791,6 +25808,7 @@ if (Disable_TACS3_Sim == true){
 		d : "data:video/ogg;base64,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"
 	};
 })();
+
 }
 /*
 End of TACS
