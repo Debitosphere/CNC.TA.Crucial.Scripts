@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.27
+// @version     1.0.28
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.27";
+var CrucialScriptVersion = "1.0.28";
 
 var GM_SuperValue = new function () {
 
@@ -313,6 +313,7 @@ var CCScript23 = GM_SuperValue.get("CCScript23", CCScript23);
 var CCScript24 = GM_SuperValue.get("CCScript24", CCScript24);
 var CCScript25 = GM_SuperValue.get("CCScript25", CCScript25);
 var CCScript26 = GM_SuperValue.get("CCScript26", CCScript26);
+var CCScript27 = GM_SuperValue.get("CCScript27", CCScript27);
 var ScriptName;
 var ScriptDescription;
 var ScriptAuthors;
@@ -420,10 +421,14 @@ var ScriptAuthors;
 	var ScriptDescription25 = "Calculates combined RT and CP costs and loot of multiple combat reports.";
 	var ScriptAuthors25 = "petui";	
 	var Script26;
-	var ScriptName26 = "TA The Movement";	
-	var ScriptDescription26 = "Strategical territory simulator. Allows the player to simulate territory growth/loss showing the influence gains and losses if bases were made ruins by alliance/enemy or ruins disappear";
-	var ScriptAuthors26 = "petui";	
-	var SimName01 = "V2 Simulator";
+	var ScriptName26 = "TA The Movement & Influence Meter";	
+	var ScriptDescription26 = "Strategical territory simulator. Allows the player to simulate territory growth/loss showing the influence gains and losses if bases were made ruins by alliance/enemy or ruins disappear. The Influence Meter Calculates the influence bases have over POIs";
+	var ScriptAuthors26 = "petui";
+	var Script27;
+	var ScriptName27 = "TA Repair Time Of Death";	
+	var ScriptDescription27 = "Displays how much offense repair time a dead base had at the time of death when you click on the dead base";
+	var ScriptAuthors27 = "petui";	
+	var SimName01 = "TABS / V2 Simulator";
 	var SimDescription01 = "Completely new simulator and stats calculation. It's 100 percent API no need to install any other Script. First simulator which calculates NOD upgrades correctly. ";
 	var SimAuthors01 = "Eistee<br>TheStriker<br>VisiG";
 	var SimName02 = "TACS Simulator";
@@ -462,6 +467,7 @@ function SetDefaultSettings() {
 		CCScript24 = false;
 		CCScript25 = true;
 		CCScript26 = false;
+		CCScript27 = true;
 		GM_SuperValue.set("CCNoScripts", CCNoScripts);
 		GM_SuperValue.set("CCFirstSave", CCFirstSave);
 		GM_SuperValue.set("CCChosenSimulator", CCChosenSimulator);
@@ -491,6 +497,7 @@ function SetDefaultSettings() {
 		GM_SuperValue.set("CCScript24", CCScript24);
 		GM_SuperValue.set("CCScript25", CCScript25);
 		GM_SuperValue.set("CCScript26", CCScript26);
+		GM_SuperValue.set("CCScript27", CCScript27);
 		console.log ("First Time Crucial Pack is Installed - Reseting to Full Script Settings");
 		window.location.href = url;
 }
@@ -568,6 +575,7 @@ var Disable_POI_Analyser = CCScript23;
 var Disable_Green_Cross_Tools = CCScript24;
 var Disable_Alliance_Report_Stats = CCScript25;
 var Disable_The_Movement = CCScript26;
+var Disable_RepairTimeofDeath = CCScript27;
 
 function init2() {
 	
@@ -638,6 +646,7 @@ function ScriptInfo() {
 			document.getElementById("Script24").checked = CCScript24;
 			document.getElementById("Script25").checked = CCScript25;
 			document.getElementById("Script26").checked = CCScript26;
+			document.getElementById("Script27").checked = CCScript27;
 	}
 
 
@@ -671,6 +680,7 @@ function SaveSettings(){
 	Script24 =	document.getElementById("Script24").checked;
 	Script25 =	document.getElementById("Script25").checked;
 	Script26 =	document.getElementById("Script26").checked;
+	Script27 =	document.getElementById("Script27").checked;
 	
 		GM_SuperValue.set("CCNoScripts", CCNoScripts);
 		GM_SuperValue.set("CCFirstSave", CCFirstSave);
@@ -701,6 +711,7 @@ function SaveSettings(){
 		GM_SuperValue.set("CCScript24", Script24);
 		GM_SuperValue.set("CCScript25", Script25);
 		GM_SuperValue.set("CCScript26", Script26);
+		GM_SuperValue.set("CCScript27", Script27);
 		window.location.href = url;
 }
 	
@@ -715,7 +726,7 @@ function settingsWindow() {
 		var selectionList2 = '<select name="CrucialsettingsWindowBox" size="1" style="width: 100px">';
 		var infoimage = "data:image/gif;base64,R0lGODlhEgAOAKIAAFWQCPb/APn/CNDjCKfICAAAAAAAAAAAACH5BAAAAAAALAAAAAASAA4AAAMkCLrcziGG9+SkODch9IoEEXkjUGbliaUXGgyDmnEeQ9fKjWcJADs=";
 		width = width - 50;
-        var selectionBox2 = '<div id="CrucialsettingsWindowBox" style="width: 520px; height: 778px; border: 4px solid grey; padding: 15px; z-index: 9999; position: absolute; background-color: #17341A; top: 100px; left: 100px; line-height: 20px;  left: '+width+'px; position:absolute;"><font color="#00FF00"><b>Crucial Pack All in One Settings</b><br><br>Untick the script you do not want to run in this script pack<br></div>';
+        var selectionBox2 = '<div id="CrucialsettingsWindowBox" style="width: 520px; height: 800px; border: 4px solid grey; padding: 15px; z-index: 9999; position: absolute; background-color: #17341A; top: 100px; left: 100px; line-height: 20px;  left: '+width+'px; position:absolute;"><font color="#00FF00"><b>Crucial Pack All in One Settings</b><br><br>Untick the script you do not want to run in this script pack<br></div>';
 		$('body').append(selectionBox2);
 		$('#CrucialsettingsWindowBox').append('<br>');
 		$('#CrucialsettingsWindowBox').append('<font color="#00FF00"><input type="checkbox" id="Script01" value="ON"><button type="button" id="info01"><img src="'+infoimage+'" alt="Information about this Script" width="14" height="14"> </button> '+ScriptName01+'<br>');
@@ -744,7 +755,8 @@ function settingsWindow() {
 		$('#CrucialsettingsWindowBox').append('<font color="#00FF00"><input type="checkbox" id="Script23" value="ON"><button type="button" id="info23"><img src="'+infoimage+'" alt="Information about this Script" width="14" height="14"> </button> '+ScriptName23+'<br>');
 		$('#CrucialsettingsWindowBox').append('<font color="#00FF00"><input type="checkbox" id="Script24" value="ON"><button type="button" id="info24"><img src="'+infoimage+'" alt="Information about this Script" width="14" height="14"> </button> '+ScriptName24+'<br>');
 		$('#CrucialsettingsWindowBox').append('<font color="#00FF00"><input type="checkbox" id="Script26" value="ON"><button type="button" id="info26"><img src="'+infoimage+'" alt="Information about this Script" width="14" height="14"> </button> '+ScriptName26+'<br>');
-		$('#CrucialsettingsWindowBox').append('<font color="#00FF00"><br><b>Simulators</b><br><br><input type = "radio" id = "V2Sim" name = "simulator" value = "V2Sim"><button type="button" id="siminfo01"><img src="'+infoimage+'" alt="Information about this Script" width="14" height="14"> </button>'+SimName01+'<br><input type = "radio" id = "TACS3Sim" name = "simulator" value = "TACS3Sim"><button type="button" id="siminfo02"><img src="'+infoimage+'" alt="Information about this Script" width="14" height="14"> </button>'+SimName02+'<br><input type = "radio" id = "DisableAll" name = "simulator" value = "DisableAll">'+SimName03+'<br><button type="button" id="save">Save Changes</button> <button type="button" id="close">Close</button><button type="button" id="restore">Restore Default Settings</button><br></font></div>');
+		$('#CrucialsettingsWindowBox').append('<font color="#00FF00"><input type="checkbox" id="Script27" value="ON"><button type="button" id="info27"><img src="'+infoimage+'" alt="Information about this Script" width="14" height="14"> </button> '+ScriptName27+'<br>');
+		$('#CrucialsettingsWindowBox').append('<font color="#00FF00"><br><b>Simulators</b><br><input type = "radio" id = "V2Sim" name = "simulator" value = "V2Sim"><button type="button" id="siminfo01"><img src="'+infoimage+'" alt="Information about this Script" width="14" height="14"> </button>'+SimName01+'<br><input type = "radio" id = "TACS3Sim" name = "simulator" value = "TACS3Sim"><button type="button" id="siminfo02"><img src="'+infoimage+'" alt="Information about this Script" width="14" height="14"> </button>'+SimName02+'<br><input type = "radio" id = "DisableAll" name = "simulator" value = "DisableAll">'+SimName03+'<br><br><button type="button" id="save">Save Changes</button><button type="button" id="close">Close</button><button type="button" id="restore">Restore Default Settings</button><br></font></div>');
 		LoadSettings();
 
 		$('#info01').click(function() {
@@ -1061,6 +1073,18 @@ function settingsWindow() {
 			}
 			ScriptInfo();
 		});
+		$('#info27').click(function() {
+			ScriptName = ScriptName27;
+			ScriptDescription = ScriptDescription27;
+			ScriptAuthors = ScriptAuthors27;
+			var element =  document.getElementById('CrucialInfoBox');
+			if (typeof(element) != 'undefined' && element != null)
+			{
+				element.outerHTML = "";
+				delete element;	
+			}
+			ScriptInfo();
+		});
 		$('#siminfo01').click(function() {
 			ScriptName = SimName01;
 			ScriptDescription = SimDescription01;
@@ -1330,7 +1354,7 @@ End of Multisession login
 							var UpdateFixes;
 							var VerNumb;
 							var ScriptUrl;
-							var CrucialScriptVersion = "1.0.27";
+							var CrucialScriptVersion = "1.0.28";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -1617,7 +1641,7 @@ if (Disable_MaelstromTools == true){
           type: "singleton",
           extend: qx.core.Object,
           construct: function (language) {
-            this.Languages = ['de', 'pt', 'fr', 'tr']; // en is default, not needed in here!
+            this.Languages = ['de_DE', 'pt_PT', 'fr_FR', 'tr_TR']; // en is default, not needed in here!
             if (language != null) {
               this.MyLanguage = language;
             }
@@ -1762,7 +1786,7 @@ if (Disable_MaelstromTools == true){
             initialize: function () {
               try {
                 //console.log(qx.locale.Manager.getInstance().getLocale());
-                Lang.loadData(qx.locale.Manager.getInstance().getLocale());
+                Lang.loadData(ClientLib.Config.Main.GetInstance().GetConfig(ClientLib.Config.Main.CONFIG_LANGUAGE));
                 //console.log("Client version: " + MaelstromTools.Wrapper.GetClientVersion());
                 this.itemsOnDesktopCount = [];
                 this.itemsOnDesktop = {};
@@ -2521,7 +2545,7 @@ if (Disable_MaelstromTools == true){
                   var serverBar = qx.core.Init.getApplication().getServerBar().getBounds();
                   var pos = MaelstromTools.LocalStorage.get("mcvPopup", {
                       x : serverBar.width + 150,
-                      y : 70
+                      y : 120
                     });
                   this.mcvPopupX = pos.x;
                   this.mcvPopupY = pos.y;
@@ -30926,7 +30950,6 @@ Start of TA The Movement
 */
 if (Disable_The_Movement == true){
 'use strict';
-
 (function() {
 	var main = function() {
 		'use strict';
@@ -32685,7 +32708,116 @@ if (Disable_The_Movement == true){
 	script.type = 'text/javascript';
 	document.getElementsByTagName('head')[0].appendChild(script);
 })();
+'use strict';
+eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)r[e(c)]=k[c]||e(c);k=[function(e){return r[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('\'1I 1R\';(16(){Y V=16(){\'1I 1R\';16 1V(){Y d,18;Y e=16(a,b){2M(Y c 2L a){11(a.2J(c)&&12 a[c]===\'16\'&&b.2I(a[c])){1h c}}2F\'2E 2D 2B 2z 2y 2a\';};11(12 5.17.1p.7.1M!==\'16\'){d=5.17.2w.2v.7.2u.13();Y f=d.14(/Y [a-z]=10\\.[A-Z]{6}\\.([A-Z]{6})\\(\\);/)[1];5.17.1p.7.1M=5.17.1p.7[f]}11(12 5.8.9===\'1a\'){5.8.9=16(){}}11(12 5.8.9.15===\'1a\'){11(12 5.8.1k.7.$1E!==\'16\'){d=5.8.1k.2r.13();Y g=d.14(/\\$I\\.([A-Z]{6})\\.[A-Z]{6}=\\(1c \\$I\\.\\1\\)\\.([A-Z]{6})\\(\\);/)[2];5.8.1k.7.$1E=5.8.1k.7[g]}d=5.8.1k.7.$1E.13();Y h=d.14(/11\\(\\(10\\.([A-Z]{6})\\[0\\]==1D\\)&&\\$I\\.([A-Z]{6})\\.[A-Z]{6}\\(\\)\\)\\{10\\.\\1\\[0\\]="15";/)[2];11(12 $I[h].7.1r!==\'16\'){d=5.8.1k.7.1r.13();Y i=d.14(/1h [a-z]\\.([A-Z]{6})\\([a-z]\\);\\}$/)[1];$I[h].7.1r=$I[h].7[i]}d=$I[h].7.1r.13();Y j=d.14(/1h \\(1c \\$I\\.([A-Z]{6})\\)\\.[A-Z]{6}\\([a-z]\\);\\}$/)[1];5.8.9.15=$I[j]}11(12 5.8.9.15.1o===\'1a\'||12 5.8.9.15.1o.7.1W!==\'16\'){d=5.17.1d.1d.7.1u.13();Y k=d.14(/10\\.[A-Z]{6}=10\\.[A-Z]{6}\\.([A-Z]{6})\\(0,0\\);/)[1];d=5.8.9.15.7[k].13();Y l=d.14(/\\(1c \\$I\\.([A-Z]{6})\\)/)[1];5.8.9.15.1o=$I[l];d=5.17.1d.1x.7.2q.13();Y m=d.14(/\\{10\\.([A-Z]{6})\\(\\);\\}/)[1];d=5.17.1d.1x.7[m].13();Y n=d.14(/11\\(10\\.([A-Z]{6})\\(\\)&&/)[1];d=5.17.1d.1x.7[n].13();Y o=d.14(/10\\.[A-Z]{6}\\.[A-Z]{6}\\(\\)\\.([A-Z]{6})\\(10\\.([A-Z]{6})\\.2p,10\\.\\2\\.19\\);/)[1];5.8.9.15.1o.7.1W=5.8.9.15.1o.7[o]}11(12 5.8.9.15.7.1m!==\'16\'){d=5.17.1p.7.2o.13();Y p=d.14(/10\\.[A-Z]{6}\\.([A-Z]{6})\\("1L",1D\\);/)[1];5.8.9.15.7.1m=5.8.9.15.7[p]}11(12 5.8.9.15.7.1B!==\'16\'){d=5.17.1g.1i.7.1w.13();Y q=d.14(/[a-z]\\.([A-Z]{6})\\("1N"\\);/)[1];5.8.9.15.7.1B=5.8.9.15.7[q]}11(12 5.8.9.15.7.1O!==\'16\'){d=5.1l.1j.7.2n.13();Y r=d.14(/10\\.[A-Z]{6}\\.([A-Z]{6})\\(10\\.[A-Z]{6}\\);/)[1];5.8.9.15.7.1O=5.8.9.15.7[r]}11(12 5.8.9.15.7.1Q!==\'16\'){d=5.1l.1j.7.2l.13();Y s=d.14(/10\\.[A-Z]{6}\\.([A-Z]{6})\\(10\\.[A-Z]{6}\\);/)[1];5.8.9.15.7.1Q=5.8.9.15.7[s]}11(12 5.8.9.X===\'1a\'){5.8.9.X=16(){}}11(12 5.8.9.X.X===\'1a\'||12 5.8.9.X.1e===\'1a\'){d=5.8.9.15.7.1m.13();18=d.14(/11\\([a-z]=="2i"\\)\\{1h \\(1c \\$I\\.([A-Z]{6})\\)\\.([A-Z]{6})\\(\\);\\}/);Y t=18[1];Y u=18[2];5.8.9.X.1e=$I[t];d=5.8.9.X.1e.7[u].13();Y v=d.14(/\\$I\\.([A-Z]{6})\\.7\\.[A-Z]{6}\\.2g \\(10\\);/)[1];5.8.9.X.X=$I[v]}11(12 5.8.9.X.X.7.1z!==\'16\'){d=5.1l.1j.7.1z.13();Y w=d.14(/10\\.[A-Z]{6}\\.([A-Z]{6})\\([a-z]\\);\\}$/)[1];5.8.9.X.X.7.1z=5.8.9.X.X.7[w]}11(12 5.8.9.X.X.7.1A!==\'16\'){d=5.1l.1j.7.1A.13();Y x=d.14(/10\\.[A-Z]{6}\\.([A-Z]{6})\\([a-z]\\);\\}$/)[1];5.8.9.X.X.7.1A=5.8.9.X.X.7[x]}11(12 5.8.9.X.X.7.1v!==\'16\'){d=5.1l.1j.7.1v.13();Y y=d.14(/10\\.[A-Z]{6}\\.([A-Z]{6})\\(\\(/)[1];5.8.9.X.X.7.1v=5.8.9.X.X.7[y]}11(12 5.8.9.X.X.7.1C!==\'16\'){d=5.1l.1j.7.1C.13();Y z=d.14(/10\\.[A-Z]{6}\\.([A-Z]{6})\\(\\(/)[1];5.8.9.X.X.7.1C=5.8.9.X.X.7[z]}11(12 5.8.9.X.X.7.1q!==\'16\'||12 5.8.9.X.X.7.1X!==\'16\'){d=5.17.1g.1i.7.1w.13();18=d.14(/10\\.([A-Z]{6})\\.([A-Z]{6})\\(10\\.([A-Z]{6})\\.w\\);10\\.\\1\\.([A-Z]{6})\\(10\\.\\3\\.h\\);/);Y A=18[2];Y B=18[4];5.8.9.X.X.7.1q=5.8.9.X.X.7[A];5.8.9.X.X.7.1X=5.8.9.X.X.7[B]}11(12 5.8.9.X.1e.7.1Z!==\'16\'||12 5.8.9.X.1e.7.20!==\'16\'){11(12 5.17.1g.1i.7.1F!==\'16\'){d=5.17.1g.2f.7.2e.13();Y C=d.14(/10\\.([A-Z]{6})\\(\\);}/)[1];5.17.1g.1i.7.1F=5.17.1g.1i.7[C]}d=5.17.1g.1i.7.1F.13();18=d.14(/10\\.([A-Z]{6})\\.([A-Z]{6})\\([a-z]\\);10\\.\\1\\.([A-Z]{6})\\(\\([a-z] \\? 10\\.[A-Z]{6} : 10\\.[A-Z]{6}\\)\\);\\}$/);Y D=18[2];Y E=18[3];5.8.9.X.1e.7.1Z=5.8.9.X.1e.7[D];5.8.9.X.1e.7.20=5.8.9.X.1e.7[E]}11(12 5.8.9.X.1n===\'1a\'){d=5.8.9.15.7.1m.13();Y F=d.14(/11\\([a-z]=="1L"\\)\\{1h \\(1c \\$I\\.([A-Z]{6})\\)\\.[A-Z]{6}\\(\\);\\}/)[1];5.8.9.X.1n=$I[F]}11(12 5.8.9.X.1n.7.23!==\'16\'){d=5.17.24.24.7.2d.13();Y G=d.14(/10\\.[A-Z]{6}\\.([A-Z]{6})\\([a-z]\\);/)[1];5.8.9.X.1n.7.23=5.8.9.X.1n.7[G]}11(12 5.8.9.X.19===\'1a\'){d=5.8.9.15.7.1m.13();Y H=d.14(/11\\([a-z]=="26"\\)\\{1h \\(1c \\$I\\.([A-Z]{6})\\)\\.[A-Z]{6}\\(\\);\\}/)[1];5.8.9.X.19=$I[H]}11(12 5.8.9.X.19.7.27!==\'16\'||12 5.8.9.X.19.7.28!==\'16\'||12 5.8.9.X.19.7.1s!==\'16\'){d=5.17.1t.1t.7.1u.13();Y I=d.14(/10\\.[A-Z]{6}\\.[A-Z]{6}\\(\\(1c \\$I\\.[A-Z]{6}\\)\\.[A-Z]{6}\\(10,10\\.([A-Z]{6})\\)\\);/)[1];d=5.17.1t.1t.7[I].13();18=d.14(/10\\.([A-Z]{6})\\.([A-Z]{6})\\("#2x"\\);10\\.\\1\\.([A-Z]{6})\\("2b"\\);10\\.\\1\\.([A-Z]{6})\\(10\\.[A-Z]{6}\\.13\\(\\)\\);/);Y J=18[2];Y K=18[3];Y L=18[4];5.8.9.X.19.7.1s=5.8.9.X.19.7[J];5.8.9.X.19.7.28=5.8.9.X.19.7[K];5.8.9.X.19.7.27=5.8.9.X.19.7[L]}11(12 5.8.9.X.15===\'1a\'){d=5.8.9.15.7.1m.13();Y M=d.14(/11\\([a-z]=="2c"\\)\\{1h \\(1c \\$I\\.([A-Z]{6})\\)\\.[A-Z]{6}\\(\\);\\}/)[1];5.8.9.X.15=$I[M]}11(12 5.8.9.X.15.7.25!==\'16\'||12 5.8.9.X.15.7.22!==\'16\'){Y N=e(5.17.1d.1y.7,/"2h"/);d=5.17.1d.1y.7[N].13();Y O=d.14(/10\\.[A-Z]{6}=\\(1c \\$I\\.([A-Z]{6})\\)\\.[A-Z]{6}\\(\\(\\(10\\.[A-Z]{6}\\(\\)==1\\) \\? \\$I\\.[A-Z]{6}\\.2j/)[1];d=5.17.1d.1y.7.2k.13();Y P=d.14(/11\\(\\(10\\.([A-Z]{6})!=1D\\)&&!10\\.[A-Z]{6}\\)\\{10\\.\\1\\.([A-Z]{6})\\(10\\.[A-Z]{6},10\\.[A-Z]{6}\\);\\}/)[2];d=$I[O].7[P].13();18=d.14(/10\\.([A-Z]{6})\\.([A-Z]{6})\\(c\\);.+Y [a-z]=10\\.\\1\\.([A-Z]{6})\\(\\)\\.2m/);Y Q=18[2];Y R=18[3];5.8.9.X.15.7.25=5.8.9.X.15.7[Q];5.8.9.X.15.7.22=5.8.9.X.15.7[R]}11(12 5.8.9.1b===\'1a\'){5.8.9.1b=16(){}}11(12 5.8.9.1b.1f===\'1a\'){d=5.8.9.15.7.1B.13();Y S=d.14(/11\\(a=="1N"\\)\\{1h \\(1c \\$I\\.([A-Z]{6})\\)\\.[A-Z]{6}\\(\\);\\}/)[1];5.8.9.1b.1f=$I[S]}11(12 5.8.9.1b.1f.7.1s!==\'16\'){d=5.17.1d.2s.7.2t.13();Y T=d.14(/\\.([A-Z]{6})\\("#1P"\\);/)[1];5.8.9.1b.1f.7.1s=5.8.9.1b.1f.7[T]}11(12 5.8.9.1b.1f.7.1q!==\'16\'){d=5.17.1g.1i.7.1w.13();Y U=d.14(/\\("#1P"\\);10\\.[A-Z]{6}\\.([A-Z]{6})\\(3\\);/)[1];5.8.9.1b.1f.7.1q=5.8.9.1b.1f.7[U]}29.21(\'1Y 2A\')}16 1G(){2C{11(12 1H!==\'1a\'&&1H.1U.1u.1T()&&1H.1U.1u.1T().2G){1V()}2H{1K(1G,1J)}}2K(e){29.21(\'1Y: \',e.13())}}1K(1G,1J)};Y W=1S.2N(\'2O\');W.2P=\'(\'+V.13()+\')();\';W.2Q=\'26/2R\';1S.2S(\'2T\')[0].2U(W)})();',62,181,'|||||ClientLib||prototype|Draw|Scene||||||||||||||||||||||||||||||||||||||||||||||||||Element|var||this|if|typeof|toString|match|Canvas|function|Vis|matches|Text|undefined|Shader|new|Region|Shape|Pen|MouseTool|return|SelectSupportTool|BaseEffect|DrawMain|Effect|CreateElement|Image|View|VisView|set_Width|CreateScene|set_Color|City|Init|set_X|Activate|RegionNPCCamp|RegionGhostCity|set_Layer|set_ZOrder|CreateShader|set_Y|null|ctor|Check|waitForGame|qx|use|1000|setTimeout|image|get_Scene|pen|Attach|00c2f8|Detach|strict|document|getApplication|core|run|calculateTextWidth|set_Height|DrawLayerDeobfuscator|set_Stops|set_Shader|log|get_DomElement|set_Source|BaseView|set_DomElement|text|set_Text|set_Font|console|content|unit_level|canvas|ChangeBackground|Update|FoundBaseTool|call|region_city_name|shape|Cyan|VisUpdate|DetachFromScene|width|AttachToScene|AddSelectionImage|Font|UiUpdate|GetInstance|RegionCity|setActiveSupportState|Dispose|ArmyDismissArea|ArmySetup|FFFFFF|by|method|loaded|locate|try|to|Unable|throw|initDone|else|test|hasOwnProperty|catch|in|for|createElement|script|innerHTML|type|javascript|getElementsByTagName|head|appendChild'.split('|'),0,{}))
+'use strict';
+eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)r[e(c)]=k[c]||e(c);k=[function(e){return r[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('\'2B 2U\';(B(){u r=B(){\'2B 2U\';B 2s(){2x.2y(\'K 4B\');L.3H.4d(\'K\',{2q:\'4S\',4T:L.1A.5b,3k:{2t:[t.D.E.1N.2Q,t.D.E.1N.2V,t.D.E.1N.3f],3b:{2h:(H t.T.U).$N(0,0,5,7),2H:(H t.T.U).$N(6,0,11,7),2J:(H t.T.U).$N(13,0,14,7),2M:(H t.T.U).$N(2P,1,2T,2),2W:(H t.T.U).$N(38,1,43,2),2Z:(H t.T.U).$N(44,1,49,2),39:(H t.T.U).$N(50,0,55,3),1D:(H t.T.U).$N(56,0,4j,3),2m:(H t.T.U).$N(2P,1,2T,2)},1o:{},V:B(a,b){u c=K.3b[a];u d=K.1o[b];F(H t.T.U).$N(c.X+d.x,c.W+d.y,c.3r+d.x,c.3E+d.y)}},3G:B(a){a.1o[t.O.1x.2S]={x:0,y:0};a.1o[t.O.1x.3J]={x:0,y:18};a.1o[t.O.1x.3N]={x:0,y:36};a.1o[t.O.1x.3S]={x:3T,y:36}},48:{S:R,1q:R,1z:R,23:R,1L:R,1E:[],4R:{},2k:B(){v.2n();v.2p();1t.1i.10.1B.1U().2z(\'3z\',v.2A,v)},2n:B(){u a,1r;G(J 1t.1i.10.1B.C.28!==\'B\'){a=1t.1i.10.1B.C.3K.M();u b=a.P(/^B \\(([A-2R-z]+)\\)\\{v\\.([A-2R-47]+)=\\1;/)[2];1t.1i.10.1B.C.28=B(){F v[b]}}G(J t.D.E.C.2c!==\'B\'||J t.D.E.C.2e!==\'B\'||J t.D.E.1k.C.1v!==\'B\'||J t.D.E.1p.C.1O!==\'B\'){a=t.D.E.C.4m.M();1r=a.P(/4n \\$I\\.[A-Z]{6}\\.2Q:{.+?u h=v\\.([A-Z]{6})\\.d\\[g\\.([A-Z]{6})\\];G\\(h==R\\){F 2l;}u i=\\(\\(h\\.([A-Z]{6})!=0\\) \\? v\\.([A-Z]{6})\\.d\\[h\\.\\3\\] : R\\);/);u c=1r[1];u d=1r[2];u e=1r[3];u f=1r[4];t.D.E.C.2c=B(){F v[c]};t.D.E.C.2e=B(){F v[f]};t.D.E.1k.C.1v=B(){F v[d]};t.D.E.1p.C.1O=B(){F v[e]}}G(J t.D.E.1c.C.1v!==\'B\'){a=t.O.1w.3h.C.3j.M();u g=a.P(/u [a-z]=v\\.[A-Z]{6}\\.[A-Z]{6}\\(v\\.[A-Z]{6}\\.([A-Z]{6})\\);/)[1];t.D.E.1c.C.1v=B(){F v[g]}}G(J t.D.E.1G.C.Q!==\'B\'){a=t.D.E.C.3m.M();u h=a.P(/F [a-z]\\.([A-Z]{6});\\}$/)[1];t.D.E.1G.C.Q=B(){F v[h]}}G(J t.D.E.1G.C.1n!==\'B\'){a=t.O.1w.2f.C.3B.M();u i=a.P(/F [a-z]\\.([A-Z]{6});/)[1];t.D.E.1G.C.1n=B(){F v[i]}}G(J t.D.E.1p.C.Q!==\'B\'){a=t.D.E.C.3D.M();u j=a.P(/F [a-z]\\.([A-Z]{6});\\}$/)[1];t.D.E.1p.C.Q=B(){F v[j]}}G(J t.D.E.1p.C.1n!==\'B\'){a=t.O.1w.2f.C.3F.M();u k=a.P(/F [a-z]\\.([A-Z]{6});/)[1];t.D.E.1p.C.1n=B(){F v[k]}}G(J t.D.E.1k.C.1j!==\'B\'){a=t.D.E.1k.C.$N.M();u l=a.P(/v\\.([A-Z]{6})=\\(\\([a-z]>>3I\\)&15\\);/)[1];t.D.E.1k.C.1j=B(){F v[l]}}G(J t.D.E.1k.C.1g!==\'B\'){a=t.O.1w.2f.C.2N.M();u m=a.P(/F v\\.[A-Z]{6}\\.([A-Z]{6});/)[1];t.D.E.1k.C.1g=B(){F v[m]}}G(J t.D.E.1c.C.1j!==\'B\'){a=t.D.E.1c.C.$N.M();u n=a.P(/v\\.([A-Z]{6})=\\(\\(g>>9\\)&15\\);/)[1];t.D.E.1c.C.1j=B(){F v[n]}}G(J t.D.E.1c.C.1g!==\'B\'){a=t.D.E.1c.C.$N.M();u o=a.P(/v\\.([A-Z]{6})=\\(\\(g>>1\\)&3Q\\);/)[1];t.D.E.1c.C.1g=B(){F v[o]}}G(J t.D.E.1F.C.1j!==\'B\'){a=t.D.E.1F.C.$N.M();u p=a.P(/v\\.([A-Z]{6})=\\(\\([a-z]>>3U\\)&15\\);/)[1];t.D.E.1F.C.1j=B(){F v[p]}}G(J t.D.E.1F.C.1g!==\'B\'){a=t.O.1w.46.C.2N.M();u q=a.P(/F v\\.[A-Z]{6}\\.([A-Z]{6});/)[1];t.D.E.1F.C.1g=B(){F v[q]}}},2p:B(){v.1L=H L.5i.25.4c().1s({4e:2l,4g:2,4h:2,4i:\'%\'});t.2X.2Y.1b().30().34.21={3a:\'4u "4v"\',c:\'#4A\',w:24,o:R,s:R};v.S=H L.1a.S.2i(H L.1a.2j.5a());v.S.1f(H L.1a.1A.3e().1s({20:6}));v.S.1f(H L.1a.1J.1K(\'3g\').1s({2o:\'3i\',1Z:\'1M-10-2r\'}));v.S.1f(v.1q=H L.1a.S.2i(H L.1a.2j.3l(8)).1s({1Z:\'1M-10-3n\'}));v.S.1f(v.1z=H 1t.1i.3o.3p(\'3q 1u 10 3s\').1s({3t:\'3u-3v\',3w:\'3x\',3y:\'2u\'}));v.1z.2z(\'3A\',v.2v,v);1t.1i.10.1B.1U().3C(v.S,4)},2v:B(){v.1z.2w(\'2u\');u a=v.23;u b=t.O.1P.1b().1Q();u c=b.1W();u d={};1e(u e 1u a.1V){u f=a.1V[e]/a.1m;u g=v.1L.25(f*2C);t.2D.2E.3L(e,d);u x=d.b;u y=d.c;u h=v.2F(g,t.O.1x.2S);h.3M(x*b.2G()+(b.2G()-h.3O().26)/2);h.3P(y*b.2I()+b.2I()/12);c.3R(h);v.1E.1R(h)}},2K:B(){u a=t.O.1P.1b().1Q().1W();1e(u i=0;i<v.1E.2L;i++){a.3V(v.1E[i])}v.1E=[]},2A:B(c){v.1q.3W();v.2K();u d=c.3X().28();G(d.3Y()===t.D.E.3Z.40.41){v.S.42();F}v.S.45();u e=L.1A.1X.1Y();u f=v.2O(d.4a(),d.4b());G(f.1m>0){u g=[];G(f.1l.1I>0){g.1R({1T:e.1D(\'22:4f 1I\'),1d:f.1l.1I/f.1m,1h:3})}1e(u h 1u f.1l.1y){g.1R({1T:f.27.1y[h],1d:f.1l.1y[h]/f.1m,1h:2,1H:-h})}1e(u h 1u f.1l.1C){g.1R({1T:e.1D(\'22:4k:\')+\' \'+f.27.1C[h],1d:f.1l.1C[h]/f.1m,1h:1,1H:h})}g.4l(B(a,b){G(b.1d===a.1d){G(a.1h===b.1h){F b.1H-a.1H}F a.1h-b.1h}F b.1d-a.1d});1e(u i=0;i<g.2L;i++){v.1q.1f(H L.1a.1J.1K(g[i].1T),{29:i,2a:0});v.1q.1f(H L.1a.1J.1K(v.1L.25(g[i].1d*2C)).1s({1Z:\'1M-10-2r\'}),{29:i,2a:1})}v.23=f;v.1z.2w(\'4o\')}1S{v.1q.1f(H L.1a.1J.1K(e.1D(\'22:4p\')),{29:0,2a:0})}},2O:B(a,b){u c=t.D.4q.1b().4r();u d=0;u e=0;u f={};u g={};u h={};u i={};u j={};1e(u x=a-3;x<=a+3;x++){1e(u y=b-3;y<=b+3;y++){u k=c.4s(x,y);G(k===R||K.2t.4t(k.31)===-1){32}u l=k.1j()+0.5;u m=33.4w((x-a)*(x-a)+(y-b)*(y-b));G(m>l){32}u n=k.1g()*(l-m)/l;d+=n;j[t.2D.2E.4x(x,y)]=n;G(k.31===t.D.E.1N.2V){e+=n}1S{u o=c.4y(x,y);u p=o.2c().d[k.1v()];G(!p.1O()){G(!(p.Q()1u g)){g[p.Q()]=0;i[p.Q()]=p.1n()}g[p.Q()]+=n}1S{u q=o.2e().d[p.1O()];G(!(q.Q()1u f)){f[q.Q()]=0;h[q.Q()]=q.1n()}f[q.Q()]+=n}}}}F{1l:{1I:e,1y:f,1C:g},27:{1y:h,1C:i},1m:d,1V:j}},2F:B(a,b){u c=t.O.1P.1b().1Q().1W();u d=t.O.1P.1b().1Q().4z();u e=2b.35(\'37\');u f=c.4C(\'37\',R);f.4D(e);f.4E(4F);f.4G(4H);u g=24;u h=d.4I(\'21\',a);h+=h%2;e.26=h+12;e.20=g+12;u i=t.T.4J.4K.1b().4L(\'4M/4N/1i/4O.4P\');u j=e.4Q(\'2d\');u k=K.V(\'39\',b);j.17(i,k.X,k.W,k.19(),k.Y(),0,0,6,4);k=K.V(\'2W\',b);j.17(i,k.X,k.W,k.19(),k.Y(),0,4,6,g);k=K.V(\'2h\',b);j.17(i,k.X,k.W,k.19(),k.Y(),0,4+g,6,8);k=K.V(\'2m\',b);j.17(i,k.X,k.W,k.19(),k.Y(),6,0,h,4);k=K.V(\'2M\',b);j.17(i,k.X,k.W,k.19(),k.Y(),6,4,h,g);k=K.V(\'2J\',b);j.17(i,k.X,k.W,k.19(),k.Y(),6,4+g,h,8);k=K.V(\'1D\',b);j.17(i,k.X,k.W,k.19(),k.Y(),6+h,0,6,4);k=K.V(\'2Z\',b);j.17(i,k.X,k.W,k.19(),k.Y(),6+h,4,6,g);k=K.V(\'2H\',b);j.17(i,k.X,k.W,k.19(),k.Y(),6+h,4+g,6,8);u l=t.2X.2Y.1b().30().34.21;j.2o=l.3a;j.4U=l.c;j.4V=\'4W\';j.4X=\'4Y\';j.4Z(a,6+33.51(h/2),16);f.52(e.26);f.53(e.20);F f}}})}B 2g(){57{G(J L!==\'58\'&&L.1A.1X.1Y()&&L.1A.1X.1Y().59){2s();K.1U().2k()}1S{3c(2g,3d)}}5c(e){2x.2y(\'K: \',e.M())}}3c(2g,3d)};u s=2b.35(\'5d\');s.5e=\'(\'+r.M()+\')();\';s.2q=\'1M/5f\';2b.5g(\'5h\')[0].54(s)})();',62,329,'|||||||||||||||||||||||||||||ClientLib|var|this||||||function|prototype|Data|WorldSector|return|if|new||typeof|InfluenceMeter|qx|toString|ctor|Vis|match|get_Id|null|container|Draw|Segment|GetDrawSegment|y1|x1|get_Height||region|||||||drawImage||get_Width|ui|GetInstance|WorldObjectRuin|influence|for|add|get_Level|priority|gui|get_TerritoryRadius|WorldObjectCity|groups|total|get_Name|PlateColorSegmentOffsets|Player|influenceTable|matches|set|webfrontend|in|get_PlayerDataId|Region|EBackgroundPlateColor|alliances|regionDisplayLink|core|RegionPointOfInterestStatusInfo|players|tr|regionTextElements|WorldObjectNPCBase|Alliance|weight|forgotten|basic|Label|influenceFormat|text|ObjectType|get_AllianceDataId|VisMain|get_Region|push|else|name|getInstance|objects|get_Scene|Init|getApplication|textColor|height|region_influence_meter|tnf|currentInfluences||format|width|names|getObject|row|column|document|get_Players||get_Alliances|RegionCity|waitForGame|bl|Composite|layout|initialize|false|ts|initializeHacks|font|initializeUserInterface|type|value|createInfluenceMeter|WorldObjectTypes|excluded|onRegionDisplayLinkClick|setVisibility|console|log|addListener|onStatusInfoAppear|use|100|Base|MathUtil|createRegionText|get_GridWidth|br|get_GridHeight|bs|cleanUpRegionTextElements|length|fs|get_BaseLevel|calculateInfluences|63|City|Za|Black|64|strict|NPCBase|ls|Res|ResMain|rs|GetGamedata|Type|continue|Math|fonts|createElement||canvas||tl|css|DrawSegments|setTimeout|1000|Spacer|Ruin|Influence|RegionRuin|font_size_14|get_AllianceId|statics|Grid|GetPlayerAllianceId|tooltip|widgets|SelectableLabel|Display|x2|view|appearance|clickable|link|cursor|pointer|visibility|appear|click|get_AllianceName|addAt|GetPlayerId|y2|get_PlayerName|defer|Class|0x10|White|setObject|DecodeCoordId|set_X|Cyan|get_DomElement|set_Y|0xff|Attach|Orange|66|0x12|Detach|removeAll|getTarget|get_Type|WorldObjectPointOfInterest|EPOIType|TunnelExit|exclude|||show|RegionNPCBase|z_|members||get_RawX|get_RawY|NumberFormat|define|groupingUsed|the|minimumFractionDigits|maximumFractionDigits|postfix|61|player|sort|SetDetails|case|visible|none|MainData|get_World|GetObjectFromPosition|indexOf|24pt|Arial|sqrt|EncodeCoordId|GetWorldSectorByCoords|get_View|FF3333|loaded|CreateElement|set_DomElement|set_Layer|98|set_ZOrder|10000|calculateTextWidth|Html|ImageCache|GetImage|baseview|neutral|font_backdrop_atlas|png|getContext|drawSegments|singleton|extend|fillStyle|textAlign|center|textBaseline|middle|fillText||floor|set_Width|set_Height|appendChild|||try|undefined|initDone|VBox|Object|catch|script|innerHTML|javascript|getElementsByTagName|head|util'.split('|'),0,{}))
 }
 /*
 End of TA The Movement
+*/
+
+/*
+Start of TA Repair Time of Death
+*/
+if (Disable_RepairTimeofDeath == true){
+'use strict';
+
+(function() {
+	var main = function() {
+		'use strict';
+
+		function createRepairTimeOfDeath() {
+			console.log('RepairTimeOfDeath loaded');
+
+			qx.Class.define('RepairTimeOfDeath', {
+				type: 'singleton',
+				extend: qx.core.Object,
+				members: {
+					offenseRepairTimeLabel: null,
+
+					initialize: function() {
+						this.initializeHacks();
+						this.initializeUserInterface();
+
+						webfrontend.gui.region.RegionGhostStatusInfo.getInstance().addListener('appear', this.onRegionGhostStatusInfoAppear, this);
+					},
+
+					initializeHacks: function() {
+						if (typeof webfrontend.gui.region.RegionGhostStatusInfo.prototype.getObject !== 'function') {
+							var source = webfrontend.gui.region.RegionGhostStatusInfo.prototype.setObject.toString();
+							var objectMemberName = source.match(/^function \(([A-Za-z]+)\)\{.*this\.([A-Za-z_]+)=\1;/)[2];
+
+							/**
+							 * @returns {ClientLib.Vis.Region.RegionGhostCity}
+							 */
+							webfrontend.gui.region.RegionGhostStatusInfo.prototype.getObject = function() {
+								return this[objectMemberName];
+							};
+						}
+					},
+
+					initializeUserInterface: function() {
+						var container = new qx.ui.container.Composite(new qx.ui.layout.HBox(2));
+						container.add(new qx.ui.basic.Image('webfrontend/ui/icons/icn_repair_off_points.png').set({
+							alignY: 'middle',
+							AutoFlipH: false,
+							toolTipText: qx.core.Init.getApplication().tr('tnf:offense repair time')
+						}));
+						container.add(this.offenseRepairTimeLabel = new qx.ui.basic.Label().set({
+							alignY: 'middle',
+							maxWidth: 370,
+							rich: true,
+							textColor: 'text-region-value',
+							wrap: true
+						}));
+
+						var regionGhostStatusInfo = webfrontend.gui.region.RegionGhostStatusInfo.getInstance();
+						regionGhostStatusInfo.addAt(container, regionGhostStatusInfo.getChildren().length - 2);
+					},
+
+					onRegionGhostStatusInfoAppear: function() {
+						var cityId = webfrontend.gui.region.RegionGhostStatusInfo.getInstance().getObject().get_Id();
+						var city = ClientLib.Data.MainData.GetInstance().get_Cities().GetCity(cityId);
+
+						var stepOfDeath = city.GetResourceData(ClientLib.Base.EResourceType.RepairChargeBase).Step;
+						var repairCharge = city.get_RepairOffenseResources().get_RepairChargeOffense();
+						var repairTimeAtDeath = ClientLib.Base.Resource.GetResourceCountStep(repairCharge, stepOfDeath);
+						var time = ClientLib.Data.MainData.GetInstance().get_Time();
+
+						this.offenseRepairTimeLabel.setValue(qx.core.Init.getApplication().tr('tnf:offense repair time') + ': '
+							+ phe.cnc.Util.getTimespanString(time.GetTimeSpan(repairTimeAtDeath)) + ' / '
+							+ phe.cnc.Util.getTimespanString(time.GetTimeSpan(repairCharge.Max))
+						);
+					}
+				}
+			});
+		}
+
+		function waitForGame() {
+			try {
+				if (typeof qx !== 'undefined' && qx.core.Init.getApplication() && qx.core.Init.getApplication().initDone) {
+					createRepairTimeOfDeath();
+					RepairTimeOfDeath.getInstance().initialize();
+				}
+				else {
+					setTimeout(waitForGame, 1000);
+				}
+			}
+			catch (e) {
+				console.log('RepairTimeOfDeath: ', e.toString());
+			}
+		}
+
+		setTimeout(waitForGame, 1000);
+	};
+
+	var script = document.createElement('script');
+	script.innerHTML = '(' + main.toString() + ')();';
+	script.type = 'text/javascript';
+	document.getElementsByTagName('head')[0].appendChild(script);
+})();
+}
+/*
+End of TA Repair Time of Death
 */
