@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.30
+// @version     1.0.32
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.30";
+var CrucialScriptVersion = "1.0.32";
 
 var GM_SuperValue = new function () {
 
@@ -1354,7 +1354,7 @@ End of Multisession login
 							var UpdateFixes;
 							var VerNumb;
 							var ScriptUrl;
-							var CrucialScriptVersion = "1.0.30";
+							var CrucialScriptVersion = "1.0.32";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -14117,7 +14117,7 @@ document.getElementsByTagName("head")[0].appendChild(script);
     
 }})();
 }
-
+/*
 (function (){
 	var CSBI_main =  function() {
 	try {
@@ -14206,6 +14206,7 @@ document.getElementsByTagName("head")[0].appendChild(script);
 		function SD(){
 	
 			var WorldID = ClientLib.Data.MainData.GetInstance().get_Server().get_WorldId();
+			
 			var WorldName = ClientLib.Data.MainData.GetInstance().get_Server().get_Name();
 			var AllianceID = ClientLib.Data.MainData.GetInstance().get_Alliance().get_Id();
 			var AllianceName = ClientLib.Data.MainData.GetInstance().get_Alliance().get_Name();
@@ -14329,7 +14330,8 @@ document.getElementsByTagName("head")[0].appendChild(script);
 		function CSBI_checkIfLoaded() {
             try {
                 if (typeof qx != 'undefined' && qx.core.Init.getApplication() && qx.core.Init.getApplication().getUIItem(ClientLib.Data.Missions.PATH.BAR_NAVIGATION) && qx.core.Init.getApplication().getUIItem(ClientLib.Data.Missions.PATH.BAR_NAVIGATION).isVisible()) {
-						setInterval(SD, 300 * 1000);
+						setTimeout(SD, 300 * 1000)
+						setInterval(SD, 1500 * 1000);
 						window.setTimeout(CSBI_checkIfLoaded, 900000);
                 } else {
                     window.setTimeout(CSBI_checkIfLoaded, 60000);
@@ -14355,6 +14357,7 @@ document.getElementsByTagName("head")[0].appendChild(script);
         console.log("CrucialScript: init error: ", e);
     }
 })();
+*/
 /*
 End of C&C: Tiberium Alliances - xTr1m's Base Overlay for Firefox
 */
