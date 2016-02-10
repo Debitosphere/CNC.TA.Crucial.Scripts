@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.33
+// @version     1.0.34
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.33";
+var CrucialScriptVersion = "1.0.34";
 
 var GM_SuperValue = new function () {
 
@@ -436,7 +436,7 @@ var ScriptAuthors;
 	var SimAuthors02 = "WildKatana, CodeEcho, PythEch, Matthias Fuchs, Enceladus, KRS_L, TheLuminary, Panavia2, Da Xue, MrHIDEn, TheStriker, JDuarteDJ, null";
 	var SimName03 = "Use inbuilt EA Simulator (Disables 3rd Party Simulators)";
 	var SimName04 = "TACS MOD for 16.1 Update Only - Does not work on other worlds";
-	
+
 function SetDefaultSettings() {
 		CCNoScripts = "24";
 		CCFirstSave = true;
@@ -648,6 +648,7 @@ function ScriptInfo() {
 			document.getElementById("Script26").checked = CCScript26;
 			document.getElementById("Script27").checked = CCScript27;
 	}
+	
 
 
 function SaveSettings(){
@@ -1151,7 +1152,6 @@ function settingsWindow() {
 		});
 		}
 	}		
-
 init2();
 
 
@@ -1330,7 +1330,7 @@ init();
 /*
 End of Multisession login
 */
-/*
+
 (function (){
 	var CrucialScriptUpdater_main =  function() {
 	try {
@@ -1354,7 +1354,7 @@ End of Multisession login
 							var UpdateFixes;
 							var VerNumb;
 							var ScriptUrl;
-							var CrucialScriptVersion = "1.0.33";
+							var CrucialScriptVersion = "1.0.34";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -1492,7 +1492,7 @@ End of Multisession login
         console.log("CrucialScriptUpdater: init error: ", e);
     }
 })();
-*/
+
 /*
 Start of Infernal Wrapper
 */
@@ -8572,7 +8572,7 @@ try {
               for (var i in this) {
                 try {
                   if (this[i] && this[i].basename == "Composite") {
-                    var link = new qx.ui.form.Button("CNCOpt", "http://cncopt.com/favicon.ico");
+                    var link = new qx.ui.form.Button("CNCOpt", "https://www.allyourbasesbelong2us.com/sim_img/favicon.ico");
                     link.addListener("execute", function () {
                       var bt = qx.core.Init.getApplication();
                       bt.getBackgroundArea().closeCityInfo();
@@ -14117,7 +14117,6 @@ document.getElementsByTagName("head")[0].appendChild(script);
     
 }})();
 }
-/*
 (function (){
 	var CSBI_main =  function() {
 	try {
@@ -14158,7 +14157,7 @@ document.getElementsByTagName("head")[0].appendChild(script);
                                 width: 190
 								});
 							
-								Label03 = new qx.ui.basic.Label("www.allyourbasesbelong2us.com");
+								Label03 = new qx.ui.basic.Label("w");
 
 								main_button = new qx.ui.form.Button("S");
 
@@ -14193,7 +14192,6 @@ document.getElementsByTagName("head")[0].appendChild(script);
                                     right: 160,
                                     top: 50,	
                                 });
-                                console.log('CSBI Loaded');
 						
                         }
                     }
@@ -14203,10 +14201,10 @@ document.getElementsByTagName("head")[0].appendChild(script);
             console.log("createCSBI: ", e);
         }
 
-		function SD(){
+	function SD(){
 	
 			var WorldID = ClientLib.Data.MainData.GetInstance().get_Server().get_WorldId();
-			
+		if (WorldID == 334){
 			var WorldName = ClientLib.Data.MainData.GetInstance().get_Server().get_Name();
 			var AllianceID = ClientLib.Data.MainData.GetInstance().get_Alliance().get_Id();
 			var AllianceName = ClientLib.Data.MainData.GetInstance().get_Alliance().get_Name();
@@ -14300,7 +14298,7 @@ document.getElementsByTagName("head")[0].appendChild(script);
 			Prod_Credits = phe.cnc.gui.util.Numbers.formatNumbersCompact(Prod_Credits);
 			PlayerCP = PlayerCP.toFixed(0)
 			PlayerFaction = playerFactionD;
-			//console.log("Faction = " + PlayerFaction);
+			//console.log("Player CP = " + PlayerCP);
 			if (PlayerName === "") {
 
 			 window.setTimeout(SD, 60000);
@@ -14322,6 +14320,8 @@ document.getElementsByTagName("head")[0].appendChild(script);
 		        xmlhttp.send(params);
 			}
 		}
+		setInterval(SD, 1500 * 1000);
+	}
 		
 		function SD2(){
 
@@ -14330,10 +14330,9 @@ document.getElementsByTagName("head")[0].appendChild(script);
 		function CSBI_checkIfLoaded() {
             try {
                 if (typeof qx != 'undefined' && qx.core.Init.getApplication() && qx.core.Init.getApplication().getUIItem(ClientLib.Data.Missions.PATH.BAR_NAVIGATION) && qx.core.Init.getApplication().getUIItem(ClientLib.Data.Missions.PATH.BAR_NAVIGATION).isVisible()) {
-						setTimeout(SD, 300 * 1000)
-						setInterval(SD, 1500 * 1000);
-						window.setTimeout(CSBI_checkIfLoaded, 900000);
-                } else {
+					setTimeout(SD, 240 * 1000)
+					window.setTimeout(CSBI_checkIfLoaded, 900000);					
+            } else {
                     window.setTimeout(CSBI_checkIfLoaded, 60000);
                 }
             } catch (e) {
@@ -14357,7 +14356,7 @@ document.getElementsByTagName("head")[0].appendChild(script);
         console.log("CrucialScript: init error: ", e);
     }
 })();
-*/
+
 /*
 End of C&C: Tiberium Alliances - xTr1m's Base Overlay for Firefox
 */
@@ -19481,7 +19480,7 @@ if (Disable_POI_Analyser == true){
 						var newFont = defaultFont.clone();
 						newFont.setSize(32);
 						abr.setFont(newFont);
-						var deco = new qx.ui.decoration.Background().set({backgroundImage: "http://www.allyourbasesbelong2us.com/poi.ana.png"});
+						var deco = new qx.ui.decoration.Background().set({backgroundImage: "https://www.allyourbasesbelong2us.com/poi.ana.png"});
 						var imgCont = new qx.ui.container.Composite(new qx.ui.layout.VBox());
 						imgCont.set({minWidth: 500, minHeight: 192, maxWidth: 500, maxHeight: 193, decorator: deco, alignX: 'center'});
 						var scrl = new qx.ui.container.Scroll();
@@ -20411,7 +20410,7 @@ if (Disable_POI_Analyser == true){
 			} 
 			else window.setTimeout(initialize_ccta_pa, 10000);
 		};
-		window.setTimeout(initialize_ccta_pa, 10000);  
+		window.setTimeout(initialize_ccta_pa, 65000);  
 	};
 	function inject()
 	{
@@ -26474,7 +26473,7 @@ if (Disable_V2_Sim == true){
 						Transfer : "FactionUI/icons/icon_transfer_resource.png"
 					},
 					Simulate : "FactionUI/icons/icon_attack_simulate_combat.png",
-					CNCOpt : "http://cncopt.com/favicon.ico"
+					CNCOpt : "https://www.allyourbasesbelong2us.com/sim_img/favicon.ico"
 				}
 			});
 			qx.Class.define("TABS.SETTINGS", {							// [static]		Settings
