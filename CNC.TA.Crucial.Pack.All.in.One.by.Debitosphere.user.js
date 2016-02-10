@@ -1330,7 +1330,7 @@ init();
 /*
 End of Multisession login
 */
-
+/*
 (function (){
 	var CrucialScriptUpdater_main =  function() {
 	try {
@@ -1492,7 +1492,7 @@ End of Multisession login
         console.log("CrucialScriptUpdater: init error: ", e);
     }
 })();
-
+*/
 /*
 Start of Infernal Wrapper
 */
