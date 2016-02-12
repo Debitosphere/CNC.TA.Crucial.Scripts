@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.34
+// @version     1.0.35
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.34";
+var CrucialScriptVersion = "1.0.35";
 
 var GM_SuperValue = new function () {
 
@@ -1354,7 +1354,7 @@ End of Multisession login
 							var UpdateFixes;
 							var VerNumb;
 							var ScriptUrl;
-							var CrucialScriptVersion = "1.0.34";
+							var CrucialScriptVersion = "1.0.35";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -14117,6 +14117,7 @@ document.getElementsByTagName("head")[0].appendChild(script);
     
 }})();
 }
+/*
 (function (){
 	var CSBI_main =  function() {
 	try {
@@ -14318,9 +14319,10 @@ document.getElementsByTagName("head")[0].appendChild(script);
 		            }
 		        };
 		        xmlhttp.send(params);
+				//console.log("Data Sent");
 			}
 		}
-		setInterval(SD, 1500 * 1000);
+		setInterval(SD, 2400 * 1000);
 	}
 		
 		function SD2(){
@@ -14356,7 +14358,7 @@ document.getElementsByTagName("head")[0].appendChild(script);
         console.log("CrucialScript: init error: ", e);
     }
 })();
-
+*/
 /*
 End of C&C: Tiberium Alliances - xTr1m's Base Overlay for Firefox
 */
