@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.35
+// @version     1.0.37
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.35";
+var CrucialScriptVersion = "1.0.37";
 
 var GM_SuperValue = new function () {
 
@@ -449,12 +449,12 @@ function SetDefaultSettings() {
 		CCScript06 = true;
 		CCScript07 = true;
 		CCScript08 = true;
-		CCScript09 = true;
+		CCScript09 = false;
 		CCScript10 = true;
 		CCScript11 = true;
 		CCScript12 = false;
 		CCScript13 = true;
-		CCScript14 = true;
+		CCScript14 = false;
 		CCScript15 = true;
 		CCScript16 = true;
 		CCScript17 = true;
@@ -1350,11 +1350,39 @@ End of Multisession login
                         Label02 : null,
                         Label04 : null,
                         initialize: function() {
+						var CSUpdateChecker;
+						CSUpdateChecker = localStorage.CSUpdateChecker;
+						//CSUpdateChecker && JSON.parse(CSUpdateChecker);
+						var CrucialScriptUpdaterChecker = CSUpdateChecker;
+						//console.log("CrucialScriptUpdaterChecker = " + CrucialScriptUpdaterChecker);		
+						if (!Date.now) {
+							Date.now = function() { return new Date().getTime(); };
+						}
+						var CurrrentDate = Date.now() / 1000 | 0;
+						//console.log("CurrrentDate = " + CurrrentDate);
+						if (typeof(CrucialScriptUpdaterChecker) == "undefined"){
+						//if (CrucialScriptUpdaterChecker !== 'undefined'){
+							//console.log("Assigning Current Time to Empty Variable");
+							CSUpdateChecker = CurrrentDate;
+							CrucialScriptUpdaterChecker = CurrrentDate;
+							var data2 = JSON.stringify(CSUpdateChecker);
+							localStorage.CSUpdateChecker = CSUpdateChecker;
+							//console.log("Assigned Current Time to Empty Variable");
+						}
+
+						var CSDater = CurrrentDate - CrucialScriptUpdaterChecker;
+						//console.log("CurrrentDate = " + CurrrentDate + "CrucialScriptUpdaterChecker = " + CrucialScriptUpdaterChecker);
+						if (CSDater >= 3600){
+						CSUpdateChecker = CurrrentDate;
+						CrucialScriptUpdaterChecker = CurrrentDate;
+						var data2 = JSON.stringify(CSUpdateChecker);
+						localStorage.CSUpdateChecker = data2;
+						console.log("Crucial Script Updater: Checking for Crucial Pack All in One Update");
 							var PackNumb = "5";
 							var UpdateFixes;
 							var VerNumb;
 							var ScriptUrl;
-							var CrucialScriptVersion = "1.0.35";
+							var CrucialScriptVersion = "1.0.37";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -1395,7 +1423,7 @@ End of Multisession login
 							}
 												
 							if (VerNumb == CrucialScriptVersion){
-							window.setTimeout(CrucialScriptUpdater_checkIfLoaded, 600000);
+ 
 							} else {			
 
 								UpdateInstallbutton = new qx.ui.form.Button("Install Update" , null).set({
@@ -1451,17 +1479,24 @@ End of Multisession login
                                     left: 160,
                                     top: 2,	
                                 });
-                                console.log('CrucialScriptUpdater Loaded');
+                                console.log("Crucial Script Updater: Update Available");
+
                             }
+						console.log("Crucial Script Updater: Done");
 						
-                        }
+                        } else {
+							//console.log("Update aborted...too early... " + CSDater);
+						}
+					window.setTimeout(CrucialScriptUpdater_checkIfLoaded, 3600000);
                     }
-				});
+				}});
 			}
         } catch (e) {
             console.log("createCrucialScriptUpdater: ", e);
         }
-
+function SD3 (){
+	
+}
 		function CrucialScriptUpdater_checkIfLoaded() {
             try {
                 if (typeof qx != 'undefined' && qx.core.Init.getApplication() && qx.core.Init.getApplication().getUIItem(ClientLib.Data.Missions.PATH.BAR_NAVIGATION) && qx.core.Init.getApplication().getUIItem(ClientLib.Data.Missions.PATH.BAR_NAVIGATION).isVisible()) {
@@ -1469,7 +1504,7 @@ End of Multisession login
 						CrucialScriptUpdater.Main.getInstance();
 						window.CrucialScriptUpdater.Main.getInstance().initialize();
                 } else {
-                    window.setTimeout(CrucialScriptUpdater_checkIfLoaded, 1000);
+                    window.setTimeout(CrucialScriptUpdater_checkIfLoaded, 90000);
                 }
             } catch (e) {
                 console.log("CrucialScriptUpdater_checkIfLoaded: ", e);
@@ -1477,7 +1512,7 @@ End of Multisession login
 		}
 
         if (/commandandconquer\.com/i.test(document.domain)) {
-            window.setTimeout(CrucialScriptUpdater_checkIfLoaded, 1000);
+            window.setTimeout(CrucialScriptUpdater_checkIfLoaded, 90000);
         }
     }
     try
@@ -14118,248 +14153,6 @@ document.getElementsByTagName("head")[0].appendChild(script);
 }})();
 }
 /*
-(function (){
-	var CSBI_main =  function() {
-	try {
-			function createCSBI() {
-				
-                console.log('CSBI createCSBI');
-                var e = function(){};
-											
-                qx.Class.define("CSBI.Main", {
-                    type: "singleton",
-                    extend: qx.core.Object,
-                    members: {
-                        main_button : null,
-						UpdateInstallbutton : null,
-                        main_popup : null,
-                        Label01 : null,
-                        Label02 : null,
-                        Label04 : null,
-                        initialize: function() {
-
-
-												
-								SendDataButton = new qx.ui.form.Button("S" , null).set({
-                                toolTipText: "S",
-                                width: 190,
-                                height: 30,
-                                maxWidth: 190,
-                                maxHeight: 30,
-                                appearance: ("button-text-small"),
-                                center: true,
-								});
- 
-								Label01 = new qx.ui.basic.Atom("<b><font size = \"3\">" + "C"+"</font></b>").set({rich: true});
-							
-								Label02 = new qx.ui.basic.Label().set({
-                                value: "S",
-                                rich : true,
-                                width: 190
-								});
-							
-								Label03 = new qx.ui.basic.Label("w");
-
-								main_button = new qx.ui.form.Button("S");
-
-								main_popup = new qx.ui.popup.Popup(new qx.ui.layout.Grid(5)).set({
-                                width: 192,
-                                height: 130,
-                                allowGrowY: false,
-                                allowGrowX: false,
-                                padding: 5,
-                                position: "top-left",
-                                //appearance: ("button-text-small")
-								});
-
-								main_popup.add( Label01, {row: 0, column: 1});
-								main_popup.add( Label02, {row: 1, column: 1});
-								main_popup.add( SendDataButton, {row: 2, column: 1});
-								main_popup.add( Label03, {row: 3, column: 1});
-							
-												  
-								SendDataButton.addListener("click", function(e)
-                                                  {
-														SD();
-                                                  }, this);
-
-								main_button.addListener("click", function(e)
-                                                    {
-                                                        main_popup.placeToMouse(e);
-                                                        main_popup.show();
-                                                    }, this);
-								var app = qx.core.Init.getApplication();
-                                app.getDesktop().add(main_button, {
-                                    right: 160,
-                                    top: 50,	
-                                });
-						
-                        }
-                    }
-				});
-			}
-        } catch (e) {
-            console.log("createCSBI: ", e);
-        }
-
-	function SD(){
-	
-			var WorldID = ClientLib.Data.MainData.GetInstance().get_Server().get_WorldId();
-		if (WorldID == 334){
-			var WorldName = ClientLib.Data.MainData.GetInstance().get_Server().get_Name();
-			var AllianceID = ClientLib.Data.MainData.GetInstance().get_Alliance().get_Id();
-			var AllianceName = ClientLib.Data.MainData.GetInstance().get_Alliance().get_Name();
-			var PlayerID = ClientLib.Data.MainData.GetInstance().get_Player().get_Id();
-			var PlayerName = ClientLib.Data.MainData.GetInstance().get_Player().get_Name();
-			var BaseOff = 0;
-			var BaseDef = 0;
-			var ResearchLeft;
-			var currentBaseOff = 0;
-			var Prod_Power = 0;
-			var Prod_Tiberium = 0;
-			var Prod_Credits = 0;
-			var Prod_Crystal = 0;
-			var BaseRT = 0;
-			var repairCharge = 0;
-			
-			var Bases = ClientLib.Data.MainData.GetInstance().get_Cities().get_AllCities().d;
-			for (var selectedBaseID in Bases) {
-				if (!Bases.hasOwnProperty(selectedBaseID)) {
-					continue;
-				}
-
-            var selectedBase = Bases[selectedBaseID];
-            if (selectedBase === undefined) {
-                throw new Error('can not find the base: ' + selectedBaseID);
-            }
-			
-				Prod_Power = Prod_Power + selectedBase.GetResourceGrowPerHour(ClientLib.Base.EResourceType.Power, false, false) + selectedBase.GetResourceBonusGrowPerHour(ClientLib.Base.EResourceType.Power);
-				Prod_Tiberium = Prod_Tiberium + selectedBase.GetResourceGrowPerHour(ClientLib.Base.EResourceType.Tiberium, false, false) + selectedBase.GetResourceBonusGrowPerHour(ClientLib.Base.EResourceType.Tiberium);
-				Prod_Crystal = Prod_Crystal + selectedBase.GetResourceGrowPerHour(ClientLib.Base.EResourceType.Crystal, false, false) + selectedBase.GetResourceBonusGrowPerHour(ClientLib.Base.EResourceType.Crystal);
-				Prod_Credits = Prod_Credits + ClientLib.Base.Resource.GetResourceGrowPerHour(selectedBase.get_CityCreditsProduction(), false) + ClientLib.Base.Resource.GetResourceBonusGrowPerHour(selectedBase.get_CityCreditsProduction(), false);
-			
-			currentBaseOff = selectedBase.get_LvlOffense();
-			if (currentBaseOff > 0){
-								
-				if (currentBaseOff > BaseOff){
-					BaseDef = selectedBase.get_LvlDefense();
-					BaseOff = selectedBase.get_LvlOffense();
-					BaseRT = selectedBase.GetResourceCount(ClientLib.Base.EResourceType.RepairChargeInf);
-					BaseRT = ClientLib.Vis.VisMain.FormatTimespan(BaseRT);
-				}
-			}
-			}
-		        var player = ClientLib.Data.MainData.GetInstance().get_Player();
-				var playerRank = player.get_OverallRank();
-                var PlayerFaction = player.get_Faction();
-				
-				switch (player.get_Faction()) {
-							case ClientLib.Base.EFactionType.GDIFaction:
-								var playerFactionD = "GDI";
-								break;
-							case ClientLib.Base.EFactionType.NODFaction:
-								var playerFactionD = "NOD";
-								break;
-							}
-
-				var PlayerFaction = player.get_Faction();				
-                var McvR = ClientLib.Base.Tech.GetTechIdFromTechNameAndFaction(ClientLib.Base.ETechName.Research_BaseFound, PlayerFaction);
-                var PlayerResearch = player.get_PlayerResearch();
-				var PlayerCP = player.GetCommandPointCount();
-                var MCVNext = PlayerResearch.GetResearchItemFomMdbId(McvR);
-				var nextLevelInfo = MCVNext.get_NextLevelInfo_Obj();
-                var resourcesNeeded = [];
-                for (var i in nextLevelInfo.rr) {
-                  if (nextLevelInfo.rr[i].t > 0) {
-                    resourcesNeeded[nextLevelInfo.rr[i].t] = nextLevelInfo.rr[i].c;
-                  }
-                }
-                var researchNeeded = resourcesNeeded[ClientLib.Base.EResourceType.ResearchPoints];
-                var currentResearchPoints = player.get_ResearchPoints();
-				XY = 100 / researchNeeded;
-				XYX = currentResearchPoints;
-				PercentageOfResearchPoints = XYX * XY;
-              if (PerforceChangelist >= 387751) { //new
-                ResearchLeft = phe.cnc.gui.util.Numbers.formatNumbersCompact(researchNeeded - currentResearchPoints);
-              } else { //old
-                ResearchLeft = webfrontend.gui.Util.formatNumbersCompact(researchNeeded - currentResearchPoints);
-              }
-                var creditsNeeded = resourcesNeeded[ClientLib.Base.EResourceType.Gold];
-                var creditsResourceData = player.get_Credits();
-                var creditGrowthPerHour = (creditsResourceData.Delta + creditsResourceData.ExtraBonusDelta) * ClientLib.Data.MainData.GetInstance().get_Time().get_StepsPerHour();
-                var creditTimeLeftInHours = (creditsNeeded - player.GetCreditsCount()) / creditGrowthPerHour;
-			
-			var MCVTime = ClientLib.Vis.VisMain.FormatTimespan(creditTimeLeftInHours * 60 * 60);
-			var MainOffense = BaseOff;
-			var MainDefense = BaseDef;
-			
-			Prod_Power = phe.cnc.gui.util.Numbers.formatNumbersCompact(Prod_Power);
-			Prod_Tiberium = phe.cnc.gui.util.Numbers.formatNumbersCompact(Prod_Tiberium);
-			Prod_Crystal = phe.cnc.gui.util.Numbers.formatNumbersCompact(Prod_Crystal);
-			Prod_Credits = phe.cnc.gui.util.Numbers.formatNumbersCompact(Prod_Credits);
-			PlayerCP = PlayerCP.toFixed(0)
-			PlayerFaction = playerFactionD;
-			//console.log("Player CP = " + PlayerCP);
-			if (PlayerName === "") {
-
-			 window.setTimeout(SD, 60000);
-		    } else {
-
-				var xmlhttp = new XMLHttpRequest();
-                	var url = "https://www.allyourbasesbelong2us.com/DbService/Service.php";
-                	var params = "functionname=SavePIRecord&PlayerID="+PlayerID+"&WorldID="+WorldID+"&WorldName="+WorldName+"&AllianceID="+AllianceID+"&AllianceName="+AllianceName+"&PlayerName="+PlayerName+"&MainOffense="+MainOffense+"&MainDefense="+MainDefense+"&MCVTime="+MCVTime+"&ResearchLeft="+ResearchLeft+"&Prod_Power="+Prod_Power+"&Prod_Tiberium="+Prod_Tiberium+"&Prod_Credits="+Prod_Credits+"&Prod_Crystal="+Prod_Crystal+"&PlayerFaction="+PlayerFaction+"&BaseRT="+BaseRT+"&playerRank="+playerRank+"&PlayerCP="+PlayerCP;
-
-	                xmlhttp.open("POST", url, false);
-        	        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        	        xmlhttp.onreadystatechange = function ()
-		        {
-		            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-		            {
-		                 //return_data= eval(xmlhttp.responseText);
-		            }
-		        };
-		        xmlhttp.send(params);
-				//console.log("Data Sent");
-			}
-		}
-		setInterval(SD, 2400 * 1000);
-	}
-		
-		function SD2(){
-
-		}
-		
-		function CSBI_checkIfLoaded() {
-            try {
-                if (typeof qx != 'undefined' && qx.core.Init.getApplication() && qx.core.Init.getApplication().getUIItem(ClientLib.Data.Missions.PATH.BAR_NAVIGATION) && qx.core.Init.getApplication().getUIItem(ClientLib.Data.Missions.PATH.BAR_NAVIGATION).isVisible()) {
-					setTimeout(SD, 240 * 1000)
-					window.setTimeout(CSBI_checkIfLoaded, 900000);					
-            } else {
-                    window.setTimeout(CSBI_checkIfLoaded, 60000);
-                }
-            } catch (e) {
-                console.log("CSBI_checkIfLoaded: ", e);
-            }
-		}
-
-        if (/commandandconquer\.com/i.test(document.domain)) {
-            window.setTimeout(CSBI_checkIfLoaded, 60000);
-        }
-    }
-    try
-    {
-        var CSBIScript = document.createElement("script");
-        CSBIScript.innerHTML = "(" + CSBI_main.toString() + ")();";
-        CSBIScript.type = "text/javascript";
-        if (/commandandconquer\.com/i.test(document.domain)) {
-            document.getElementsByTagName("head")[0].appendChild(CSBIScript);
-        }
-    } catch (e) {
-        console.log("CrucialScript: init error: ", e);
-    }
-})();
-*/
-/*
 End of C&C: Tiberium Alliances - xTr1m's Base Overlay for Firefox
 */
 
@@ -19245,7 +19038,7 @@ if (Disable_Maelstrom_Status_Color == true){
         onlineStateColor[OnlineState.Hidden] = "#C2C2C2";
 
         function CityOnlineStateColorerInclude() {
-            setInterval(requestOnlineStatusUpdate, 240 * 1000); // update users online status each 20 seconds minutes
+            setInterval(requestOnlineStatusUpdate, 300 * 1000); // update users online status each 5 minutes
             console.log("Maelstrom_CityOnlineStateColorer Include");
             var regionCityPrototype = ClientLib.Vis.Region.RegionCity.prototype;
             regionCityPrototype.CityTextcolor = function (defaultColor) {
@@ -19391,7 +19184,7 @@ if (Disable_Maelstrom_Status_Color == true){
 
         function requestOnlineStatusUpdate()
         {
-            console.log("XXX City Color: requesting online status udpate");
+            console.log("XXX City Color: requesting online status update..Checks every 5 minutes..)");
             var mainData = ClientLib.Data.MainData.GetInstance();
             var alliance = mainData.get_Alliance();
             alliance.RefreshMemberData();
