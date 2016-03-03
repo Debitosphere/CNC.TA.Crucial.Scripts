@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.37
+// @version     1.0.38
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.37";
+var CrucialScriptVersion = "1.0.38";
 
 var GM_SuperValue = new function () {
 
@@ -587,10 +587,14 @@ function init2() {
 		width = width - 270;
 		var height = $(window).height() / 3;
 		var selectionList2 = '<select name="CrucialSelectionBox" size="1" style="width: 130px">';
-        var selectionBox3 = '<div id="CrucialSelectionBox" style="width: 130px; height: 100px; border: 4px solid grey; padding: 10px; z-index: 9999; position: absolute; background-color: #17341A; top: 40px; left: 130px; line-height: 20px;  left: '+width+'px; position:absolute;"><font color="#00FF00"><p align="center"><b>Crucial Pack<br>All in One<br>Installed</b></font></p></div>';
+        var selectionBox3 = '<div id="CrucialSelectionBox" style="width: 130px; height: 150px; border: 4px solid grey; padding: 10px; z-index: 9999; position: absolute; background-color: #17341A; top: 40px; left: 130px; line-height: 20px;  left: '+width+'px; position:absolute;"><font color="#00FF00"><p align="center"><b>Crucial Pack<br>All in One<br>Installed</b></font></p></div>';
 		$('body').append(selectionBox3);
-		$('#CrucialSelectionBox').append('<button type="button" id="CrucialSettings">Crucial Script Settings</button></div>');
-
+		$('#CrucialSelectionBox').append('<p align="center"><button type="button" id="CrucialDonate">Donate</button><br><br><button type="button" id="CrucialSettings">Crucial Script Settings</button></p></div>');
+		
+		$('#CrucialDonate').click(function() {
+			window.open("https://www.gofundme.com/CnCTACrucialServer", "_blank");
+		});
+		
 		$('#CrucialSettings').click(function() {
 			var element = document.getElementById("CrucialSelectionBox");
 			element.outerHTML = "";
@@ -1345,6 +1349,7 @@ End of Multisession login
                     members: {
                         main_button : null,
 						UpdateInstallbutton : null,
+						DonateButton : null,
                         main_popup : null,
                         Label01 : null,
                         Label02 : null,
@@ -1382,7 +1387,8 @@ End of Multisession login
 							var UpdateFixes;
 							var VerNumb;
 							var ScriptUrl;
-							var CrucialScriptVersion = "1.0.37";
+							var DonateUrl = "https://www.gofundme.com/CnCTACrucialServer";
+							var CrucialScriptVersion = "1.0.38";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -1425,7 +1431,7 @@ End of Multisession login
 							if (VerNumb == CrucialScriptVersion){
  
 							} else {			
-
+						
 								UpdateInstallbutton = new qx.ui.form.Button("Install Update" , null).set({
                                 toolTipText: "Installs the latest update from the website",
                                 width: 190,
@@ -1435,7 +1441,16 @@ End of Multisession login
                                 appearance: ("button-text-small"),
                                 center: true,
 								});
- 
+								
+ 								DonateButton = new qx.ui.form.Button("Please Donate" , null).set({
+                                toolTipText: "Takes you to My GoFundMe Campaign to donate",
+                                width: 190,
+                                height: 30,
+                                maxWidth: 190,
+                                maxHeight: 30,
+                                appearance: ("button-text-small"),
+                                center: true,
+								});
 								Label01 = new qx.ui.basic.Atom("<b><font size = \"3\">" + "Crucial Script Pack Updater"+"</font></b>").set({rich: true});
 							
 								Label02 = new qx.ui.basic.Label().set({
@@ -1462,13 +1477,16 @@ End of Multisession login
 								main_popup.add( Label02, {row: 1, column: 1});
 								main_popup.add( UpdateInstallbutton, {row: 2, column: 1});
 								main_popup.add( Label03, {row: 3, column: 1});
-							
+								main_popup.add( DonateButton, {row: 4, column: 1});
 												  
 								UpdateInstallbutton.addListener("click", function(e)
                                                   {
 														window.open(ScriptUrl,'_blank');
                                                   }, this);
-
+								DonateButton.addListener("click", function(e)
+                                                  {
+														window.open(DonateUrl,'_blank');
+                                                  }, this);
 								main_button.addListener("click", function(e)
                                                     {
                                                         main_popup.placeToMouse(e);
@@ -6732,7 +6750,7 @@ if (Disable_All_Compass === true){
                                 ec.width = 70;
                                 ec.height = 90;
                                 ec.style.position = 'absolute';
-                                ec.style.top = '35px';
+                                ec.style.top = '55px';
                                 ec.style.left = '140px';
                                 ec.style.zIndex = 999999;
                                 this.ctx = ec.getContext('2d');
@@ -6883,7 +6901,7 @@ if (Disable_All_Compass === true){
                                     var region = ClientLib.Vis.VisMain.GetInstance().get_Region();
                                     var zoom = region.get_ZoomFactor();
                                     var targetCoordX = winpos.left + 34;
-                                    var targetCoordY = winpos.top + 70;
+                                    var targetCoordY = winpos.top + 90;
                                     var gridW = region.get_GridWidth();
                                     var gridH = region.get_GridHeight();
                                     var viewCoordX = (region.get_PosX() + targetCoordX / zoom - zoom * gridW / 2) / gridW;
@@ -15240,8 +15258,10 @@ if (Disable_SectorHUD == true){
 				construct: function () {
 					this.SectorText = new qx.ui.basic.Label("").set({
 						textColor : "#FFFFFF",
+						rich : true,
 						font : "font_size_11"
 					});
+					
 					var HUD = new qx.ui.container.Composite(new qx.ui.layout.HBox()).set({
 						decorator : new qx.ui.decoration.Background().set({
 							backgroundRepeat : "no-repeat",
@@ -15284,6 +15304,10 @@ if (Disable_SectorHUD == true){
 						case 7:
 							return qxApp.tr("tnf:southeast abbr");
 						}
+					},
+					get_WorldLabel: function () {
+						var WorldLabel = ClientLib.Data.MainData.GetInstance().get_Server().get_Name();
+						return {Name: WorldLabel};
 					},
 					get_SectorNo: function (x, y) {
 						var WorldX2 = Math.floor(ClientLib.Data.MainData.GetInstance().get_Server().get_WorldWidth() / 2),
@@ -15335,7 +15359,8 @@ if (Disable_SectorHUD == true){
 					},
 					__update: function () {
 						var Coords = this.get_Coords();
-						this.SectorText.setValue(Coords.X + ":" + Coords.Y + " [" + this.get_SectorText(this.get_SectorNo(Coords.X, Coords.Y)) + "]");
+						var WorldLabel = this.get_WorldLabel();
+						this.SectorText.setValue(WorldLabel.Name + "<BR>" + Coords.X + ":" + Coords.Y + " [" + this.get_SectorText(this.get_SectorNo(Coords.X, Coords.Y)) + "]");
 						this.__refresh = false;
 					}
 				}
