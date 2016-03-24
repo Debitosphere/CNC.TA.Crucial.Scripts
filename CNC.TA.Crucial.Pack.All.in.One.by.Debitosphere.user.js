@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.39
+// @version     1.0.40
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.39";
+var CrucialScriptVersion = "1.0.40";
 
 var GM_SuperValue = new function () {
 
@@ -1388,7 +1388,7 @@ End of Multisession login
 							var VerNumb;
 							var ScriptUrl;
 							var DonateUrl = "https://www.allyourbasesbelong2us.com/donate.html";
-							var CrucialScriptVersion = "1.0.39";
+							var CrucialScriptVersion = "1.0.40";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -7103,7 +7103,9 @@ if (Disable_Wavy == true){
 
 						if (typeof webfrontend.gui.region.RegionCityInfo.prototype.getObject !== 'function') {
 							source = webfrontend.gui.region.RegionCityInfo.prototype.setObject.toString();
-							var objectMemberName = source.match(/^function \(([A-Za-z]+)\)\{.+this\.([A-Za-z_]+)=\1;/)[2];
+							var objectMemberName = PerforceChangelist >= 448942
+								? webfrontend.gui.region.RegionCityInfo.prototype.setObject.toString().match(/^function \(([A-Za-z]+)\)\{.+([A-Za-z]+)=\1\.object;[\s\S]+this\.([A-Za-z_]+)=\2;/m)[3]
+								: webfrontend.gui.region.RegionCityInfo.prototype.setObject.toString().match(/^function \(([A-Za-z]+)\)\{.+this\.([A-Za-z_]+)=\1;/)[2];
 
 							/**
 							 * @returns {ClientLib.Vis.Region.RegionObject}
