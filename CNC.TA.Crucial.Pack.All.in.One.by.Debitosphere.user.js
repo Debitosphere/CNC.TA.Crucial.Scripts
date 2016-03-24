@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.38
+// @version     1.0.39
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.38";
+var CrucialScriptVersion = "1.0.39";
 
 var GM_SuperValue = new function () {
 
@@ -592,7 +592,7 @@ function init2() {
 		$('#CrucialSelectionBox').append('<p align="center"><button type="button" id="CrucialDonate">Donate</button><br><br><button type="button" id="CrucialSettings">Crucial Script Settings</button></p></div>');
 		
 		$('#CrucialDonate').click(function() {
-			window.open("https://www.gofundme.com/CnCTACrucialServer", "_blank");
+			window.open("https://www.allyourbasesbelong2us.com/donate.html", "_blank");
 		});
 		
 		$('#CrucialSettings').click(function() {
@@ -1387,8 +1387,8 @@ End of Multisession login
 							var UpdateFixes;
 							var VerNumb;
 							var ScriptUrl;
-							var DonateUrl = "https://www.gofundme.com/CnCTACrucialServer";
-							var CrucialScriptVersion = "1.0.38";
+							var DonateUrl = "https://www.allyourbasesbelong2us.com/donate.html";
+							var CrucialScriptVersion = "1.0.39";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -22791,10 +22791,14 @@ window.TACS_version = GM_info.script.version;
 							
 							if (PerforceChangelist >= 443425) { // 16.1 patch
 								for (var i in this._armyBarContainer) {
-									if (typeof this._armyBarContainer[i] == "object" && this._armyBarContainer[i] != null && this._armyBarContainer[i].objid == "btn_disable") {
-										console.log(this._armyBarContainer[i].objid);
-										var nativeSimBarDisableButton = this._armyBarContainer[i];
-										break;
+									if (typeof this._armyBarContainer[i] == "object" && this._armyBarContainer[i] != null) {
+										if (this._armyBarContainer[i].objid == "btn_disable") {
+											console.log(this._armyBarContainer[i].objid);
+											var nativeSimBarDisableButton = this._armyBarContainer[i];
+										}
+										if (this._armyBarContainer[i].objid == "cnt_controls" || this._armyBarContainer[i].objid == "btn_toggle") {
+											this._armyBarContainer[i].setVisibility("excluded");
+										}
 									}
 								}
 								var armyBarChildren = this._armyBar.getChildren();
@@ -25297,7 +25301,12 @@ window.TACS_version = GM_info.script.version;
 					},
 					startSimulation : function () {
 						try {
-							if (Date.now() - this.lastSimulation > 10000) {
+							if (PerforceChangelist >= 448942) {
+								var simTimeLimit = 3000;
+							} else {
+								var simTimeLimit = 10000;
+							}
+							if (Date.now() - this.lastSimulation > simTimeLimit) {
 								var ownCity = this._MainData.get_Cities().get_CurrentOwnCity();
 								if (!this.getAllUnitsDeactivated() && ownCity.GetOffenseConditionInPercent() > 0) {
 									ClientLib.API.Battleground.GetInstance().SimulateBattle();
@@ -25373,7 +25382,12 @@ window.TACS_version = GM_info.script.version;
 							this.stats.repair.aircraft = 0;
 
 							this.lastSimulation = Date.now();
-							if (this.count == 10) this.counter = setInterval(this.countDownToNextSimulation, 1000);
+							if (PerforceChangelist >= 448942) {
+								var countDownInterval = 300;
+							} else {
+								var countDownInterval = 1000;	
+							}
+							if (this.count == 10) this.counter = setInterval(this.countDownToNextSimulation, countDownInterval);
 
 							for (var i = 0; i < data.length; i++) {
 								var unitData = data[i].Value;
