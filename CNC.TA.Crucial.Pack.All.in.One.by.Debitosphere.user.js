@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.42
+// @version     1.0.43
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.42";
+var CrucialScriptVersion = "1.0.43";
 
 var GM_SuperValue = new function () {
 
@@ -1388,7 +1388,7 @@ End of Multisession login
 							var VerNumb;
 							var ScriptUrl;
 							var DonateUrl = "https://www.allyourbasesbelong2us.com/donate.html";
-							var CrucialScriptVersion = "1.0.42";
+							var CrucialScriptVersion = "1.0.43";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -28806,13 +28806,19 @@ if (Disable_V2_Sim == true){
 							this._armyBar = this._Application.getUIItem(ClientLib.Data.Missions.PATH.BAR_ATTACKSETUP);
 							
 							if (PerforceChangelist >= 443425) { // 16.1 patch
+
 								for (var i in this._armyBarContainer) {
-									if (typeof this._armyBarContainer[i] == "object" && this._armyBarContainer[i] != null && this._armyBarContainer[i].objid == "btn_disable") {
-										console.log(this._armyBarContainer[i].objid);
-										var nativeSimBarDisableButton = this._armyBarContainer[i];
-										break;
+									if (typeof this._armyBarContainer[i] == "object" && this._armyBarContainer[i] != null) {
+										if (this._armyBarContainer[i].objid == "btn_disable") {
+											console.log(this._armyBarContainer[i].objid);
+											var nativeSimBarDisableButton = this._armyBarContainer[i];
+										}
+										if (this._armyBarContainer[i].objid == "cnt_controls" || this._armyBarContainer[i].objid == "btn_toggle") {
+											this._armyBarContainer[i].setVisibility("excluded");
+										}
 									}
 								}
+						
 								var armyBarChildren = this._armyBar.getChildren();
 								for (var i in armyBarChildren) {
 									if (armyBarChildren[i].$$user_decorator == "pane-armysetup-right") {
