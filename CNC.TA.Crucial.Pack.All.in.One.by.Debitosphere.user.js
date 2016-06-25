@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.43
+// @version     1.0.44
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.43";
+var CrucialScriptVersion = "1.0.44";
 
 var GM_SuperValue = new function () {
 
@@ -1388,7 +1388,7 @@ End of Multisession login
 							var VerNumb;
 							var ScriptUrl;
 							var DonateUrl = "https://www.allyourbasesbelong2us.com/donate.html";
-							var CrucialScriptVersion = "1.0.43";
+							var CrucialScriptVersion = "1.0.44";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -26838,14 +26838,16 @@ if (Disable_V2_Sim == true){
 								case ClientLib.Base.EFactionType.GDIFaction:
 								case ClientLib.Base.EFactionType.NODFaction:
 									unitMaxHealthPoints = this.get_UnitMaxHealthByLevel(buildings[i].l, unit, true, data.d.dm);
+                                    unitHealthPoints.setMax(sim[buildings[i].ci].mh);
+                                    unitHealthPoints.setStart(sim[buildings[i].ci].h);
 									break;
 								default:
 									unitMaxHealthPoints = this.get_UnitMaxHealthByLevel(buildings[i].l, unit, false, data.d.dm);
+                                    unitHealthPoints.setMax(Math.max(unitMaxHealthPoints, buildings[i].h * 16));
+                                    unitHealthPoints.setStart(buildings[i].h * 16);
 									break;
 								}
-
-								unitHealthPoints.setMax(Math.max(unitMaxHealthPoints, buildings[i].h * 16));
-								unitHealthPoints.setStart(buildings[i].h * 16);
+								
 								unitHealthPoints.setEnd(sim[buildings[i].ci].h);
 								unitRepairCosts = this.get_RepairCosts(buildings[i].i, buildings[i].l, unitHealthPoints);
 
@@ -27905,6 +27907,8 @@ if (Disable_V2_Sim == true){
 							this.Offense.Vehicle.HealthPoints.setAny(data.Offense.Vehicle.HealthPoints);
 						if (data.Offense.Aircraft.HealthPoints !== undefined)
 							this.Offense.Aircraft.HealthPoints.setAny(data.Offense.Aircraft.HealthPoints);
+						if (data.Offense.Crystal.HealthPoints !== undefined)
+							this.Offense.Crystal.HealthPoints.setAny(data.Offense.Overall.HealthPoints);
 						//Entity.Resource
 						if (data.Enemy.Overall.Resource !== undefined)
 							this.Enemy.Overall.Resource.setAny(data.Enemy.Overall.Resource);
@@ -27940,6 +27944,8 @@ if (Disable_V2_Sim == true){
 							this.Offense.Vehicle.Resource.setAny(data.Offense.Vehicle.Resource);
 						if (data.Offense.Aircraft.Resource !== undefined)
 							this.Offense.Aircraft.Resource.setAny(data.Offense.Aircraft.Resource);
+						if (data.Offense.Crystal.Resource !== undefined)
+							this.Offense.Crystal.Resource.setAny(data.Offense.Overall.Resource);
 					},
 					getAny : function () {
 						return {
@@ -28014,6 +28020,10 @@ if (Disable_V2_Sim == true){
 								Aircraft : {
 									HealthPoints : this.Offense.Aircraft.HealthPoints.getAny(),
 									Resource : this.Offense.Aircraft.Resource.getAny()
+								},
+                                Crystal : {
+                                    HealthPoints : this.Offense.Overall.HealthPoints.getAny(),
+                                    Resource : this.Offense.Overall.Resource.getAny()
 								}
 							}
 						};
@@ -28092,7 +28102,11 @@ if (Disable_V2_Sim == true){
 							Aircraft : {
 								HealthPoints : new TABS.STATS.Entity.HealthPoints(),
 								Resource : new TABS.STATS.Entity.Resource()
-							}
+							},
+							Crystal : {
+								HealthPoints : new TABS.STATS.Entity.HealthPoints(),
+								Resource : new TABS.STATS.Entity.Resource()
+							},
 						};
 
 						if (data !== undefined)
@@ -28287,6 +28301,7 @@ if (Disable_V2_Sim == true){
 					"changeCrystal" : "qx.event.type.Data",
 					"changeCredits" : "qx.event.type.Data",
 					"changeResearchPoints" : "qx.event.type.Data",
+					"changeRepairCrystal" : "qx.event.type.Data",
 					"changeRepairChargeBase" : "qx.event.type.Data",
 					"changeRepairChargeAir" : "qx.event.type.Data",
 					"changeRepairChargeInf" : "qx.event.type.Data",
@@ -28576,7 +28591,13 @@ if (Disable_V2_Sim == true){
 								CurrentCity = ClientLib.Data.MainData.GetInstance().get_Cities().get_CurrentCity();
 							if (CurrentOwnCity !== null && CurrentCity !== null && CurrentCity.CheckInvokeBattle(CurrentOwnCity, true) == ClientLib.Data.EAttackBaseResult.OK) {
 								clearTimeout(this.__Timeout);
-								this.__Timeout = setTimeout(this._reset.bind(this), 10000);
+                                if(PerforceChangelist >= 448942) { // patch 16.2
+                                    this.__Timeout = setTimeout(this._reset.bind(this), 3000);
+                                }
+                                else
+                                {
+                                    this.__Timeout = setTimeout(this._reset.bind(this), 10000);
+                                }
 								this.resetData();
 								this.setLock(true);
 								var formation = TABS.UTIL.Formation.Get(),
@@ -28624,7 +28645,14 @@ if (Disable_V2_Sim == true){
 					},
 					_updateTime : function () {
 						clearTimeout(this.__Timeout);
-						var time = this.__TimerStart + 10000 - Date.now();
+                        var time = 0;
+                        if(PerforceChangelist >= 448942) { // patch 16.2
+                            time = this.__TimerStart + 3000 - Date.now();
+                        }
+                        else
+                        {
+                            time = this.__TimerStart + 10000 - Date.now();
+                        }
 						if (time > 0) {
 							if (time > 100)
 								this.__Timeout = setTimeout(this._updateTime.bind(this), 100);
@@ -28961,6 +28989,28 @@ if (Disable_V2_Sim == true){
 					TABS.addInit("TABS.GUI.ArmySetupAttackBar");
 				}
 			});
+			
+            qx.Class.define("TABS.GUI.MovableBox", {
+                extend : qx.ui.container.Composite,
+                include : qx.ui.core.MMovable,
+                construct : function(layout)
+                {
+                    this.base(arguments);
+                    try
+                    {
+                        this.setLayout(layout);
+                        this._activateMoveHandle(this);
+                        //resizer.setLayout(new qx.ui.layout.HBox());
+                    }
+                    catch(e)
+                    {
+                        console.group("Tiberium Alliances Battle Simulator V2");
+						console.error("Error setting up GUI.MovableBox constructor", e);
+						console.groupEnd();
+                    }
+                }
+            });
+			
 			qx.Class.define("TABS.GUI.PlayArea", {						// [singleton]	View Simulation, Open Stats Window
 				type : "singleton",
 				extend : qx.core.Object,
@@ -29002,14 +29052,16 @@ if (Disable_V2_Sim == true){
 						WDG_COMBATSWAPVIEW.getLayoutParent().addAfter(this.btnSimulation, WDG_COMBATSWAPVIEW);
 
 						//Move Box
-						this.boxMove = new qx.ui.container.Composite(new qx.ui.layout.Grid()).set({
-								decorator : "pane-light-plain",
-				                                opacity : 0.7,
-				                                paddingTop : 0,
-				                                paddingLeft : 2,
-				                                paddingRight : 1,
-				                                paddingBottom : 3
-							});
+						this.boxMove = new TABS.GUI.MovableBox(new qx.ui.layout.Grid()).set({
+							decorator : "pane-light-plain",
+				            opacity : 0.7,
+				            paddingTop : 0,
+				            paddingLeft : 2,
+				            paddingRight : 1,
+				            paddingBottom : 3,
+                            allowGrowX : false,
+                            allowGrowY : false,
+						});
 
 						this.boxMove.add(this.newButton(TABS.RES.IMG.Stats, this.tr("Statistic") + " [NUM 7]", this.onClick_btnStats, null, null), {
 							row : 0,
@@ -29376,11 +29428,20 @@ if (Disable_V2_Sim == true){
 					btnBack : null,
 					btnSkip : null,
 					onClick_btnBack : function () {
-						var city = ClientLib.Data.MainData.GetInstance().get_Cities().get_CurrentCity();
-						if (city !== null) {
-							qx.core.Init.getApplication().getPlayArea().setView(ClientLib.Data.PlayerAreaViewMode.pavmCombatSetupDefense, city.get_Id(), 0, 0);
-							ClientLib.Vis.VisMain.GetInstance().get_CombatSetup().SetPosition(0, qx.core.Init.getApplication().getPlayArea().getHUD().getCombatSetupOffset(ClientLib.Vis.CombatSetup.CombatSetupViewMode.Defense));
-						}
+						try {
+                        				var city = ClientLib.Data.MainData.GetInstance().get_Cities().get_CurrentCity();
+			                            	if (city !== null) {
+
+				                           	qx.core.Init.getApplication().getPlayArea().setView(ClientLib.Data.PlayerAreaViewMode.pavmCombatSetupDefense, city.get_Id(), 0, 0);
+				                           	ClientLib.Vis.VisMain.GetInstance().get_CombatSetup().SetPosition(0, qx.core.Init.getApplication().getPlayArea().getHUD().getCombatSetupOffset(ClientLib.Vis.CombatSetup.CombatSetupViewMode.Defense));
+				                    	}
+				                }
+				                catch(e)
+				                {
+				                        console.group("Tiberium Alliances Battle Simulator V2");
+				                        console.error("Error onClick_btnBack", e);
+				                        console.groupEnd();
+				                }
 					},
 					onClick_btnSkip : function () {
 						if (ClientLib.Vis.VisMain.GetInstance().get_Battleground().get_Simulation !== undefined && ClientLib.Vis.VisMain.GetInstance().get_Battleground().get_Simulation().DoStep !== undefined) {
@@ -29458,7 +29519,42 @@ if (Disable_V2_Sim == true){
 							alignY : "middle"
 						});
 						this.setStatus("0 " + this.tr("simulations in cache"));
+                        
+                        //Enemy Health Section//
+						this.EnemyHeader = this.makeHeader(this.tr("tnf:combat target"));
+						this.EnemyHeader.addListener("click", function () {
+							if (this.GUI.Enemy.isVisible()) {
+								this.GUI.Enemy.exclude();
+								TABS.SETTINGS.set("GUI.Window.Stats.Enemy.visible", false);
+							} else {
+								this.GUI.Enemy.show();
+								TABS.SETTINGS.set("GUI.Window.Stats.Enemy.visible", true);
+							}
+						}, this);
 
+						//Repair Section//
+						this.RepairHeader = this.makeHeader(this.tr("tnf:own repair cost").replace(":", ""));
+						this.RepairHeader.addListener("click", function () {
+							if (this.GUI.Repair.isVisible()) {
+								this.GUI.Repair.exclude();
+								TABS.SETTINGS.set("GUI.Window.Stats.Repair.visible", false);
+							} else {
+								this.GUI.Repair.show();
+								TABS.SETTINGS.set("GUI.Window.Stats.Repair.visible", true);
+							}
+						}, this);
+
+						//Loot Section//
+						this.LootHeader = this.makeHeader(this.tr("tnf:lootable resources:").replace(":", ""));
+						this.LootHeader.addListener("click", function () {
+							if (this.GUI.Loot.isVisible()) {
+								this.GUI.Loot.exclude();
+								TABS.SETTINGS.set("GUI.Window.Stats.Loot.visible", false);
+							} else {
+								this.GUI.Loot.show();
+								TABS.SETTINGS.set("GUI.Window.Stats.Loot.visible", true);
+							}
+						}, this);
 						this.GUI = {
 							Battle : new qx.ui.container.Composite(new qx.ui.layout.HBox(-2)).set({
 								decorator : "pane-light-plain",
@@ -29469,18 +29565,21 @@ if (Disable_V2_Sim == true){
 							Enemy : new qx.ui.container.Composite(new qx.ui.layout.HBox(-2)).set({
 								decorator : "pane-light-plain",
 								allowGrowX : true,
+                                marginTop : -18,
 								marginLeft : 0,
 								marginRight : 0
 							}),
 							Repair : new qx.ui.container.Composite(new qx.ui.layout.HBox(-2)).set({
 								decorator : "pane-light-plain",
 								allowGrowX : true,
+                                marginTop : -18,
 								marginLeft : 0,
 								marginRight : 0
 							}),
 							Loot : new qx.ui.container.Composite(new qx.ui.layout.HBox(-2)).set({
 								decorator : "pane-light-plain",
 								allowGrowX : true,
+                                marginTop : -18,
 								marginLeft : 0,
 								marginRight : 0
 							}),
@@ -29502,6 +29601,7 @@ if (Disable_V2_Sim == true){
 							Enemy : new qx.ui.container.Composite(new qx.ui.layout.VBox()).set({
 								width : 29,
 								padding : 9,
+                                marginTop : 10,
 								allowGrowX : true,
 								marginLeft : 0,
 								marginRight : 0
@@ -29509,6 +29609,7 @@ if (Disable_V2_Sim == true){
 							Repair : new qx.ui.container.Composite(new qx.ui.layout.VBox()).set({
 								width : 29,
 								padding : 9,
+                                marginTop : 10,
 								allowGrowX : true,
 								marginLeft : 0,
 								marginRight : 0
@@ -29516,6 +29617,7 @@ if (Disable_V2_Sim == true){
 							Loot : new qx.ui.container.Composite(new qx.ui.layout.VBox()).set({
 								width : 29,
 								padding : 9,
+                                marginTop : 10,
 								allowGrowX : true,
 								marginLeft : 0,
 								marginRight : 0
@@ -29551,6 +29653,7 @@ if (Disable_V2_Sim == true){
 							Repair : {
 								Storage : new TABS.GUI.Window.Stats.Atom(this.tr("tnf:offense repair time"), TABS.RES.IMG.RepairCharge.Base),
 								Overall : new TABS.GUI.Window.Stats.Atom(this.tr("tnf:repair points"), TABS.RES.IMG.RepairCharge.Offense),
+								Crystal : new TABS.GUI.Window.Stats.Atom(this.tr("tnf:crystals"), TABS.RES.IMG.Resource.Crystal),
 								Infantry : new TABS.GUI.Window.Stats.Atom(this.tr("tnf:infantry repair title"), TABS.RES.IMG.RepairCharge.Infantry),
 								Vehicle : new TABS.GUI.Window.Stats.Atom(this.tr("tnf:vehicle repair title"), TABS.RES.IMG.RepairCharge.Vehicle),
 								Aircraft : new TABS.GUI.Window.Stats.Atom(this.tr("tnf:aircraft repair title"), TABS.RES.IMG.RepairCharge.Aircraft)
@@ -29718,16 +29821,28 @@ if (Disable_V2_Sim == true){
 						if (newMode != ClientLib.Vis.Mode.CombatSetup && newMode != ClientLib.Vis.Mode.Battleground)
 							this.close();
 					},
-					makeHeader : function (text) {
-						var Header = new qx.ui.container.Composite(new qx.ui.layout.VBox(5)).set({
-								decorator : "pane-light-opaque"
-							});
-						Header.add(new qx.ui.basic.Label(text).set({
-								alignX : "center",
-								alignY : "middle",
-								paddingTop : -4,
-								paddingBottom : 4,
-								font : "font_size_13_bold_shadow"
+					makeHeader : function (text) {  
+                        var Header = new qx.ui.container.Composite(new qx.ui.layout.Grow()).set({
+                            alignX : "center",
+                            alignY : "middle", 
+                            zIndex : 11
+                        });
+                        Header.add(new qx.ui.container.Composite(new qx.ui.layout.VBox(5)).set({
+								decorator : "pane-light-opaque",
+                            allowGrowX : true,
+                            allowGrowY : true,
+							}));
+
+                        Header.add(new qx.ui.basic.Label(text).set({
+                            paddingLeft : 9,
+                            allowGrowX : true,
+                            allowGrowY : true,
+                            paddingBottom : 2,
+
+
+
+
+							font : "font_size_13_bold_shadow"
 							}));
 						return Header;
 					},
@@ -29928,6 +30043,7 @@ if (Disable_V2_Sim == true){
 							Enemy : new qx.ui.container.Composite(new qx.ui.layout.VBox()).set({
 								//padding : 5,
 								allowGrowX : true,
+                                marginTop : 10,
 								marginLeft : 0,
 								marginRight : 0,
 								decorator : "pane-light-opaque"
@@ -29935,6 +30051,7 @@ if (Disable_V2_Sim == true){
 							Repair : new qx.ui.container.Composite(new qx.ui.layout.VBox()).set({
 								//padding : 5,
 								allowGrowX : true,
+                                marginTop : 10,
 								marginLeft : 0,
 								marginRight : 0,
 								decorator : "pane-light-opaque"
@@ -29942,6 +30059,7 @@ if (Disable_V2_Sim == true){
 							Loot : new qx.ui.container.Composite(new qx.ui.layout.VBox()).set({
 								//padding : 5,
 								allowGrowX : true,
+                                marginTop : 10,
 								marginLeft : 0,
 								marginRight : 0,
 								decorator : "pane-light-opaque"
@@ -30037,17 +30155,24 @@ if (Disable_V2_Sim == true){
 									type : "Repair",
 									subType : "RepairCharge"
 								}),
+								Crystal : new TABS.GUI.Window.Stats.SimView.Label("-").set({
+									type : "Repair",
+									subType : "Resource"
+								}),
 								Infantry : new TABS.GUI.Window.Stats.SimView.Label("-").set({
 									type : "Repair",
-									subType : "RepairCharge"
+									subType : "RepairChargeInf"
+
 								}),
 								Vehicle : new TABS.GUI.Window.Stats.SimView.Label("-").set({
 									type : "Repair",
-									subType : "RepairCharge"
+									subType : "RepairChargeVeh"
+
 								}),
 								Aircraft : new TABS.GUI.Window.Stats.SimView.Label("-").set({
 									type : "Repair",
-									subType : "RepairCharge"
+									subType : "RepairChargeAir"
+
 								})
 							},
 							Loot : {
@@ -30151,6 +30276,18 @@ if (Disable_V2_Sim == true){
 									this.Stats.Offense[i].Resource.bind("RepairChargeAir", this.Label.Repair[i].Resource, "RepairChargeAir");
 									this.Stats.Offense[i].Resource.bind("RepairChargeInf", this.Label.Repair[i].Resource, "RepairChargeInf");
 									this.Stats.Offense[i].Resource.bind("RepairChargeVeh", this.Label.Repair[i].Resource, "RepairChargeVeh");
+                                    if (i == "Crystal") {
+										for (j in this.Label.Repair) {
+											this.Stats.Offense[i].Resource.bind("Tiberium", this.Label.Repair[j].Resource, "Tiberium");
+											this.Stats.Offense[i].Resource.bind("Crystal", this.Label.Repair[j].Resource, "Crystal");
+											this.Stats.Offense[i].Resource.bind("Credits", this.Label.Repair[j].Resource, "Credits");
+											this.Stats.Offense[i].Resource.bind("ResearchPoints", this.Label.Repair[j].Resource, "ResearchPoints");
+											this.Stats.Offense[i].Resource.bind("RepairChargeBase", this.Label.Repair[j].Resource, "RepairChargeBase");
+											this.Stats.Offense[i].Resource.bind("RepairChargeAir", this.Label.Repair[j].Resource, "RepairChargeAir");
+											this.Stats.Offense[i].Resource.bind("RepairChargeInf", this.Label.Repair[j].Resource, "RepairChargeInf");
+											this.Stats.Offense[i].Resource.bind("RepairChargeVeh", this.Label.Repair[j].Resource, "RepairChargeVeh");
+										}
+									}
 								}
 							}
 						}
@@ -30425,6 +30562,15 @@ if (Disable_V2_Sim == true){
 									value = this.HealthPointsRel();
 									break;
 								case "RepairCharge":
+								case "RepairChargeInf":
+								case "RepairChargeVeh":
+								case "RepairChargeAir":
+									value = this.RepairCharge();
+									break;
+								case "RepairStorage":
+                                    return;
+								case "Resource":
+
 									value = this.RepairCharge();
 									break;
 								case "RepairStorage":
@@ -30487,12 +30633,44 @@ if (Disable_V2_Sim == true){
 						return null;
 					},
 					RepairCharge : function () {
-						if (this.HealthPoints.getMax() > 0) {
-							return {
-								text : phe.cnc.Util.getTimespanString(Math.max(this.Resource.getRepairChargeBase(), this.Resource.getRepairChargeAir(), this.Resource.getRepairChargeInf(), this.Resource.getRepairChargeVeh())),
-								color : this.getColorFromPercent(1 - (this.HealthPoints.getEnd() / this.HealthPoints.getMax()))
+                        if(this.getSubType() == "Resource")
+                        {
+                            res = 0;
+                            res = this.Resource.getCrystal();
+                            
+                            return {
+								text : phe.cnc.gui.util.Numbers.formatNumbersCompact(res),
+
+
+
+								color : this.getColorFromPercent(1)
 							};
-						}
+                        }
+                        else
+                        {
+                            res = 0;
+                            if (this.HealthPoints.getMax() > 0) {
+                                switch (this.getSubType()) {
+                                    case "RepairChargeInf":
+                                         res = this.Resource.getRepairChargeInf();
+                                        break;
+                                    case "RepairChargeVeh":
+                                         res = this.Resource.getRepairChargeVeh();
+                                        break;
+                                    case "RepairChargeAir":
+                                         res = this.Resource.getRepairChargeAir();
+                                        break;
+                                    case "RepairCharge":
+                                         res = Math.max(this.Resource.getRepairChargeBase(), this.Resource.getRepairChargeAir(), this.Resource.getRepairChargeInf(), this.Resource.getRepairChargeVeh());
+                                        break;
+                                }
+                                return {
+                                    text : phe.cnc.Util.getTimespanString(res),
+                                    color : this.getColorFromPercent(1 - (this.HealthPoints.getEnd() / this.HealthPoints.getMax()))
+                                };
+                            }
+                        }
+
 						return null;
 					},
 					Loot : function () {
