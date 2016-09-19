@@ -8442,16 +8442,57 @@ try {
                   /* NOD */
                   link += "N|";
                   break;
-                case 3:
+               case 3:
+				switch (own_city.get_CityFaction()) {
+				 case 1:
+                  /* GDI */
+                  link += "G|";
+                  break;
+                case 2:
+                  /* NOD */
+                  link += "N|";
+                  break;
+				}
+				 break;
                   /* FOR faction - unseen, but in GAMEDATA */
                 case 4:
+				switch (own_city.get_CityFaction()) {
+				 case 1:
+                  /* GDI */
+                  link += "G|";
+                  break;
+                case 2:
+                  /* NOD */
+                  link += "N|";
+                  break;
+				}
+				 break;
                   /* Forgotten Bases */
                 case 5:
+				switch (own_city.get_CityFaction()) {
+				 case 1:
+                  /* GDI */
+                  link += "G|";
+                  break;
+                case 2:
+                  /* NOD */
+                  link += "N|";
+                  break;
+				}
+				 break;
                   /* Forgotten Camps */
                 case 6:
-                  /* Forgotten Outposts */
-                  link += "F|";
+				switch (own_city.get_CityFaction()) {
+				 case 1:
+                  /* GDI */
+                  link += "G|";
                   break;
+                case 2:
+                  /* NOD */
+                  link += "N|";
+                  break;
+				}
+				 break;
                 default:
                   console.log("cncopt: Unknown faction: " + own_city.get_CityFaction());
                   link += "E|";
