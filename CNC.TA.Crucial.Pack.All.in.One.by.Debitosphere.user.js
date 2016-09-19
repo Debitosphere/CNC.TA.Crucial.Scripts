@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.44
+// @version     1.0.45
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.44";
+var CrucialScriptVersion = "1.0.45";
 
 var GM_SuperValue = new function () {
 
@@ -1388,7 +1388,7 @@ End of Multisession login
 							var VerNumb;
 							var ScriptUrl;
 							var DonateUrl = "https://www.allyourbasesbelong2us.com/donate.html";
-							var CrucialScriptVersion = "1.0.44";
+							var CrucialScriptVersion = "1.0.45";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -8433,7 +8433,7 @@ try {
                   link += "E|";
                   break;
               }
-              switch (own_city.get_CityFaction()) {
+              switch (city.get_CityFaction()) {
                 case 1:
                   /* GDI */
                   link += "G|";
@@ -14522,30 +14522,50 @@ if (Disable_ReplayShare == true){
 		function createReplayShare() {
 			console.log('ReplayShare loaded');
 
-			Parse.initialize('PmNW9dH7wrTFQmYgInbDVgGqagUOVPIzENRwzfWu', 'ajepOC4n9K44jh89s5WKtEa4v0hh3OMokxNqLqt0');
-			var Replay = Parse.Object.extend('Replay', {
-				/**
-				 * @returns {Object}
-				 */
-				getData: function() {
-					return this.get('data');
-				},
-				/**
-				 * @param {Object} data
-				 * @returns {Replay}
-				 */
-				setData: function(data) {
-					this.set('data', data);
-					return this;
-				},
-				/**
-				 * @param {Object} data
-				 * @returns {Boolean}
-				 */
-				equals: function(data) {
-					return JSON.stringify(this.getData()) === JSON.stringify(data);
-				}
-			});
+			var Replay = function() {};
+			Replay.prototype.id = null;
+			Replay.prototype.data = null;
+			/**
+			 * @returns {Boolean}
+			 */
+			Replay.prototype.isNew = function() {
+				return this.id === null;
+			};
+			/**
+			 * @returns {String}
+			 */
+			Replay.prototype.getId = function() {
+				return this.id;
+			};
+			/**
+			 * @param {Number} id
+			 * @returns {Replay}
+			 */
+			Replay.prototype.setId = function(id) {
+				this.id = id;
+				return this;
+			};
+			/**
+			 * @returns {Object}
+			 */
+			Replay.prototype.getData = function() {
+				return this.data;
+			};
+			/**
+			 * @param {Object} data
+			 * @returns {Replay}
+			 */
+			Replay.prototype.setData = function(data) {
+				this.data = data;
+				return this;
+			};
+			/**
+			 * @param {Object} data
+			 * @returns {Boolean}
+			 */
+			Replay.prototype.equals = function(data) {
+				return JSON.stringify(this.getData()) === JSON.stringify(data);
+			};
 
 			qx.Class.define('ReplayShare', {
 				type: 'singleton',
@@ -14608,8 +14628,8 @@ if (Disable_ReplayShare == true){
 						});
 						shareButton.addListener('execute', this.onClickShare, this);
 						qx.core.Init.getApplication().getReportReplayOverlay().add(shareButton, {
-							right: 150,
-							top: 12
+							right: 70,
+							top: 35
 						});
 					},
 
@@ -14637,7 +14657,7 @@ if (Disable_ReplayShare == true){
 					 * @returns {Boolean}
 					 */
 					handleLink: function(url) {
-						var matches = url.match(/^https?:\/\/replayshare\.parseapp\.com\/([A-Za-z0-9]+)/);
+						var matches = url.match(/^https?:\/\/replayshare\.(?:parseapp\.com|petui\.net)\/([A-Za-z0-9]+)/);
 
 						if (matches !== null) {
 							var id = matches[1];
@@ -14717,6 +14737,7 @@ if (Disable_ReplayShare == true){
 				construct: function(replayShare) {
 					qx.ui.window.Window.call(this);
 					this.replayShare = replayShare;
+					this.service = new ReplayShare.Service();
 
 					this.set({
 						caption: 'ReplayShare',
@@ -14833,6 +14854,7 @@ if (Disable_ReplayShare == true){
 				},
 				members: {
 					replayShare: null,
+					service: null,
 					sharePopup: null,
 					errorMessageLabel: null,
 					attackerFactionImage: null,
@@ -14906,9 +14928,9 @@ if (Disable_ReplayShare == true){
 						if (this.replay.isNew()) {
 							var context = this;
 
-							this.replay.save(null, {
+							this.service.save(this.replay, {
 								success: function(replay) {
-									context.sharePopup.setLinkURL('https://replayshare.parseapp.com/' + replay.id);
+									context.sharePopup.setLinkURL(context.formatLinkUrl(replay.getId()));
 								},
 								error: function(replay, error) {
 									context.sharePopup.setError(error.message);
@@ -14916,8 +14938,23 @@ if (Disable_ReplayShare == true){
 							});
 						}
 						else {
-							this.sharePopup.setLinkURL('https://replayshare.parseapp.com/' + this.replay.id);
+							this.sharePopup.setLinkURL(this.formatLinkUrl(this.replay.getId()));
 						}
+					},
+
+					/**
+					 * @param {String} id
+					 * @returns {String}
+					 */
+					formatLinkUrl: function scope(id) {
+						if (scope.baseUrl === undefined) {
+							// Start serving links to new host on 2016-11-01 12:00:00 UTC
+							scope.baseUrl = Date.now() < Date.UTC(2016, 11, 1, 12, 0, 0)
+								? 'https://replayshare.parseapp.com/'
+								: 'https://replayshare.petui.net/';
+						}
+
+						return scope.baseUrl + id;
 					},
 
 					/**
@@ -14926,12 +14963,14 @@ if (Disable_ReplayShare == true){
 					setDetailsFromReplayData: function(replayData) {
 						var isForgottenAttacker = replayData.af !== ClientLib.Base.EFactionType.GDIFaction && replayData.af !== ClientLib.Base.EFactionType.NODFaction;
 						this.attackerFactionImage.setSource(phe.cnc.gui.util.Images.getFactionIcon(replayData.af));
+						this.attackerFactionImage.show();
 						this.attackerNameLabel.setValue(isForgottenAttacker ? this.tr('tnf:mutants') : replayData.apn);
 						this.attackerBaseLabel.setValue(this.getReplayAttackerBaseName(replayData));
 						this.attackerAllianceLabel.setValue(isForgottenAttacker ? this.tr('tnf:mutants') : (replayData.aan || '-'));
 
 						var isForgottenDefender = replayData.df !== ClientLib.Base.EFactionType.GDIFaction && replayData.df !== ClientLib.Base.EFactionType.NODFaction;
 						this.defenderFactionImage.setSource(phe.cnc.gui.util.Images.getFactionIcon(isForgottenDefender ? ClientLib.Base.EFactionType.FORFaction : replayData.df));
+						this.defenderFactionImage.show();
 						this.defenderNameLabel.setValue(isForgottenDefender ? this.tr('tnf:mutants') : replayData.dpn);
 						this.defenderBaseLabel.setValue(this.getReplayDefenderBaseName(replayData));
 						this.defenderAllianceLabel.setValue(isForgottenDefender ? this.tr('tnf:mutants') : (replayData.dan || '-'));
@@ -14951,6 +14990,8 @@ if (Disable_ReplayShare == true){
 							case ClientLib.Base.EFactionType.NPCBase:
 							case ClientLib.Base.EFactionType.NPCCamp:
 							case ClientLib.Base.EFactionType.NPCOutpost:
+							case ClientLib.Base.EFactionType.NPCFortress:
+							case ClientLib.Base.EFactionType.NPCEvent:
 								attackerBaseName = this.tr(replayData.an) + ' (' + replayData.abl + ')';
 								break;
 							default:
@@ -14973,19 +15014,23 @@ if (Disable_ReplayShare == true){
 							case ClientLib.Base.EFactionType.NPCCamp:
 							case ClientLib.Base.EFactionType.NPCOutpost:
 							case ClientLib.Base.EFactionType.NPCFortress:
+							case ClientLib.Base.EFactionType.NPCEvent:
 								var defenderPlayerId = replayData.dpi;
 								var type;
 
 								switch (Math.abs(defenderPlayerId) % 100) {
-									case ClientLib.Data.WorldSector.WorldObjectNPCCamp.ECampType.Beginner:
-									case ClientLib.Data.WorldSector.WorldObjectNPCCamp.ECampType.Random:
+									case ClientLib.Data.Reports.ENPCCampType.Beginner:
+									case ClientLib.Data.Reports.ENPCCampType.Random:
 										type = 'tnf:mutants camp';
 										break;
-									case ClientLib.Data.WorldSector.WorldObjectNPCCamp.ECampType.Cluster:
+									case ClientLib.Data.Reports.ENPCCampType.Cluster:
 										type = 'tnf:mutants outpost';
 										break;
-									case ClientLib.Data.WorldSector.WorldObjectNPCCamp.ECampType.Fortress:
+									case ClientLib.Data.Reports.ENPCCampType.Fortress:
 										type = 'tnf:centerhub short';
+										break;
+									case ClientLib.Data.Reports.ENPCCampType.Event:
+										type = 'tnf:event camp';
 										break;
 									default:
 										type = 'tnf:mutants base';
@@ -15008,8 +15053,7 @@ if (Disable_ReplayShare == true){
 						this.resetFields('Loading...');
 
 						var context = this;
-						var query = new Parse.Query(Replay);
-						query.get(id, {
+						this.service.get(id, {
 							success: function(replay) {
 								context.setReplay(replay);
 							},
@@ -15054,10 +15098,12 @@ if (Disable_ReplayShare == true){
 					 * @param {String} label
 					 */
 					resetFields: function(label) {
+						this.attackerFactionImage.exclude();
 						this.attackerFactionImage.setSource(null);
 						this.attackerNameLabel.setValue(label);
 						this.attackerBaseLabel.setValue(label);
 						this.attackerAllianceLabel.setValue(label);
+						this.defenderFactionImage.exclude();
 						this.defenderFactionImage.setSource(null);
 						this.defenderNameLabel.setValue(label);
 						this.defenderBaseLabel.setValue(label);
@@ -15211,11 +15257,125 @@ if (Disable_ReplayShare == true){
 					}
 				}
 			});
+
+			qx.Class.define('ReplayShare.Service', {
+				extend: qx.core.Object,
+				members: {
+					/**
+					 * @param {String} id
+					 * @param {Object} options
+					 */
+					get: function(id, options) {
+						var requestOptions = {
+							method: 'GET',
+							accept: 'application/json'
+						};
+
+						if (options.success !== undefined) {
+							requestOptions.success = function(data) {
+								options.success(new Replay()
+									.setId(id)
+									.setData(data.data)
+								);
+							};
+						}
+
+						if (options.error !== undefined) {
+							requestOptions.error = function(error) {
+								options.error(null, { message: error });
+							};
+						}
+
+						this._sendRequest('https://replayshare.petui.net/' + id, requestOptions);
+					},
+
+					/**
+					 * @param {Replay} replay
+					 * @param {Object} options
+					 */
+					save: function(replay, options) {
+						var requestOptions = {
+							method: 'PUT',
+							accept: 'application/json',
+							contentType: 'application/json',
+							data: JSON.stringify({
+								data: replay.getData(),
+								rev: PerforceChangelist || null
+							})
+						};
+
+						if (options.success !== undefined) {
+							requestOptions.success = function(data) {
+								options.success(replay.setId(data.id));
+							};
+						}
+
+						if (options.error !== undefined) {
+							requestOptions.error = function(error) {
+								options.error(replay, { message: error });
+							};
+						}
+
+						this._sendRequest('https://replayshare.petui.net', requestOptions);
+					},
+
+					/**
+					 * @param {String} url
+					 * @param {Object} options
+					 */
+					_sendRequest: function(url, options) {
+						var request = new qx.io.request.Xhr(url);
+						request.setMethod(options.method || 'GET');
+						request.setTimeout(options.timeout || 10000);
+
+						if (options.accept !== undefined) {
+							request.setAccept(options.accept);
+						}
+
+						if (options.contentType !== undefined) {
+							request.setRequestHeader('Content-Type', options.contentType);
+						}
+
+						if (options.data !== undefined) {
+							request.setRequestData(options.data);
+						}
+
+						if (options.success !== undefined) {
+							request.addListener('success', function(event) {
+								options.success(event.getTarget().getResponse());
+							}, this);
+						}
+
+						if (options.error !== undefined) {
+							request.addListener('error', function(event) {
+								options.error('Unknown error');
+							});
+
+							request.addListener('statusError', function(event) {
+								var response = event.getTarget().getResponse();
+
+								if (response.error !== undefined) {
+									options.error(response.error.message || response.error.statusText);
+								}
+								else {
+									options.error('Unknown server error');
+								}
+							});
+
+							request.addListener('timeout', function(event) {
+								options.error('Request timed out');
+							});
+						}
+
+						request.send();
+					}
+				}
+			});
 		}
 
 		function waitForGame() {
 			try {
-				if (typeof Parse !== 'undefined' && typeof qx !== 'undefined' && qx.core.Init.getApplication() && qx.core.Init.getApplication().initDone) {
+				if (typeof qx !== 'undefined' && qx.core.Init.getApplication() && qx.core.Init.getApplication().initDone) {
 					createReplayShare();
 					ReplayShare.getInstance().initialize();
 				}
@@ -15231,16 +15391,12 @@ if (Disable_ReplayShare == true){
 		setTimeout(waitForGame, 1000);
 	};
 
-	var parseScript = document.createElement('script');
-	parseScript.src = 'https://www.parsecdn.com/js/parse-1.2.19.min.js';
-	parseScript.type = 'text/javascript';
-	document.getElementsByTagName('head')[0].appendChild(parseScript);
-
 	var script = document.createElement('script');
 	script.innerHTML = '(' + main.toString() + ')();';
 	script.type = 'text/javascript';
 	document.getElementsByTagName('head')[0].appendChild(script);
 })();
+
 }
 /*
 End of ReplayShare
@@ -33229,3 +33385,145 @@ if (Disable_RepairTimeofDeath == true){
 /*
 End of TA Repair Time of Death
 */
+
+
+/*
+Start of TAMarkerFix
+*/
+(function () {
+    var TAMarkerFix_main = function () {
+        function TAMarkerFix_checkIfLoaded() {
+        	if (PerforceChangelist >= 443425) { // patch 16.1 
+        		try {
+					if (typeof qx !== 'undefined' && typeof qx.core !== 'undefined' && typeof qx.core.Init !== 'undefined') {
+						try {
+							webfrontend.gui.region.RegionInfoAllianceMarker.prototype.onCitiesChange = function () {};
+						} catch (e) {
+							window.setTimeout(TAMarkerFix_checkIfLoaded, 1000);
+						}
+					} else {
+						window.setTimeout(TAMarkerFix_checkIfLoaded, 1000);
+					}
+				} catch (e) {
+					console.log("TAMarkerFix_checkIfLoaded: ", e);
+				}
+			}
+		}
+
+		if (/commandandconquer\.com/i.test(document.domain)) {
+			window.setTimeout(TAMarkerFix_checkIfLoaded, 1000);
+		}
+    }
+    
+  try {
+    var script = document.createElement("script");
+    script.innerHTML = "(" + TAMarkerFix_main.toString() + ")();";
+    script.type = "text/javascript";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  } catch (e) {
+    console.log("AMarkerFix: init error: ", e);
+  }
+  
+})();
+
+/*
+End of TAMarkerFix
+*/
+
+/*
+Start of CnCTA WorldMap Link
+*/
+(function() {
+	var main = function() {
+		'use strict';
+
+		function createCnCMapLink() {
+			console.log('CnCMapLink loaded');
+
+			Parse.initialize('PmNW9dH7wrTFQmYgInbDVgGqagUOVPIzENRwzfWu', 'ajepOC4n9K44jh89s5WKtEa4v0hh3OMokxNqLqt0');
+
+			qx.Class.define('CnCMapLink', {
+				type: 'singleton',
+				extend: qx.core.Object,
+				members: {
+					window: null,
+
+					initialize: function() {
+						this.initializeEntryPoints();
+					},
+
+					initializeEntryPoints: function() {
+						var scriptsButton = qx.core.Init.getApplication().getMenuBar().getScriptsButton();
+						scriptsButton.Add('CnC TA: World Map', 'https://www.allyourbasesbelong2us.com/images/scripts/cncmap.png');
+						var children = scriptsButton.getMenu().getChildren();
+						var lastChild = children[children.length - 1];
+						lastChild.addListener('execute', this.onClickMap, this);
+
+						var mapButton = new qx.ui.form.Button('CnCMaps').set({
+							appearance: 'button-text-small',
+							toolTipText: 'Opens Current World Map from CnC Maps',
+							width: 80
+						});
+
+						mapButton.addListener('execute', this.onClickMap, this);
+						qx.core.Init.getApplication().getReportReplayOverlay().add(mapButton, {
+							right: 150,
+							top: 12
+						});	
+	
+					},
+
+					onClickMap: function() {
+					var WorldIDMap = ClientLib.Data.MainData.GetInstance().get_Server().get_WorldId();
+					var CnCMapIDLink = "http://cnc-map.com/" + WorldIDMap
+						qx.core.Init.getApplication().showExternal(CnCMapIDLink);
+					},
+				}
+			});
+
+		}
+
+		function waitForGame() {
+			try {
+				if (typeof Parse !== 'undefined' && typeof qx !== 'undefined' && qx.core.Init.getApplication() && qx.core.Init.getApplication().initDone) {
+					createCnCMapLink();
+					CnCMapLink.getInstance().initialize();
+				}
+				else {
+					setTimeout(waitForGame, 1000);
+				}
+			}
+			catch (e) {
+				console.log('CnCMapLink: ', e.toString());
+			}
+		}
+
+		setTimeout(waitForGame, 1000);
+	};
+
+	var parseScript = document.createElement('script');
+	parseScript.src = 'https://www.parsecdn.com/js/parse-1.2.19.min.js';
+	parseScript.type = 'text/javascript';
+	document.getElementsByTagName('head')[0].appendChild(parseScript);
+
+	var script = document.createElement('script');
+	script.innerHTML = '(' + main.toString() + ')();';
+	script.type = 'text/javascript';
+	document.getElementsByTagName('head')[0].appendChild(script);
+})();
+
+/*
+End of CnCTA WorldMap Link
+*/
+
+
+
+
+
+
+
+
+
+
+
+
