@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.47
+// @version     1.0.48
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.47";
+var CrucialScriptVersion = "1.0.48";
 
 var GM_SuperValue = new function () {
 
@@ -1388,7 +1388,7 @@ End of Multisession login
 							var VerNumb;
 							var ScriptUrl;
 							var DonateUrl = "https://www.allyourbasesbelong2us.com/donate.html";
-							var CrucialScriptVersion = "1.0.47";
+							var CrucialScriptVersion = "1.0.48";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -26505,6 +26505,9 @@ if (Disable_V2_Sim == true){
 						Transfer : "FactionUI/icons/icon_transfer_resource.png"
 					},
 					Simulate : "FactionUI/icons/icon_attack_simulate_combat.png",
+					one:"https://www.allyourbasesbelong2us.com/sim_img/swap1_2.png",
+					two:"https://www.allyourbasesbelong2us.com/sim_img/swap2_3.png",
+					three:"https://www.allyourbasesbelong2us.com/sim_img/swap3_4.png",
 					CNCOpt : "https://www.allyourbasesbelong2us.com/sim_img/favicon.ico"
 				}
 			});
@@ -26798,6 +26801,22 @@ if (Disable_V2_Sim == true){
 
 							if ((sel === null || formation[i].x == sel) && pos == "v")
 								formation[i].y = Math.abs(formation[i].y - ClientLib.Base.Util.get_ArmyMaxSlotCountY() + 1);
+						}
+						return formation;
+					},
+					SwapLines:function(formation, lineA, lineB) {
+						lineAZoroBasedIndex = lineA - 1;
+						lineBZeroBasedIndex = lineB - 1;
+						for (var f = 0;f < formation.length;f++) {
+							  
+							 switch(formation[f].y) {
+								case lineAZoroBasedIndex:
+									formation[f].y = lineBZeroBasedIndex;
+									break;
+								case lineBZeroBasedIndex:
+									formation[f].y = lineAZoroBasedIndex;
+									break;							    
+							}
 						}
 						return formation;
 					},
@@ -29321,10 +29340,21 @@ if (Disable_V2_Sim == true){
 							row : 4,
 							column : 2
 						});
-						
+						this.boxMove.add(this.newButton(TABS.RES.IMG.one, this.tr("Swaps lines 1 & 2."), this.onClick_btnSwap_1_2, "k", null), {
+							row:5,
+							column:0
+						});
+						this.boxMove.add(this.newButton(TABS.RES.IMG.two, this.tr("Swaps lines 2 & 3."), this.onClick_btnSwap_2_3, "z", null), {
+							row:5,
+							column:1
+						});
+						this.boxMove.add(this.newButton(TABS.RES.IMG.three, this.tr("Swaps lines 3 & 4."), this.onClick_btnSwap_3_4, "c", null), {
+							row:5,
+							column:2
+						});
 						this.PlayArea.add(this.boxMove, {
 							right : 5,
-							bottom : 180
+							bottom : 188
 						});
 						//DS-MOD-END
 						phe.cnc.Util.attachNetEvent(ClientLib.Vis.VisMain.GetInstance(), "ViewModeChange", ClientLib.Vis.ViewModeChange, this, this._onViewChanged);
@@ -29486,6 +29516,21 @@ if (Disable_V2_Sim == true){
 					onClick_btnShift : function (e) {
 						var formation = TABS.UTIL.Formation.Get();
 						formation = TABS.UTIL.Formation.Shift(formation, e.getTarget().getModel()[0], e.getTarget().getModel()[1]);
+						TABS.UTIL.Formation.Set(formation);
+					},
+					onClick_btnSwap_1_2 : function (e) {
+						var formation = TABS.UTIL.Formation.Get(),
+						formation = TABS.UTIL.Formation.SwapLines(formation, 1, 2);
+						TABS.UTIL.Formation.Set(formation);
+					},
+					onClick_btnSwap_2_3 : function (e) {
+						var formation = TABS.UTIL.Formation.Get(),
+						formation = TABS.UTIL.Formation.SwapLines(formation, 2, 3);
+						TABS.UTIL.Formation.Set(formation);
+					},
+					onClick_btnSwap_3_4 : function (e) {
+						var formation = TABS.UTIL.Formation.Get(),
+						formation = TABS.UTIL.Formation.SwapLines(formation, 3, 4);
 						TABS.UTIL.Formation.Set(formation);
 					},
 					onClick_btnDisable : function (e) {
@@ -33553,15 +33598,3 @@ Start of CnCTA WorldMap Link
 /*
 End of CnCTA WorldMap Link
 */
-
-
-
-
-
-
-
-
-
-
-
-
