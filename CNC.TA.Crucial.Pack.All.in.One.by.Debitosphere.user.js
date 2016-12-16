@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.48
+// @version     1.0.49
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.48";
+var CrucialScriptVersion = "1.0.49";
 
 var GM_SuperValue = new function () {
 
@@ -1388,7 +1388,7 @@ End of Multisession login
 							var VerNumb;
 							var ScriptUrl;
 							var DonateUrl = "https://www.allyourbasesbelong2us.com/donate.html";
-							var CrucialScriptVersion = "1.0.48";
+							var CrucialScriptVersion = "1.0.49";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -33598,3 +33598,15 @@ Start of CnCTA WorldMap Link
 /*
 End of CnCTA WorldMap Link
 */
+
+/*
+Start of MENU FIX Chrome 55
+*/
+(function () {
+    
+    window.navigator["pointerEnabled"] = new Function( "if (\"PointerEvent\" in window) {return true; }");
+})();
+/*
+End of MENU FIX Chrome 55
+*/
+
