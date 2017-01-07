@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.51
+// @version     1.0.52
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.51";
+var CrucialScriptVersion = "1.0.52";
 
 var GM_SuperValue = new function () {
 
@@ -1444,7 +1444,7 @@ End of Multisession login
 							var VerNumb;
 							var ScriptUrl;
 							var DonateUrl = "https://www.allyourbasesbelong2us.com/donate.html";
-							var CrucialScriptVersion = "1.0.51";
+							var CrucialScriptVersion = "1.0.52";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -7251,7 +7251,7 @@ if (Disable_Wavy == true){
 						var worldObjectNPCBases = this.getWorldObjectsWithinRange(
 							visObject.get_RawX(),
 							visObject.get_RawY(),
-							Wavy.ForgottenAttackDistance + 0.5,
+							Wavy.ForgottenAttackDistance,
 							[ClientLib.Data.WorldSector.ObjectType.NPCBase]
 						)[ClientLib.Data.WorldSector.ObjectType.NPCBase];
 						var npcBaseLevels = this.getNPCBaseLevels(worldObjectNPCBases);
@@ -7283,7 +7283,7 @@ if (Disable_Wavy == true){
 
 						if (!(coords in this.regionCityMoveInfoCache)) {
 							var worldObjectNPCBases = this.getWorldObjectsWithinRange(x, y,
-								Wavy.ForgottenAttackDistance + 0.5,
+								Wavy.ForgottenAttackDistance,
 								[ClientLib.Data.WorldSector.ObjectType.NPCBase]
 							)[ClientLib.Data.WorldSector.ObjectType.NPCBase];
 
