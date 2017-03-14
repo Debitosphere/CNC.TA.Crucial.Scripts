@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.52
+// @version     1.0.53
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.52";
+var CrucialScriptVersion = "1.0.53";
 
 var GM_SuperValue = new function () {
 
@@ -610,7 +610,7 @@ function init2() {
 		var selectionList2 = '<select name="CrucialSelectionBox" size="1" style="width: 130px">';
         var selectionBox3 = '<div id="CrucialSelectionBox" style="width: 130px; height: 150px; border: 4px solid grey; padding: 10px; z-index: 9999; position: absolute; background-color: #17341A; top: 40px; left: 130px; line-height: 20px;  left: '+width+'px; position:absolute;"><font color="#00FF00"><p align="center"><b>Crucial Pack<br>All in One<br>Installed</b></font></p></div>';
 		$('body').append(selectionBox3);
-		$('#CrucialSelectionBox').append('<p align="center"><button type="button" id="CrucialDonate">Donate</button><br><br><button type="button" id="CrucialSettings">Crucial Script Settings</button></p></div>');
+		$('#CrucialSelectionBox').append('<p align="center"><button type="button" id="CrucialDonate">Donate</button><br><br><button type="button" id="CrucialSettings">Crucial Script Settings</button><br><br><button type="button" id="NewSessionLogin">New Login Session</button></p></div>');
 		
 		$('#CrucialDonate').click(function() {
 			window.open("https://www.allyourbasesbelong2us.com/donate.html", "_blank");
@@ -622,9 +622,22 @@ function init2() {
 			delete element;
 			settingsWindow();
 		});
+        
+        $('#NewSessionLogin').click(function() {
+            eraseCookie("JSESSIONID");
+            eraseCookie("Rememberme");
+            eraseCookie("commandandconquer_remember_me");
+            eraseCookie("commandandconquer_remember_me_success");
+            window.open("https://www.tiberiumalliances.com/login/auth", "_blank");
+            //window.location.reload();
+		});
 	}
 	}
 	
+
+
+
+
 function ScriptInfo() {
 	
 	var url = window.location.href;
@@ -1444,7 +1457,7 @@ End of Multisession login
 							var VerNumb;
 							var ScriptUrl;
 							var DonateUrl = "https://www.allyourbasesbelong2us.com/donate.html";
-							var CrucialScriptVersion = "1.0.52";
+							var CrucialScriptVersion = "1.0.53";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -1477,7 +1490,7 @@ End of Multisession login
 							var index;
 							for(index in return_data)
 							{
-								if(return_data[index].id == PackNumb){
+								if(return_data[index]){
 									VerNumb = return_data[index].VerNumb;
 									UpdateFixes = return_data[index].UpdateFixes;
 									ScriptUrl = return_data[index].ScriptUrl;
@@ -8120,6 +8133,7 @@ if (Disable_Formation_Saver == true){
 /*
 End of Formation Saver
 */
+
 
 
 /*
@@ -23252,6 +23266,7 @@ window.TACS_version = GM_info.script.version;
 									contentPaddingBottom : 2,
 									contentPaddingRight : 2,
 									contentPaddingLeft : 6,
+									width : 245,
 									showMaximize : false,
 									showMinimize : false,
 									allowMaximize : false,
@@ -23276,6 +23291,7 @@ window.TACS_version = GM_info.script.version;
 							}, this);
 							var tabView = new qx.ui.tabview.TabView().set({
 									contentPaddingTop : 3,
+									width : 245,
 									contentPaddingBottom : 6,
 									contentPaddingRight : 7,
 									contentPaddingLeft : 3
@@ -23341,7 +23357,7 @@ window.TACS_version = GM_info.script.version;
 							layout.setColumnAlign(0, "left", "middle");
 							layout.setColumnAlign(1, "right", "middle");
 							layout.setColumnFlex(0, 1);
-							layout.setRowHeight(0, 15);
+							layout.setRowHeight(0, 22);
 							container.setLayout(layout);
 							container.setThemedFont("bold");
 							container.setThemedBackgroundColor("#eef");
@@ -23362,7 +23378,8 @@ window.TACS_version = GM_info.script.version;
 
 							this.buttons.attack.refreshStats = new qx.ui.form.Button(lang("Refresh"));
 							this.buttons.attack.refreshStats.set({
-								width : 58,
+								width : 90,
+								height : 21,
 								appearance : "button-text-small",
 								toolTipText : lang("Refresh Stats")
 							});
@@ -33636,8 +33653,6 @@ Start of CnCTA WorldMap Link
 		function createCnCMapLink() {
 			console.log('CnCMapLink loaded');
 
-			Parse.initialize('PmNW9dH7wrTFQmYgInbDVgGqagUOVPIzENRwzfWu', 'ajepOC4n9K44jh89s5WKtEa4v0hh3OMokxNqLqt0');
-
 			qx.Class.define('CnCMapLink', {
 				type: 'singleton',
 				extend: qx.core.Object,
@@ -33649,9 +33664,12 @@ Start of CnCTA WorldMap Link
 					},
 
 					initializeEntryPoints: function() {
-						var scriptsButton = qx.core.Init.getApplication().getMenuBar().getScriptsButton();
-						scriptsButton.Add('CnC TA: World Map', 'https://www.allyourbasesbelong2us.com/images/scripts/cncmap.png');
-						var children = scriptsButton.getMenu().getChildren();
+						
+						var ScriptsButton = qx.core.Init.getApplication().getMenuBar().getScriptsButton();
+
+						ScriptsButton.Add('CnC TA: World Map', 'https://www.allyourbasesbelong2us.com/images/scripts/cncmap.png');
+
+						var children = ScriptsButton.getMenu().getChildren();
 						var lastChild = children[children.length - 1];
 						lastChild.addListener('execute', this.onClickMap, this);
 
@@ -33662,22 +33680,22 @@ Start of CnCTA WorldMap Link
 						});
 
 						mapButton.addListener('execute', this.onClickMap, this);
-	
+
 					},
 
 					onClickMap: function() {
 					var WorldIDMap = ClientLib.Data.MainData.GetInstance().get_Server().get_WorldId();
 					var CnCMapIDLink = "http://cnc-map.com/" + WorldIDMap
-						qx.core.Init.getApplication().showExternal(CnCMapIDLink);
+					qx.core.Init.getApplication().showExternal(CnCMapIDLink);
 					},
 				}
 			});
 
-		}
+		};
 
 		function waitForGame() {
 			try {
-				if (typeof Parse !== 'undefined' && typeof qx !== 'undefined' && qx.core.Init.getApplication() && qx.core.Init.getApplication().initDone) {
+				if (typeof qx !== 'undefined' && qx.core.Init.getApplication() && qx.core.Init.getApplication().initDone) {
 					createCnCMapLink();
 					CnCMapLink.getInstance().initialize();
 				}
@@ -33688,15 +33706,10 @@ Start of CnCTA WorldMap Link
 			catch (e) {
 				console.log('CnCMapLink: ', e.toString());
 			}
-		}
+		};
 
 		setTimeout(waitForGame, 1000);
 	};
-
-	var parseScript = document.createElement('script');
-	parseScript.src = 'https://www.parsecdn.com/js/parse-1.2.19.min.js';
-	parseScript.type = 'text/javascript';
-	document.getElementsByTagName('head')[0].appendChild(parseScript);
 
 	var script = document.createElement('script');
 	script.innerHTML = '(' + main.toString() + ')();';
