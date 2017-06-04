@@ -414,7 +414,7 @@ var ScriptAuthors;
 	var ScriptDescription22 = "Based on Maelstrom Dev Tools. Modified MCV timer, repair time label, resource labels.";
 	var ScriptAuthors22 = "unicode";
 	var Script23;
-	var ScriptName23 = "TA POI Analyser";
+	var ScriptName23 = "TA POI Analyser - <b>Currently Broken<b>";
 	var ScriptDescription23 = "Display alliance POIs scores and next tier requirements.";
 	var ScriptAuthors23 = "zdoom<br>Debitosphere";
 	var Script24;
@@ -1961,7 +1961,7 @@ if (Disable_MaelstromTools == true){
                     this.mainMenuWindow.setAutoHide(false);
                     this.mainMenuWindow.setBackgroundColor("transparent");
                     //this.mainMenuWindow.setShadow(null);
-                    this.mainMenuWindow.setDecorator(new qx.ui.decoration.Background());
+                    this.mainMenuWindow.setDecorator(new qx.ui.decoration.Decorator());
                   }
                 }
 
@@ -1983,7 +1983,7 @@ if (Disable_MaelstromTools == true){
                 desktopPositionModifier++;
                 var openMainMenuButton = this.createDesktopButton(Lang.gt("Main menu"), "ProductionMenu", false, this.desktopPosition(desktopPositionModifier));
                 openMainMenuButton.addListener("click", function (e) {
-                  this.mainMenuWindow.placeToMouse(e);
+                  this.mainMenuWindow.placeToPointer(e);
                   this.mainMenuWindow.show();
                 }, this);
 
@@ -5679,7 +5679,7 @@ if (Disable_MaelstromTools_BaseScanner == true){
 							}, this);
 							oOptions.add(this.ZG);
 
-							var border = new qx.ui.decoration.Single(2, "solid", "blue");
+							var border = new qx.ui.decoration.Decorator(2, "solid", "blue");
 							this.ZV = new qx.ui.container.Composite(new qx.ui.layout.Basic()).set({
 									decorator : border,
 									backgroundColor : "red",
@@ -9239,7 +9239,7 @@ if (Disable_Resource_Transfer_Window == true){
 							width : 18,
 							height : 20,
 							scale : true,
-							AutoFlipH : false
+							//AutoFlipH : false
 						});
 						tradeCostBox.add(new qx.ui.core.Spacer(), {
 							flex : 1
@@ -9258,7 +9258,7 @@ if (Disable_Resource_Transfer_Window == true){
 						tradeCostContainer.add(tradeCostBox);
 						tradeCostContainer.add(this.tradeButton);
 						var tradeWindowCanvas = new qx.ui.container.Composite(new qx.ui.layout.Canvas()).set({
-							decorator : new qx.ui.decoration.Background().set({
+							decorator : new qx.ui.decoration.Decorator().set({
 								backgroundRepeat : 'no-repeat',
 								backgroundImage : "webfrontend/ui/menues/resource_transfer/bgr_restransfer_summary.png"
 							})
@@ -13629,7 +13629,7 @@ var xtr1m_main = function()
                         
                         var box = new qx.ui.layout.HBox();
                         var overlay = new qx.ui.container.Composite(box).set({
-						    decorator : new qx.ui.decoration.Single(1, "solid", "#000000").set({backgroundColor : "#" + red + green + "0"}),
+						    decorator : new qx.ui.decoration.Decorator(1, "solid", "#000000").set({backgroundColor : "#" + red + green + "0"}),
 							opacity : 0.8,
 							width: width - 2, 
                             height: height - 2
@@ -14039,7 +14039,7 @@ var xtr1m_main = function()
                         
                         var box = new qx.ui.layout.HBox();
                         var overlay = new qx.ui.container.Composite(box).set({
-						    decorator : new qx.ui.decoration.Single(1, "solid", "#000000").set({backgroundColor : "#" + red + green + "0"}),
+						    decorator : new qx.ui.decoration.Decorator(1, "solid", "#000000").set({backgroundColor : "#" + red + green + "0"}),
 							opacity : 0.8,
 							width: width - 2, 
                             height: height - 2
@@ -15524,7 +15524,7 @@ if (Disable_SectorHUD == true){
 					});
 					
 					var HUD = new qx.ui.container.Composite(new qx.ui.layout.HBox()).set({
-						decorator : new qx.ui.decoration.Background().set({
+						decorator : new qx.ui.decoration.Decorator().set({
 							backgroundRepeat : "no-repeat",
 							backgroundImage : "webfrontend/ui/menues/notifications/bgr_ticker_container.png",
 							backgroundPositionX : "center"
@@ -18242,11 +18242,11 @@ if (Disable_InfoSticker == true){
                             try {
                             	var i;
                                 
-                                if (this.infoSticker && !this.mcvInfoLabel.isDisposed() && !this.mcvPopup.isDisposed()) {
+                                 if (this.infoSticker && !this.mcvInfoLabel.isDisposed() && !this.mcvPopup.isDisposed()) {
                                     var dele;
 
                                     try {
-                                        if (this.top_image != null) {
+/*                                         if (this.top_image != null) {
                                             dele = this.top_image.getContentElement().getDomElement();
                                             if (dele != null) {
                                                 dele.style["-moz-transform"] = "scaleY(-1)";
@@ -18274,6 +18274,7 @@ if (Disable_InfoSticker == true){
                                                 }
                                             }
                                         }
+										 */
                                     } catch (e2) {
                                         console.log("Error flipping images.", e2.toString());
                                     }
@@ -18364,7 +18365,7 @@ if (Disable_InfoSticker == true){
                             var mid = "#9CA4A8";
                             var dark = "#8C9499";
                             this.lockPane.setDecorator(null);
-                            this.lockButtonDecoration = new qx.ui.decoration.Background();
+                            this.lockButtonDecoration = new qx.ui.decoration.Decorator();
                             this.lockButtonDecoration.setBackgroundColor(this.locked ? dark : light);
                             this.lockPane.setDecorator(this.lockButtonDecoration);
                         },
@@ -18400,7 +18401,7 @@ if (Disable_InfoSticker == true){
                             var mid = "#9CA4A8";
                             var dark = "#8C9499";
                             this.pinPane.setDecorator(null);
-                            this.pinButtonDecoration = new qx.ui.decoration.Background().set({
+                            this.pinButtonDecoration = new qx.ui.decoration.Decorator().set({
                                 //innerOpacity: 0.5
                             });
                             //this.pinButtonDecoration.setInnerColor(this.pinned ? mid : light);
@@ -18429,7 +18430,7 @@ if (Disable_InfoSticker == true){
 								var pane = new qx.ui.container.Composite(new qx.ui.layout.VBox()).set({
 									padding: [5, 0, 5, 5],
 									width: 124,
-									decorator: new qx.ui.decoration.Background().set({
+									decorator: new qx.ui.decoration.Decorator().set({
 										backgroundImage: "decoration/pane_messaging_item/messaging_items_pane.png",
 										backgroundRepeat: "scale",
 									}),
@@ -18450,7 +18451,7 @@ if (Disable_InfoSticker == true){
 								});
 								
 								var hideButton = new qx.ui.form.Button("-").set({
-									//decorator: new qx.ui.decoration.Single(1, "solid", "black"),
+									decorator: new qx.ui.decoration.Decorator(1, "solid", "black"),
 									maxWidth: 15,
 									maxHeight: 10,
 									//textColor: "black"
@@ -18619,7 +18620,7 @@ if (Disable_InfoSticker == true){
                                     spacing: 3})).set({
                                     paddingLeft: 5,
                                     width: 105,
-                                    decorator: new qx.ui.decoration.Background()
+                                    decorator: new qx.ui.decoration.Decorator()
                                 });
                                 
                                 var menu = new qx.ui.menu.Menu();
@@ -18960,7 +18961,7 @@ if (Disable_InfoSticker == true){
                                     this.stickerBackground = new qx.ui.container.Composite(new qx.ui.layout.VBox()).set({
                                         //paddingLeft: 5,
                                         width: 105,
-                                        decorator: new qx.ui.decoration.Background().set({
+                                        decorator: new qx.ui.decoration.Decorator().set({
                                             backgroundImage: "webfrontend/ui/common/bgr_region_world_select_scaler.png",
                                             backgroundRepeat: "scale",
                                         })
@@ -19561,7 +19562,7 @@ if (Disable_POI_Analyser == true){
 						var newFont = defaultFont.clone();
 						newFont.setSize(32);
 						abr.setFont(newFont);
-						var deco = new qx.ui.decoration.Background().set({backgroundImage: "https://www.allyourbasesbelong2us.com/poi.ana.png"});
+						var deco = new qx.ui.decoration.Decorator().set({backgroundImage: "https://www.allyourbasesbelong2us.com/poi.ana.png"});
 						var imgCont = new qx.ui.container.Composite(new qx.ui.layout.VBox());
 						imgCont.set({minWidth: 500, minHeight: 192, maxWidth: 500, maxHeight: 193, decorator: deco, alignX: 'center'});
 						var scrl = new qx.ui.container.Scroll();
@@ -19938,9 +19939,12 @@ if (Disable_POI_Analyser == true){
 						}, this);
 						
 						var overlay = webfrontend.gui.alliance.AllianceOverlay.getInstance();
-						var mainTabview = overlay.getChildren()[12].getChildren()[0];
+						console.log(overlay);
+						//var mainTabview = overlay.getChildren()[12].getChildren()[0];
+/* 						var mainTabview = overlay.getChildren()[11].getChildren()[0];
+						console.log(mainTabview);
 							mainTabview.addAt(this, 0);
-							mainTabview.setSelection([this]);
+							mainTabview.setSelection([this]); */
 					}
 					catch(e)
 					{
@@ -20716,7 +20720,7 @@ if (Disable_Tunnel_Info == true){
 					addTunnelMarker : function (tunnelX, tunnelY, color) {
 						try {
 							var tunnelMarker = new qx.ui.container.Composite(new qx.ui.layout.HBox(5)).set({
-									decorator : new qx.ui.decoration.Single(1, "solid", "#000000").set({
+									decorator : new qx.ui.decoration.Decorator(1, "solid", "#000000").set({
 										backgroundColor : color
 									}),
 									width : this.tunnelMarkerWidth,
@@ -21243,12 +21247,12 @@ if (Disable_FluniksTools == true){
 							popup1.add(AccBuildingChoice, {row: 0, column: 5});
 						button.addListener("click", function(e)
 								{
-								  popup.placeToMouse(e);
+								  popup.placeToPointer(e);
 									popup.show();
 								}, this);
 							button1.addListener("click", function(e)
 								{
-								  popup1.placeToMouse(e);
+								  popup1.placeToPointer(e);
 									popup1.show();
 								}, this);
 						
@@ -24429,7 +24433,7 @@ window.TACS_version = GM_info.script.version;
 							this.toolBar.setHeight(53);
 							this.toolBar.setWidth(this.TOOL_BAR_WIDTH);
 							this.toolBar.set({
-								decorator : new qx.ui.decoration.Background().set({
+								decorator : new qx.ui.decoration.Decorator().set({
 									backgroundImage : "FactionUI/menues/victory_screen/bgr_victscr_header.png"
 								}),
 								visibility : false
@@ -24780,7 +24784,7 @@ window.TACS_version = GM_info.script.version;
 							this.userInterface.setHeight(160);
 							this.userInterface.setWidth(canvasWidth);
 							this.userInterface.set({
-								decorator : new qx.ui.decoration.Background().set({
+								decorator : new qx.ui.decoration.Decorator().set({
 									backgroundImage : interfaceBG
 								})
 							});
@@ -26195,7 +26199,7 @@ window.TACS_version = GM_info.script.version;
 
 								_this.repairButtons[i] = new qx.ui.form.Button("", "data:image/png;base64,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%3D%3D");
 								_this.repairButtons[i].set({
-									decorator : new qx.ui.decoration.Background().set({
+									decorator : new qx.ui.decoration.Decorator().set({
 										backgroundColor : 'transparent'
 									}),
 									width : gridWidth,
@@ -33484,7 +33488,7 @@ if (Disable_RepairTimeofDeath == true){
 						var container = new qx.ui.container.Composite(new qx.ui.layout.HBox(2));
 						container.add(new qx.ui.basic.Image('webfrontend/ui/icons/icn_repair_off_points.png').set({
 							alignY: 'middle',
-							AutoFlipH: false,
+							//AutoFlipH: false,
 							toolTipText: qx.core.Init.getApplication().tr('tnf:offense repair time')
 						}));
 						container.add(this.offenseRepairTimeLabel = new qx.ui.basic.Label().set({
