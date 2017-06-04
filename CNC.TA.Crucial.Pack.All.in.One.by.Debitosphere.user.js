@@ -1558,7 +1558,7 @@ End of Multisession login
                                                   }, this);
 								main_button.addListener("click", function(e)
                                                     {
-                                                        main_popup.placeToMouse(e);
+                                                        main_popup.placeToPointer(e);
                                                         main_popup.show();
                                                     }, this);
 								var app = qx.core.Init.getApplication();
