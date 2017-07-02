@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Reservations
 // @description Allows a player to reserve a layout to a list that can be managed by the alliance CiC
-// @version     0.50b
+// @version     0.51b
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialLayoutReserver
@@ -761,7 +761,7 @@ function SD2(){
 
 					onClickReserve: function() {
 					//OpenReservationsList();
-					SD6();
+					//4();
 					OpenReservationsListSlim();
 					},
 				}
@@ -795,7 +795,7 @@ function SD2(){
 					throw new Error('can not find the base: ' + selectedBaseID);
 				}
 			}
-			BaseCount = BaseCount + 1;
+			//BaseCount = BaseCount + 1;
 		        var player = ClientLib.Data.MainData.GetInstance().get_Player();
 				var playerRank = player.get_OverallRank();
                 var PlayerFaction = player.get_Faction();
@@ -896,9 +896,10 @@ function OpenReservationsList(){
 								2 : "#31A245"
 							}
 							var WorldID = "" + ClientLib.Data.MainData.GetInstance().get_Server().get_WorldId();
+							var AllianceID = "" + ClientLib.Data.MainData.GetInstance().get_Alliance().get_Id();
 							var return_data;
 							var xmlhttp = new XMLHttpRequest();
-							var params = "functionname=ReservationsList&WorldID="+WorldID;
+							var params = "functionname=ReservationsList&WorldID="+WorldID+"&AllianceID="+AllianceID;
 							xmlhttp.open("POST", "https://www.allyourbasesbelong2us.com/DbService/Service.php", false);
 							xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 							xmlhttp.onreadystatechange = function ()
@@ -906,6 +907,7 @@ function OpenReservationsList(){
 							if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
 								{
 									return_data= eval(xmlhttp.responseText);
+									console.log(xmlhttp.responseText);
 								}
 							};
 							xmlhttp.send(params);
@@ -1162,9 +1164,10 @@ function OpenReservationsListSlim() {
         }), {row: 0, column: 2 });
 		
 	var WorldID = "" + ClientLib.Data.MainData.GetInstance().get_Server().get_WorldId();
+	var AllianceID = "" + ClientLib.Data.MainData.GetInstance().get_Alliance().get_Id();
 	var return_data2;
     var xmlhttp2 = new XMLHttpRequest();
-    var params2 = "functionname=FreeLayoutsList&WorldID="+WorldID;
+    var params2 = "functionname=FreeLayoutsList&WorldID="+WorldID+"&AllianceID="+AllianceID;
     xmlhttp2.open("POST", "https://www.allyourbasesbelong2us.com/DbService/Service.php", false);
     xmlhttp2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp2.onreadystatechange = function() {
@@ -4512,9 +4515,10 @@ function OpenReservationsListSlim() {
             alignX: 'left'
         }), {row: 0, column: 2 }); 	
 	var WorldID = "" + ClientLib.Data.MainData.GetInstance().get_Server().get_WorldId();
+	var AllianceID = "" + ClientLib.Data.MainData.GetInstance().get_Alliance().get_Id();
 	var return_data3;
     var xmlhttp3 = new XMLHttpRequest();
-    var params3 = "functionname=SatCodeList&WorldID="+WorldID;
+    var params3 = "functionname=SatCodeList&WorldID="+WorldID+"&AllianceID="+AllianceID;
     xmlhttp3.open("POST", "https://www.allyourbasesbelong2us.com/DbService/Service.php", false);
     xmlhttp3.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp3.onreadystatechange = function() {
@@ -4827,10 +4831,11 @@ function OpenReservationsListSlim() {
         }), {row: 0, column: 6 });	
 		
 		
-	var WorldID = ClientLib.Data.MainData.GetInstance().get_Server().get_WorldId();	
+	var WorldID = "" + ClientLib.Data.MainData.GetInstance().get_Server().get_WorldId();
+	var AllianceID = "" + ClientLib.Data.MainData.GetInstance().get_Alliance().get_Id();
     var return_data;
     var xmlhttp = new XMLHttpRequest();
-    var params = "functionname=ReservationsList&WorldID="+WorldID;
+    var params = "functionname=ReservationsList&WorldID="+WorldID+"&AllianceID="+AllianceID;
     xmlhttp.open("POST", "https://www.allyourbasesbelong2us.com/DbService/Service.php", false);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp.onreadystatechange = function() {
@@ -7149,7 +7154,8 @@ for (var i=0; i<s_chk.length; i++) {
 					throw new Error('can not find the base: ' + selectedBaseID);
 				}
 			}
-			BaseCount = BaseCount + 1;
+			//BaseCount = BaseCount + 1;
+			//BaseCount = "" + BaseCount;
 		        var player = ClientLib.Data.MainData.GetInstance().get_Player();
 				var playerRank = player.get_OverallRank();
                 var PlayerFaction = player.get_Faction();
