@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.56
+// @version     1.0.57
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.56";
+var CrucialScriptVersion = "1.0.57";
 
 var GM_SuperValue = new function () {
 
@@ -346,7 +346,7 @@ var ScriptAuthors;
 	var Script05;
 	var ScriptName05 = "TA POI Real Gain";
 	var ScriptDescription05 = "Displays actual gain/loss for POIs by taking rank multiplier properly into account";
-	var ScriptAuthors05 = "petui";
+	var ScriptAuthors05 = "petui<br>AlkalyneD4";
 	var Script06;
 	var ScriptName06 = "TA Enemy Info";
 	var ScriptDescription06 = "Displays an Enemy's Offense and Defense Level when in range of your selected base.";
@@ -418,7 +418,7 @@ var ScriptAuthors;
 	var Script23;
 	var ScriptName23 = "TA POI Analyser";
 	var ScriptDescription23 = "Display alliance POIs scores and next tier requirements.";
-	var ScriptAuthors23 = "zdoom<br>Debitosphere";
+	var ScriptAuthors23 = "zdoom<br>Debitosphere<br>leo7044";
 	var Script24;
 	var ScriptName24 = "Green Cross Tools";	
 	var ScriptDescription24 = "Tools to help the player manage their gameplay more efficiently and effectively. A non-wrapper take of Maelstrom tools with some original touch.";
@@ -7218,9 +7218,10 @@ if (Disable_Wavy == true){
 
 						if (typeof webfrontend.gui.region.RegionCityInfo.prototype.getObject !== 'function') {
 							source = webfrontend.gui.region.RegionCityInfo.prototype.setObject.toString();
+							source=source.replace("function(","function (");
 							var objectMemberName = PerforceChangelist >= 448942 && PerforceChangelist < 451851
-								? source.match(/^function.?\(([A-Za-z]+)\)\{.+([A-Za-z]+)=\1\.object;[\s\S]+this\.([A-Za-z_]+)=\2;/)[3]
-								: source.match(/^function.?\(([A-Za-z]+)(?:,[A-Za-z]+)?\)\{.+this\.([A-Za-z_]+)=\1;/)[2];
+								? source.match(/^function \(([A-Za-z]+)\)\{.+([A-Za-z]+)=\1\.object;[\s\S]+this\.([A-Za-z_]+)=\2;/)[3]
+								: source.match(/^function \(([A-Za-z]+)(?:,[A-Za-z]+)?\)\{.+this\.([A-Za-z_]+)=\1;/)[2];
 
 							/**
 							 * @returns {ClientLib.Vis.Region.RegionObject}
@@ -14429,6 +14430,7 @@ if (Disable_POI_RealGain == true){
 							var allianceScore = poiRankScore.s;
 							var nextAllianceScore = poiRankScore.ns;
 							var previousAllianceScore = poiRankScore.ps;
+							var bonusMultiplier = ClientLib.Data.MainData.GetInstance().get_Server().get_POIGlobalBonusFactor();
 							var currentTotalBonus = ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(poiType, allianceRank, allianceScore);
 							var gainOrLoss = null;
 
@@ -14437,14 +14439,14 @@ if (Disable_POI_RealGain == true){
 
 								if (previousAllianceScore <= 0) {
 									// No rank multiplier; no loss by rank
-									gainOrLoss = currentTotalBonus - ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(poiType, allianceRank, allianceScore - selectedPoiScore);
+									gainOrLoss = currentTotalBonus - ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(poiType, allianceRank, allianceScore - selectedPoiScore,bonusMultiplier);
 								}
 								else if (allianceScore - selectedPoiScore < previousAllianceScore) {
 									// Falling behind previous alliance; need to use rankings
 								}
 								else {
 									// No loss by rank; if we end up with same score as previous alliance, our rank stays the same and they get same rank
-									gainOrLoss = currentTotalBonus - ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(poiType, allianceRank, allianceScore - selectedPoiScore);
+									gainOrLoss = currentTotalBonus - ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(poiType, allianceRank, allianceScore - selectedPoiScore,bonusMultiplier);
 								}
 							}
 							else {
@@ -14455,7 +14457,7 @@ if (Disable_POI_RealGain == true){
 								}
 								else if (nextAllianceScore <= 0 || allianceRank <= 1) {
 									// Already rank 1; no gain by rank
-									gainOrLoss = ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(poiType, allianceRank, allianceScore + selectedPoiScore) - currentTotalBonus;
+									gainOrLoss = ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(poiType, allianceRank, allianceScore + selectedPoiScore,bonusMultiplier) - currentTotalBonus;
 								}
 								else if (visObject.get_OwnerAllianceId() !== webfrontend.gui.widgets.AllianceLabel.ESpecialNoAllianceName) {
 									// Current owner of POI will lose score while we gain; need to use rankings
@@ -14465,11 +14467,11 @@ if (Disable_POI_RealGain == true){
 								}
 								else if (allianceScore + selectedPoiScore < nextAllianceScore) {
 									// No gain by rank
-									gainOrLoss = ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(poiType, allianceRank, allianceScore + selectedPoiScore) - currentTotalBonus;
+									gainOrLoss = ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(poiType, allianceRank, allianceScore + selectedPoiScore,bonusMultiplier) - currentTotalBonus;
 								}
 								else {
 									// Same score as next alliance; same rank and same bonus as them
-									gainOrLoss = ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(poiType, allianceRank - 1, allianceScore + selectedPoiScore) - currentTotalBonus;
+									gainOrLoss = ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(poiType, allianceRank - 1, allianceScore + selectedPoiScore,bonusMultiplier) - currentTotalBonus;
 								}
 							}
 
@@ -14586,8 +14588,9 @@ if (Disable_POI_RealGain == true){
 							}
 						}
 
-						var currentTotalBonus = ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(context.poiType, context.currentRank, context.currentScore);
-						var newTotalBonus = ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(context.poiType, i + 1, newAllianceScore);
+						var bonusMultiplier = ClientLib.Data.MainData.GetInstance().get_Server().get_POIGlobalBonusFactor();
+						var currentTotalBonus = ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(context.poiType, context.currentRank, context.currentScore,bonusMultiplier);
+						var newTotalBonus = ClientLib.Base.PointOfInterestTypes.GetTotalBonusByType(context.poiType, i + 1, newAllianceScore,bonusMultiplier);
 						var gainOrLoss = isGain
 							? newTotalBonus - currentTotalBonus
 							: currentTotalBonus - newTotalBonus;
@@ -19585,7 +19588,6 @@ if (Disable_POI_Analyser == true){
 {	
 	var injectScript = function()
 	{
-
 		function create_ccta_pa_class()
 		{
 			qx.Class.define('ccta_pa',
@@ -19604,15 +19606,17 @@ if (Disable_POI_Analyser == true){
 						footerLayout.setColumnFlex(1,1);
 						var footer = new qx.ui.container.Composite(footerLayout).set({font: "font_size_13", padding: [5, 10], marginTop: 5, decorator: "pane-light-opaque"});
 						var label = new qx.ui.basic.Label().set({textColor: "text-value", font: "font_size_13", padding: 10, alignX: 'right'});
-						var abr = new qx.ui.basic.Label().set({alignX: 'center', marginTop: 30, font: 'font_size_16', textColor: 'black'});
+						var checkBox = new qx.ui.form.CheckBox('Show/Hide image and alliance appreviation.')
+						checkBox.set({textColor: webfrontend.gui.util.BBCode.clrLink, font: "font_size_13"});
+						var abr = new qx.ui.basic.Label().set({alignX: 'center', marginTop: 30, font: 'font_size_14', textColor: 'black'});
 						var manager = qx.theme.manager.Font.getInstance();
 						var defaultFont = manager.resolve(abr.getFont());
 						var newFont = defaultFont.clone();
 						newFont.setSize(32);
 						abr.setFont(newFont);
-						var deco = new qx.ui.decoration.Decorator().set({backgroundImage: "https://www.allyourbasesbelong2us.com/poi.ana.png"});
+						//var deco = new qx.ui.decoration.Decorator().set({backgroundImage: "https://www.allyourbasesbelong2us.com/poi.ana.png"});
 						var imgCont = new qx.ui.container.Composite(new qx.ui.layout.VBox());
-						imgCont.set({minWidth: 500, minHeight: 192, maxWidth: 500, maxHeight: 193, decorator: deco, alignX: 'center'});
+						imgCont.set({minWidth: 363, minHeight: 356, maxWidth: 363, maxHeight: 356, /*decorator: deco, */alignX: 'center'});
 						var scrl = new qx.ui.container.Scroll();
 						var cont = new qx.ui.container.Composite(new qx.ui.layout.VBox()).set({allowGrowY: true, padding: 10});
 						var gb = new qx.ui.groupbox.GroupBox("Statistics").set({layout: new qx.ui.layout.VBox(), marginLeft: 2});
@@ -19652,8 +19656,8 @@ if (Disable_POI_Analyser == true){
 						{
 							var previousScore = (i == 0) ? 0 : bonusData[i - 1][1];
 							var score = getNextScore(previousScore);
-							var bonus = getBonus(startRank, score);
-							var percent = getBonus(endRank - 1, score);
+							var bonus = getBonus(startRank, score, 1);
+							var percent = getBonus(endRank - 1, score, 1);
 							if (score != previousScore)
 							{
 								bonusData[i] = [i + 1, score, bonus, percent + '%'];
@@ -19767,7 +19771,18 @@ if (Disable_POI_Analyser == true){
 						var modifierCont = new qx.ui.container.Composite(new qx.ui.layout.HBox());
 						
 						var rankingModel = new qx.ui.table.model.Simple().set({columns: ['Rank', 'Name', 'Score', 'Multiplier', 'Total Bonus']});
-
+						
+						/*
+						var custom =
+						{
+							tableColumnModel : function(obj)
+							{
+								return new qx.ui.table.columnmodel.Resize(obj);
+							}
+						};
+						*/
+						
+						//var rankingTable = new qx.ui.table.Table(rankingModel, custom);
                         var rankingTable = new qx.ui.table.Table(rankingModel);
 						rankingTable.set({
 							columnVisibilityButtonVisible: false, 
@@ -19782,10 +19797,25 @@ if (Disable_POI_Analyser == true){
 							if (n == 1) rankingTable.getTableColumnModel().setDataCellRenderer(n, new qx.ui.table.cellrenderer.Html());
 							else rankingTable.getTableColumnModel().setDataCellRenderer(n, new qx.ui.table.cellrenderer.Default().set({useAutoAlign: false}));
 						}
+						var rankingTableColumnModel = rankingTable.getTableColumnModel();
+						/*
+						var rankingTableResizeBehavior = rankingTableColumnModel.getBehavior();
+						rankingTableResizeBehavior.setWidth(0, 50);
+						rankingTableResizeBehavior.setWidth(1, "2*");
+						rankingTableResizeBehavior.setWidth(2, 100);
+						rankingTableResizeBehavior.setWidth(3, 70);
+						rankingTableResizeBehavior.setWidth(4, 100);
+						*/
 	
 						var resultsModel = new qx.ui.table.model.Simple().set({columns: ['Property', 'Value']});
+						//var resultsTable = new qx.ui.table.Table(resultsModel, custom);
 						var resultsTable = new qx.ui.table.Table(resultsModel);
-
+						var resultsTableColumnModel = resultsTable.getTableColumnModel();
+						/*
+						var resultsTableResizeBehavior = resultsTableColumnModel.getBehavior();
+						resultsTableResizeBehavior.setWidth(0, 100);
+						resultsTableResizeBehavior.setWidth(1, "2*");
+						*/
 						resultsTable.set({
 							columnVisibilityButtonVisible: false, 
 							headerCellHeight: 25, 
@@ -19801,6 +19831,7 @@ if (Disable_POI_Analyser == true){
 						
 						var poisColumns = ['Coords', 'Level', 'Score', 'Enabled'];
 						var poisModel = new qx.ui.table.model.Simple().set({columns: poisColumns  });
+						//var poisTable = new qx.ui.table.Table(poisModel, custom);
 						var poisTable = new qx.ui.table.Table(poisModel);
 						poisTable.set({
 							columnVisibilityButtonVisible: false, 
@@ -19815,6 +19846,14 @@ if (Disable_POI_Analyser == true){
 							else if (n == 3) poisTable.getTableColumnModel().setDataCellRenderer(n, new qx.ui.table.cellrenderer.Boolean())
 							else poisTable.getTableColumnModel().setDataCellRenderer(n, new qx.ui.table.cellrenderer.Default().set({useAutoAlign: false}));
 						}
+						var poisTableColumnModel = poisTable.getTableColumnModel();
+						/*
+						var poisTableResizeBehavior = poisTableColumnModel.getBehavior();
+						poisTableResizeBehavior.setWidth(0, 70);
+						poisTableResizeBehavior.setWidth(1, 50);
+						poisTableResizeBehavior.setWidth(2, "2*");
+						poisTableResizeBehavior.setWidth(3, 60);
+						*/
 						var selectionModel = poisTable.getSelectionManager().getSelectionModel();
 						selectionModel.setSelectionMode(qx.ui.table.selection.Model.MULTIPLE_INTERVAL_SELECTION_TOGGLE);
 						poisTable.getSelectionModel().addListener('changeSelection', function(e)
@@ -19904,7 +19943,25 @@ if (Disable_POI_Analyser == true){
 						////////////////////////////////////////////////////////////////////////////////////////////////////////
 						
 						
-						var showImage = true;
+						var showImage = false;
+						if (typeof localStorage.ccta_pa == 'undefined')
+						{
+							localStorage.ccta_pa = JSON.stringify({'showImage': false});
+						}
+						else showImage = JSON.parse(localStorage.ccta_pa).showImage;
+						checkBox.setValue(showImage);
+
+						var toggleImage = function()
+						{
+							var isChecked = checkBox.getValue();
+							localStorage.ccta_pa = JSON.stringify({'showImage': isChecked});
+							if (!isChecked) cont.remove(imgCont);
+							else cont.addAt(imgCont, 0);
+						};
+						checkBox.addListener('changeValue', toggleImage, this);
+
+						//footer.add(checkBox, {row: 0, column: 0});
+						//footer.add(label, {row: 0, column: 1});
 						scrl.add(cont);
 						imgCont.add(abr);
 						if (showImage) cont.add(imgCont);
@@ -19987,12 +20044,8 @@ if (Disable_POI_Analyser == true){
 						}, this);
 						
 						var overlay = webfrontend.gui.alliance.AllianceOverlay.getInstance();
-						console.log(overlay);
-						//var mainTabview = overlay.getChildren()[12].getChildren()[0];
  						var mainTabview = overlay.getChildren()[11].getChildren()[0];
-						console.log(mainTabview);
-						//mainTabview.addAt(this, 1);
-                        mainTabview.add(this, 0);
+						mainTabview.addAt(this, 0);
 						mainTabview.setSelection([this]);
 					}
 					catch(e)
@@ -20193,13 +20246,13 @@ if (Disable_POI_Analyser == true){
 						var getRankingData = function(i, type, nr)
 						{
 							var x = isolatedRanks[type][i], score = (x.pois || 0), name = webfrontend.gui.util.BBCode.createAllianceLinkText(x.an);
-							var bonus = getBonus(pois[type].index, score), multiplier = getMultiplier(nr), totalBonus = bonus + (bonus * multiplier / 100);
+							var bonus = getBonus(pois[type].index, score, 1), multiplier = getMultiplier(nr), totalBonus = bonus + (bonus * multiplier / 100);
 							totalBonus = (pois[type].bonusType == 1) ? format(Math.round(totalBonus)) : Math.round(totalBonus * 100) / 100 + '%';
 							return [nr, name, format(score), '+' + multiplier + '%',  totalBonus] 
 						};
 						getMyRanking = function(s, i, p)
 						{
-							var b = getBonus(pois[p].index, s);
+							var b = getBonus(pois[p].index, s, 1);
 							var m = getMultiplier(i);
 							var tb = b + (b * m / 100);
 							tb = (pois[p].bonusType == 1) ? format(Math.round(tb)) : Math.round(tb * 100) / 100 + '%';
@@ -20274,7 +20327,7 @@ if (Disable_POI_Analyser == true){
 							var nr = ns - s;
 							var nt = getNextTier(s);
 							var pt = getPreviousTier(s);
-							var b = getBonus(pois[p].index, s);
+							var b = getBonus(pois[p].index, s, 1);
 							var m = getMultiplier(r);
 							var f = format;
 							var tb = b + (b * m / 100);
@@ -20369,9 +20422,9 @@ if (Disable_POI_Analyser == true){
 								var rank = ranks[i].r;
 								var multiplier = getMultiplier(rank);
 								var score = ranks[i].s;
-								var bonus = getBonus(type, score);
+								var bonus = getBonus(type, score, 1);
 								var nextScore = getNextScore(score);
-								var nextBonus = getBonus(type, nextScore);
+								var nextBonus = getBonus(type, nextScore, 1);
 								var totalBonus = bonus + (bonus * multiplier / 100);
 								var nextTotalBonus = nextBonus + (nextBonus * multiplier / 100);
 								var nextTier = format(nextScore - score);
@@ -20544,8 +20597,9 @@ if (Disable_POI_Analyser == true){
 			} 
 			else window.setTimeout(initialize_ccta_pa, 10000);
 		};
-		window.setTimeout(initialize_ccta_pa, 65000);  
+		window.setTimeout(initialize_ccta_pa, 10000);  
 	};
+	
 	function inject()
 	{
 		var script = document.createElement("script");
@@ -20556,7 +20610,8 @@ if (Disable_POI_Analyser == true){
 				console.log('injected');
 			}
 	};
-	inject();	
+	inject();
+	
 })();
 }
 /*
@@ -33522,7 +33577,8 @@ if (Disable_RepairTimeofDeath == true){
 					initializeHacks: function() {
 						if (typeof webfrontend.gui.region.RegionGhostStatusInfo.prototype.getObject !== 'function') {
 							var source = webfrontend.gui.region.RegionGhostStatusInfo.prototype.setObject.toString();
-							var objectMemberName = source.match(/^function.?\(([A-Za-z]+)\)\{.*this\.([A-Za-z_]+)=\1;/)[2];
+							source=source.replace("function(","function (", this);
+							var objectMemberName = source.match(/^function \(([A-Za-z]+)\)\{.*this\.([A-Za-z_]+)=\1;/)[1];
 
 							/**
 							 * @returns {ClientLib.Vis.Region.RegionGhostCity}
@@ -33534,10 +33590,9 @@ if (Disable_RepairTimeofDeath == true){
 					},
 
 					initializeUserInterface: function() {
-						var container = new qx.ui.container.Composite(new qx.ui.layout.HBox(2));
+						var container = new qx.ui.container.Composite(new qx.ui.layout.HBox(1));
 						container.add(new qx.ui.basic.Image('webfrontend/ui/icons/icn_repair_off_points.png').set({
 							alignY: 'middle',
-							//AutoFlipH: false,
 							toolTipText: qx.core.Init.getApplication().tr('tnf:offense repair time')
 						}));
 						container.add(this.offenseRepairTimeLabel = new qx.ui.basic.Label().set({
@@ -33549,12 +33604,11 @@ if (Disable_RepairTimeofDeath == true){
 						}));
 
 						var regionGhostStatusInfo = webfrontend.gui.region.RegionGhostStatusInfo.getInstance();
-						regionGhostStatusInfo.addAt(container, regionGhostStatusInfo.getChildren().length - 2);
+						regionGhostStatusInfo.addAt(container, regionGhostStatusInfo.getChildren().length - 1);
 					},
 
 					onRegionGhostStatusInfoAppear: function() {
-						var cityId = webfrontend.gui.region.RegionGhostStatusInfo.getInstance().getObject().get_Id();
-						var city = ClientLib.Data.MainData.GetInstance().get_Cities().GetCity(cityId);
+						var city = ClientLib.Data.MainData.GetInstance().get_Cities().GetCity(ClientLib.Vis.VisMain.GetInstance().get_SelectedObject().get_Id());
 
 						var stepOfDeath = city.GetResourceData(ClientLib.Base.EResourceType.RepairChargeBase).Step;
 						var repairCharge = city.get_RepairOffenseResources().get_RepairChargeOffense();
