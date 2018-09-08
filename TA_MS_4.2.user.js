@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name          CnC:TA MemberStats 4.2
-// @version       4.7.5.2
+// @version       4.7.5.3
 // @namespace     https://www.member-stats.de
 // @homepage      https://www.member-stats.de
 // @description   Sammelt Informationen ueber Basenausbau der Allianzmitglieder (basierend auf Skripte / Routinen von neobsen, JimBeamJD, KRS_L und Dooki)
@@ -1301,9 +1301,9 @@
                                 var f = c.get_Player().get_Name(),
                                     b = c.get_Server().get_WorldId(),
                                     l = c.get_Alliance().get_Id();
-                                !1 === d._scanning && d._count === d._done && !1 === d._abort ? (d.win.push(""), 0 < d._count ? (d.win.push("Done! (" + d._count + ")"), d.win.push(""), d.winOpen.winOpen("layout", "layout"), 5 > Object.keys(d._bases).length &&
-                                    (c = MeStScanner.Layout.window.getInstance(), !0 !== c.active && (c.active = !0, c.openWindow("MeSt Scan result", null, 1)), c.FO(d._bases), d._bases = {})) : (d.win.push("Done! 0 new layouts to scan"), d.win.push(""))) : !1 === d._scanning && d._count + 1 === d._done && !1 === d._abort ? (d.win.delall(), d.win.push(""), 0 < d._count ? (d.win.push("Done! (" + d._count + ")"), d.win.push(""), d.winOpen.winOpen("layout", "layout"), 5 > Object.keys(d._bases).length && (c = MeStScanner.Layout.window.getInstance(), !0 !== c.active && (c.active = !0, c.openWindow("MeSt Scan result", null, 1)), c.FO(d._bases), d._bases = {})) : (d.win.push("Done! 0 new layouts to scan"), d.win.push(""))) : !1 === d._scanning && !1 === d._abort && d.win.push("Scan")
-                            },
+                                !1 === d._scanning && d._count === d._done && !1 === d._abort ? (d.win.push(""), 0 < d._count ? (d.win.push("Done! (" + d._count + ")"), d.win.push(""), 5 > Object.keys(d._bases).length &&
+                                    (c = MeStScanner.Layout.window.getInstance(), !0 !== c.active && (c.active = !0, c.openWindow("MeSt Scan result", null, 1)), c.FO(d._bases), d._bases = {})) : (d.win.push("Done! 0 new layouts to scan"), d.win.push(""))) : !1 === d._scanning && d._count + 1 === d._done && !1 === d._abort ? (d.win.delall(), d.win.push(""), 0 < d._count ? (d.win.push("Done! (" + d._count + ")"), d.win.push(""), 5 > Object.keys(d._bases).length && (c = MeStScanner.Layout.window.getInstance(), !0 !== c.active && (c.active = !0, c.openWindow("MeSt Scan result", null, 1)), c.FO(d._bases), d._bases = {})) : (d.win.push("Done! 0 new layouts to scan"), d.win.push(""))) : !1 === d._scanning && !1 === d._abort && d.win.push("Scan")
+							},
                             getBaseLayout: function(c) {
                                 var f =
                                     ClientLib.Data.MainData.GetInstance(),
