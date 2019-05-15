@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.57
+// @version     1.0.58
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -1414,7 +1414,8 @@ function removeProfile() {
 
 function init() {
 	if (url == "https://alliances.commandandconquer.com/"+language+"/" || url == "https://alliances.commandandconquer.com/") {
-		window.location.href = "https://alliances.commandandconquer.com/" + language + "/game/launch";
+        window.location.href = "https://signin.ea.com/p/web2/login?execution=e1571811549s1&initref=https%3A%2F%2Faccounts.ea.com%3A443%2Fconnect%2Fauth%3Fclient_id%3Dccta-web-server%26redirect_uri%3Dhttps%253A%252F%252Fwww.tiberiumalliances.com%252Flogin_check%26locale%3Den_US%26response_type%3Dcode%26state%3D4b604773-3368-4d4e-8cd4-b588fd2ae8a9";
+		//window.location.href = "https://alliances.commandandconquer.com/" + language + "/game/launch";
 	} else if (url.search("/login/auth/step") != -1 || url.search("/login/auth") != -1) {
 		var width = $(window).width() / 2.5;
 		var height = $(window).height() / 3;
@@ -1505,7 +1506,7 @@ End of Multisession login
 							var VerNumb;
 							var ScriptUrl;
 							var DonateUrl = "https://www.allyourbasesbelong2us.com/donate.html";
-							var CrucialScriptVersion = "1.0.57";
+							var CrucialScriptVersion = "1.0.58";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -15479,7 +15480,8 @@ if (Disable_ReplayShare == true){
 					 * @param {Object} options
 					 */
 					_sendRequest: function(url, options) {
-						var request = new qx.io.request.Xhr(url);
+						var request = new qx.bom.request.Jsonp;
+                        request.setUrl(url);
 						request.setMethod(options.method || 'GET');
 						request.setTimeout(options.timeout || 10000);
 
@@ -20782,10 +20784,10 @@ if (Disable_Tunnel_Info == true){
 												var tunnelLevel = visObject.get_Level();
 												var distanceToTunnel = ClientLib.Base.Util.CalculateDistance(startX, startY, tunnelX, tunnelY);
 												if (distanceToTunnel <= this.tunnelInfluenceRange) {
-													if (this.currentCityOffenseLevel < tunnelLevel - 6) { // Blocking Tunnel
+													if (this.currentCityOffenseLevel < tunnelLevel - 7) { // Blocking Tunnel
 														this.regionCityMoveInfoAddonExists = true;
-														if (this.requiredOffenseLevel < tunnelLevel - 6)
-															this.requiredOffenseLevel = tunnelLevel - 6;
+														if (this.requiredOffenseLevel < tunnelLevel - 7)
+															this.requiredOffenseLevel = tunnelLevel - 7;
 														this.addTunnelMarker(tunnelX, tunnelY, "#ff3600");
 													} else { // Activating Tunnel
 														this.addTunnelMarker(tunnelX, tunnelY, "#06ff00");
@@ -31914,7 +31916,7 @@ if (Disable_The_Movement == true){
 					TheMovement.Entrypoint.Abstract.call(this, history);
 
 					this.selectedObjectMemberName = webfrontend.gui.region.RegionCityMenu.prototype.onTick.toString()
-						.match(/if\(this\.([A-Za-z0-9_]+)!=null\)this\.[A-Za-z0-9_]+\(\);/)[1];
+						.match(/if\(this\.([A-Za-z0-9_]+)!==null\)this\.[A-Za-z0-9_]+\(\);/)[1];
 
 					this.actionButtons = {};
 					this.blankMenu = new qx.ui.container.Composite(new qx.ui.layout.VBox(0)).set({
