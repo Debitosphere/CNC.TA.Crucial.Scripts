@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.58
+// @version     1.0.59
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -1506,7 +1506,7 @@ End of Multisession login
 							var VerNumb;
 							var ScriptUrl;
 							var DonateUrl = "https://www.allyourbasesbelong2us.com/donate.html";
-							var CrucialScriptVersion = "1.0.58";
+							var CrucialScriptVersion = "1.0.59";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -1682,7 +1682,7 @@ Start of Infernal Wrapper
                 System = $I;
                 SharedLib = $I;
                 var strFunction;
-                
+
                 // SharedLib.Combat.CbtSimulation.prototype.DoStep
                 for (var x in $I) {
                     for (var key in $I[x].prototype) {
@@ -1708,7 +1708,6 @@ Start of Infernal Wrapper
                         }
                     }
                 }
-
                 // ClientLib.Data.CityRepair.prototype.UpdateCachedFullRepairAllCost
                 for (var key in ClientLib.Data.CityRepair.prototype) {
                     if (typeof ClientLib.Data.CityRepair.prototype[key] === 'function') {
@@ -1723,7 +1722,7 @@ Start of Infernal Wrapper
 
                 // ClientLib.Data.CityUnits.prototype.get_OffenseUnits
                 strFunction = ClientLib.Data.CityUnits.prototype.HasUnitMdbId.toString();
-                var searchString = "for (var b in {d:this.";
+                var searchString = "for(var b in {d:this.";
                 var startPos = strFunction.indexOf(searchString) + searchString.length;
                 var fn_name = strFunction.slice(startPos, startPos + 6);
                 strFunction = "var $createHelper;return this." + fn_name + ";";
@@ -1733,7 +1732,7 @@ Start of Infernal Wrapper
 
                 // ClientLib.Data.CityUnits.prototype.get_DefenseUnits
                 strFunction = ClientLib.Data.CityUnits.prototype.HasUnitMdbId.toString();
-                searchString = "for (var c in {d:this.";
+                searchString = "for(var c in {d:this.";
                 startPos = strFunction.indexOf(searchString) + searchString.length;
                 fn_name = strFunction.slice(startPos, startPos + 6);
                 strFunction = "var $createHelper;return this." + fn_name + ";";
@@ -1743,7 +1742,7 @@ Start of Infernal Wrapper
 
                 // ClientLib.Vis.Battleground.Battleground.prototype.get_Simulation
                 strFunction = ClientLib.Vis.Battleground.Battleground.prototype.StartBattle.toString();
-                searchString = "=0;for(var a=0; (a<9); a++){this.";
+                searchString = "=0;for(var a=0;(a<9);a++){this.";
                 startPos = strFunction.indexOf(searchString) + searchString.length;
                 fn_name = strFunction.slice(startPos, startPos + 6);
                 strFunction = "return this." + fn_name + ";";
@@ -5335,8 +5334,510 @@ Start of Maelstrom Tools BaseScanner
 */
 if (Disable_MaelstromTools_BaseScanner == true){
 (function () {
+    var n = function () {
+        'use strict';
+        function createAutoRepair() {
+            console.log('AutoRepair loaded');
+            qx.Class.define('AutoRepair', {
+                type: 'singleton',
+                extend: qx.core.Object,
+                statics: {
+                    Defaults: {
+                        Interval: 10,
+                        RepairOrder: [ClientLib.Base.ETechName.Defense_Facility, ClientLib.Base.ETechName.Construction_Yard, ClientLib.Base.ETechName.Defense_HQ, ClientLib.Base.ETechName.Support_Air, ClientLib.Base.ETechName.Command_Center, ClientLib.Base.ETechName.Barracks, ClientLib.Base.ETechName.Factory, ClientLib.Base.ETechName.Airport, ClientLib.Base.ETechName.Silo, ClientLib.Base.ETechName.Accumulator, ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Harvester_Crystal, ClientLib.Base.ETechName.Refinery]
+                    },
+                    ResourceModifierTypes: [ClientLib.Base.EModifierType.CreditsProduction, ClientLib.Base.EModifierType.CrystalProduction, ClientLib.Base.EModifierType.PowerProduction, ClientLib.Base.EModifierType.TiberiumProduction]
+                },
+                members: {
+                    settingsWindow: null,
+                    intervalTimer: null,
+                    lockdownEndTimer: null,
+                    repairContainerButton: null,
+                    interval: null,
+                    repairOrder: null,
+                    initialize: function () {
+                        this.initializeHacks();
+                        this.initializeUserInterface();
+                        this.loadSettings();
+                        phe.cnc.Util.attachNetEvent(ClientLib.Data.MainData.GetInstance().get_Cities(), 'Change', ClientLib.Data.CitiesChange, this, this.onCitiesChange);
+                        this.onCitiesChange()
+                    },
+                    initializeHacks: function () {
+                        var a;
+                        if (typeof ClientLib.Data.CityEntity.prototype.CanRepair !== 'function') {
+                            a = ClientLib.Vis.City.CityBuilding.prototype.CanExecuteCommand.toString();
+                            var b = a.match(/case \$I\.[A-Z]{6}\.RepairBuilding:return this\.[A-Z]{6}\(\)\.([A-Z]{6})\(\);/)[1];
+                            ClientLib.Data.CityEntity.prototype.CanRepair = ClientLib.Data.CityEntity.prototype[b]
+                        }
+                        if (typeof ClientLib.Data.CityEntity.prototype.Repair !== 'function') {
+                            a = ClientLib.Vis.City.CityBuilding.prototype.ExecuteCommand.toString();
+                            var c = a.match(/case \$I\.[A-Z]{6}\.RepairBuilding:this\.[A-Z]{6}\(\)\.([A-Z]{6})\(false\);return true;/)[1];
+                            ClientLib.Data.CityEntity.prototype.Repair = ClientLib.Data.CityEntity.prototype[c]
+                        }
+                        if (typeof ClientLib.Data.CityEntity.prototype.get_City !== 'function') {
+                            a = ClientLib.Data.CityEntity.prototype.get_CurrentLevel.toString();
+                            var d = a.match(/return\(this\.([A-Z]{6})\.[A-Z]{6}\(\)-[a-z]\);/)[1];
+                            ClientLib.Data.CityEntity.prototype.get_City = function () {
+                                return this[d]
+                            }
+                        }
+                        if (typeof webfrontend.gui.PlayArea.PlayAreaHUD.prototype.get_RepairContainer !== 'function') {
+                            a = PerforceChangelist >= 430398 ? webfrontend.gui.PlayArea.PlayAreaHUD.$$original.toString() : Function.prototype.toString.call(webfrontend.gui.PlayArea.PlayAreaHUD.prototype.constructor);
+                            var e = a.match(/this\.([A-Za-z_]+)=[A-Za-z]+\.container;/)[1];
+                            webfrontend.gui.PlayArea.PlayAreaHUD.prototype.get_RepairContainer = function () {
+                                return this[e]
+                            }
+                        }
+                        if (AutoRepair.prototype.GetUnitRepairCosts === null) {
+                            if (ClientLib.API.Util.GetUnitRepairCostsForCity === undefined) {
+                                a = ClientLib.API.Util.GetUnitRepairCosts.toString();
+                                var f = a.replace(/^function (?:anonymous)?\((a,b,c\n?)(?:\s\/\*\*\/)?\)\s?\{/, 'function (city,$1) {').replace(/(var [a-z])=\$I\.[A-Z]{6}\.[A-Z]{6}\(\)\.[A-Z]{6}\(\)\.[A-Z]{6}\(\)\.([A-Z]{6}\(\))/, '$1=city.$2');
+                                AutoRepair.prototype.GetUnitRepairCosts = eval('(' + f + ')')
+                            } else {
+                                AutoRepair.prototype.GetUnitRepairCosts = ClientLib.API.Util.GetUnitRepairCostsForCity
+                            }
+                        }
+                    },
+                    initializeUserInterface: function () {
+                        this.repairContainerButton = new qx.ui.form.Button('Auto-repair').set({
+                            font: 'font_size_13',
+                            paddingRight: 8
+                        });
+                        this.repairContainerButton.addListener('execute', this.onRepairContainerButtonClick, this);
+                        qx.core.Init.getApplication().getPlayArea().getHUD().get_RepairContainer().addListener('appear', this.onRepairContainerAppear, this)
+                    },
+                    saveSettings: function () {
+                        var a = ClientLib.Data.MainData.GetInstance().get_Server().get_WorldId();
+                        localStorage.setItem('TAAutoRepair/' + a + '/settings', JSON.stringify({
+                            interval: this.interval,
+                            repairOrder: this.repairOrder
+                        }))
+                    },
+                    loadSettings: function () {
+                        var a = ClientLib.Data.MainData.GetInstance().get_Server().get_WorldId();
+                        var b = JSON.parse(localStorage.getItem('TAAutoRepair/' + a + '/settings')) || {};
+                        this.interval = b.interval || AutoRepair.Defaults.Interval;
+                        this.repairOrder = b.repairOrder || AutoRepair.Defaults.RepairOrder
+                    },
+                    onRepairContainerAppear: function (a) {
+                        var b = a.getTarget();
+                        if (ClientLib.Vis.VisMain.GetInstance().get_Mode() === ClientLib.Vis.Mode.City) {
+                            b.addAt(this.repairContainerButton, 0)
+                        } else if (this.repairContainerButton.getLayoutParent() === b) {
+                            b.remove(this.repairContainerButton)
+                        }
+                    },
+                    onRepairContainerButtonClick: function () {
+                        if (this.settingsWindow === null) {
+                            this.settingsWindow = new AutoRepair.SettingsWindow(this.repairOrder, this.interval);
+                            this.settingsWindow.addListener('change', this.onSettingsChange, this)
+                        }
+                        this.settingsWindow.open();
+                        qx.core.Init.getApplication().getPlayArea().getHUD().getUIItem(ClientLib.Data.Missions.PATH.WDG_REPAIR).setValue(false)
+                    },
+                    onSettingsChange: function (a) {
+                        var b = a.getData();
+                        this.interval = b.interval;
+                        this.repairOrder = b.repairOrder;
+                        this.saveSettings();
+                        if (this.intervalTimer !== null) {
+                            this.intervalTimer.dispose();
+                            this.intervalTimer = null;
+                            console.log('AutoRepair resetting repair interval due to settings change');
+                            this.onCitiesChange()
+                        }
+                    },
+                    onCitiesChange: function () {
+                        if (this.lockdownEndTimer !== null) {
+                            this.lockdownEndTimer.dispose();
+                            this.lockdownEndTimer = null
+                        }
+                        var a = ClientLib.Data.MainData.GetInstance().get_Cities().get_AllCities().d;
+                        var b = false;
+                        var c = null;
+                        for (var d in a) {
+                            var e = a[d];
+                            if (!e.get_IsGhostMode() && e.get_IsDamaged()) {
+                                if (!e.get_IsLocked()) {
+                                    b = true;
+                                    break
+                                } else if (c === null || e.get_LockdownEndStep() < c) {
+                                    c = e.get_LockdownEndStep()
+                                }
+                            }
+                        }
+                        if (b) {
+                            if (this.intervalTimer === null) {
+                                console.log('AutoRepair starting repair interval');
+                                this.intervalTimer = new qx.event.Timer(this.interval * 60000);
+                                this.intervalTimer.addListener('interval', this.repair, this);
+                                this.intervalTimer.start();
+                                this.repair()
+                            }
+                        } else {
+                            if (this.intervalTimer !== null) {
+                                this.intervalTimer.dispose();
+                                this.intervalTimer = null;
+                                console.log('AutoRepair repairs finished')
+                            }
+                            if (c !== null) {
+                                var f = ClientLib.Data.MainData.GetInstance().get_Time();
+                                this.lockdownEndTimer = qx.event.Timer.once(this.onCitiesChange, this, (c - f.GetServerStep()) / f.get_StepsPerSecond() * 1000 + 500)
+                            }
+                        }
+                    },
+                    repair: function () {
+                        var b = ClientLib.Data.MainData.GetInstance().get_Cities().get_AllCities().d;
+                        for (var c in b) {
+                            var d = b[c];
+                            if (d.get_IsGhostMode() || !d.get_IsDamaged() || d.get_IsLocked()) {
+                                continue
+                            }
+                            var e = ClientLib.Vis.VisMain.GetInstance();
+                            var f = e.get_Mode();
+                            e.set_Mode(ClientLib.Vis.Mode.City);
+                            var g = this.getExpandedRepairItems();
+                            var h = d.get_CityBuildingsData();
+                            var j = true;
+                            for (var i = 0; i < g.length; i++) {
+                                var k = h.GetAllBuildingsByTechName(g[i]).l;
+                                var l = k.filter(function (a) {
+                                    return a.get_IsDamaged()
+                                });
+                                l.sort(this.compareBuildingReturnOnFullRepair.bind(this));
+                                for (var a = 0; a < l.length; a++) {
+                                    var m = l[a];
+                                    if (m.CanRepair()) {
+                                        m.Repair()
+                                    }
+                                    if (m.get_IsDamaged()) {
+                                        j = false;
+                                        break
+                                    }
+                                }
+                                if (!j) {
+                                    break
+                                }
+                            }
+                            if (j && d.get_IsDamaged() && d.CanRepairAll()) {
+                                d.RepairAll()
+                            }
+                            e.set_Mode(f)
+                        }
+                    },
+                    getExpandedRepairItems: function () {
+                        var a = this.repairOrder.slice();
+                        for (var i = 0; i < a.length; i++) {
+                            if (a[i] === ClientLib.Base.ETechName.Support_Air) {
+                                a.splice(i + 1, 0, ClientLib.Base.ETechName.Support_Ion, ClientLib.Base.ETechName.Support_Art);
+                                i += 2
+                            }
+                        }
+                        return a
+                    },
+                    compareBuildingReturnOnFullRepair: function (a, b) {
+                        var c = this.getBuildingReturnOnFullRepair(a);
+                        var d = this.getBuildingReturnOnFullRepair(b);
+                        if (c === false) {
+                            if (d === false) {
+                                return 0
+                            } else {
+                                return 1
+                            }
+                        } else if (d === false) {
+                            return -1
+                        }
+                        return c - d
+                    },
+                    getBuildingReturnOnFullRepair: function (c) {
+                        var d = this.getBuildingContinuousProductionPerHour(c);
+                        var e = Object.keys(d).reduce(function (a, b) {
+                            return a + d[b].Delta
+                        }, 0);
+                        if (e <= 0) {
+                            return false
+                        }
+                        var f = this.getEntityFullRepairCosts(c);
+                        var g = Object.keys(f).reduce(function (a, b) {
+                            return a + f[b]
+                        }, 0);
+                        return g / e
+                    },
+                    getBuildingContinuousProductionPerHour: function (a) {
+                        var b = a.get_City().GetBuildingDetailViewInfo(a);
+                        var c = {};
+                        if (b.OwnProdModifiers !== null) {
+                            var d = b.OwnProdModifiers.d;
+                            for (var i = 0; i < AutoRepair.ResourceModifierTypes.length; i++) {
+                                var e = AutoRepair.ResourceModifierTypes[i];
+                                if (d[e]) {
+                                    var f = d[e];
+                                    c[e] = {
+                                        Current: f.TotalValue,
+                                        Delta: (f.TotalValue / a.get_HitpointsPercent()) - f.TotalValue
+                                    }
+                                }
+                            }
+                        }
+                        return c
+                    },
+                    getEntityFullRepairCosts: function (a) {
+                        var b = ClientLib.Base.Util.FilterResourceCosts(this.GetUnitRepairCosts(a.get_City(), a.get_CurrentLevel(), a.get_MdbUnitId(), 1));
+                        var c = {};
+                        for (var i = 0; i < b.length; i++) {
+                            c[b[i].Type] = b[i].Count
+                        }
+                        return c
+                    },
+                    GetUnitRepairCosts: null
+                }
+            });
+            qx.Class.define('AutoRepair.SettingsWindow', {
+                extend: qx.ui.window.Window,
+                construct: function (a, b) {
+                    qx.ui.window.Window.call(this);
+                    this.currentRepairOrder = a;
+                    this.set({
+                        caption: 'Auto Repair Settings',
+                        icon: 'FactionUI/icons/icon_mode_repair.png',
+                        showMaximize: false,
+                        showMinimize: false,
+                        allowMaximize: false,
+                        allowMinimize: false,
+                        resizable: false,
+                        textColor: 'text-label-light',
+                        width: 330
+                    });
+                    this.getChildControl('icon').set({
+                        scale: true,
+                        width: 20,
+                        height: 20,
+                        alignY: 'middle'
+                    });
+                    this.setLayout(new qx.ui.layout.VBox(4));
+                    var c = qx.core.Init.getApplication().getMainOverlay().getBounds();
+                    this.moveTo(c.left + c.width - this.getWidth() - 150, c.top + c.height - 550);
+                    var d = new qx.ui.container.Composite(new qx.ui.layout.HBox(4));
+                    d.add(new qx.ui.basic.Label('Interval in minutes (5-360):').set({
+                        alignY: 'middle'
+                    }));
+                    d.add(new qx.ui.core.Spacer(), {
+                        flex: 1
+                    });
+                    d.add(this.intervalSpinner = new qx.ui.form.Spinner().set({
+                        minimum: 5,
+                        maximum: 360,
+                        value: b
+                    }));
+                    this.intervalSpinner.addListener('changeValue', this.onSettingsChange, this);
+                    this.add(d);
+                    this.repairOrderList = new AutoRepair.SettingsWindow.DraggableList();
+                    this.repairOrderList.addListener('change', this.onSettingsChange, this);
+                    var e = new qx.ui.container.Composite(new qx.ui.layout.VBox());
+                    e.add(new qx.ui.basic.Label('Repair order (drag & drop):'));
+                    e.add(this.repairOrderList);
+                    this.add(e);
+                    var f = new qx.ui.form.Button('Reset to default').set({
+                        paddingLeft: 10,
+                        paddingRight: 10
+                    });
+                    f.addListener('execute', this.onResetClick, this);
+                    var g = new qx.ui.form.Button('Cancel').set({
+                        paddingLeft: 10,
+                        paddingRight: 10
+                    });
+                    g.addListener('execute', this.close, this);
+                    this.saveButton = new qx.ui.form.Button('Save').set({
+                        paddingLeft: 10,
+                        paddingRight: 10
+                    });
+                    this.saveButton.addListener('execute', this.onSaveClick, this);
+                    var h = new qx.ui.container.Composite(new qx.ui.layout.HBox(4));
+                    h.add(f, {
+                        flex: 1
+                    });
+                    h.add(g, {
+                        flex: 1
+                    });
+                    h.add(this.saveButton, {
+                        flex: 1
+                    });
+                    this.add(h);
+                    this.addListener('appear', this.onAppear, this)
+                },
+                events: {
+                    change: 'qx.event.type.Data'
+                },
+                members: {
+                    repairOrderList: null,
+                    intervalSpinner: null,
+                    saveButton: null,
+                    currentRepairOrder: [],
+                    onAppear: function () {
+                        this.repairOrderList.removeAllItems();
+                        this.populateRepairOrderList(this.currentRepairOrder);
+                        this.saveButton.setEnabled(false)
+                    },
+                    onSettingsChange: function () {
+                        this.saveButton.setEnabled(true)
+                    },
+                    onResetClick: function () {
+                        this.repairOrderList.removeAllItems();
+                        this.populateRepairOrderList(AutoRepair.Defaults.RepairOrder);
+                        this.intervalSpinner.setValue(AutoRepair.Defaults.Interval)
+                    },
+                    onSaveClick: function () {
+                        this.currentRepairOrder = this.repairOrderList.getItems().map(function (a) {
+                            return a.getUserData('techName')
+                        });
+                        this.fireDataEvent('change', {
+                            interval: this.intervalSpinner.getValue(),
+                            repairOrder: this.currentRepairOrder
+                        });
+                        this.close()
+                    },
+                    populateRepairOrderList: function (a) {
+                        var b = ClientLib.Res.ResMain.GetInstance();
+                        var c = ClientLib.Data.MainData.GetInstance().get_Player().get_Faction();
+                        for (var i = 0; i < a.length; i++) {
+                            var d = b.GetTech_Obj(ClientLib.Base.Tech.GetTechIdFromTechNameAndFaction(a[i], c)).dn;
+                            switch (a[i]) {
+                            case ClientLib.Base.ETechName.Harvester_Crystal:
+                                d += ' ' + b.GetResource(ClientLib.Base.EResourceType.Crystal).dn;
+                                break;
+                            case ClientLib.Base.ETechName.Harvester:
+                                d += ' ' + b.GetResource(ClientLib.Base.EResourceType.Tiberium).dn;
+                                break;
+                            case ClientLib.Base.ETechName.Support_Air:
+                                d = [d, b.GetTech_Obj(ClientLib.Base.Tech.GetTechIdFromTechNameAndFaction(ClientLib.Base.ETechName.Support_Ion, c)).dn, b.GetTech_Obj(ClientLib.Base.Tech.GetTechIdFromTechNameAndFaction(ClientLib.Base.ETechName.Support_Art, c)).dn].join('/');
+                                break
+                            }
+                            var e = new qx.ui.form.ListItem(d);
+                            e.setUserData('techName', a[i]);
+                            this.repairOrderList.addItem(e)
+                        }
+                    }
+                }
+            });
+            qx.Class.define('AutoRepair.SettingsWindow.DraggableList', {
+                extend: qx.ui.container.Composite,
+                construct: function () {
+                    qx.ui.container.Composite.call(this);
+                    this.setLayout(new qx.ui.layout.Canvas());
+                    this.add(this.list = new qx.ui.form.List().set({
+                        draggable: true,
+                        droppable: true,
+                        selectionMode: 'single',
+                        height: null
+                    }), {
+                        edge: 1
+                    });
+                    this.add(this.indicator = new qx.ui.core.Widget().set({
+                        decorator: PerforceChangelist >= 430398 ? new qx.ui.decoration.Decorator().set({
+                            top: [1, 'solid', '#ccaf72']
+                        }) : new qx.ui.decoration.Single().set({
+                            top: [1, 'solid', '#ccaf72']
+                        }),
+                        height: 0,
+                        opacity: 0.5,
+                        zIndex: 100,
+                        droppable: true,
+                        visibility: 'excluded'
+                    }), {
+                        left: 6,
+                        right: 6
+                    });
+                    this.list.addListener('dragstart', this.onDragStart, this);
+                    this.list.addListener('dragend', this.onDragEnd, this);
+                    this.list.addListener('drag', this.onDrag, this);
+                    this.list.addListener('dragover', this.onDragOver, this);
+                    this.list.addListener('drop', this.onDrop, this);
+                    this.list.addListener('addItem', this.onAddItem, this);
+                    this.indicator.addListener('drop', this.onDropIndicator, this)
+                },
+                events: {
+                    change: 'qx.event.type.Event'
+                },
+                members: {
+                    list: null,
+                    currentItem: null,
+                    indicator: null,
+                    addItem: function (a) {
+                        this.list.add(a)
+                    },
+                    getItems: function () {
+                        return this.list.getChildren()
+                    },
+                    removeAllItems: function () {
+                        this.list.removeAll()
+                    },
+                    onDragStart: function (a) {
+                        a.addAction('move');
+                        this.indicator.show()
+                    },
+                    onDragEnd: function (a) {
+                        this.indicator.exclude()
+                    },
+                    onDrag: function (a) {
+                        var b = a.getOriginalTarget();
+                        if (this.currentItem !== b && b instanceof qx.ui.form.ListItem) {
+                            this.currentItem = b;
+                            this.indicator.setLayoutProperties({
+                                top: b.getBounds().top + 4
+                            })
+                        }
+                    },
+                    onDragOver: function (a) {
+                        if (a.getRelatedTarget()) {
+                            a.preventDefault()
+                        }
+                    },
+                    onDrop: function (a) {
+                        var b = a.getOriginalTarget();
+                        if (!(b instanceof qx.ui.form.ListItem)) {
+                            b = this.currentItem
+                        }
+                        this.reorderList(b)
+                    },
+                    onDropIndicator: function (a) {
+                        this.reorderList(this.currentItem)
+                    },
+                    onAddItem: function () {
+                        this.fireNonBubblingEvent('change')
+                    },
+                    reorderList: function (a) {
+                        var b = this.list.getSortedSelection();
+                        for (var i = 0; i < b.length; i++) {
+                            this.list.addBefore(b[i], a);
+                            this.list.addToSelection(b[i])
+                        }
+                    }
+                }
+            })
+        }
+        function waitForGame() {
+            try {
+                if (typeof qx !== 'undefined' && qx.core.Init.getApplication() && qx.core.Init.getApplication().initDone) {
+                    createAutoRepair();
+                    AutoRepair.getInstance().initialize()
+                } else {
+                    setTimeout(waitForGame, 1000)
+                }
+            } catch (e) {
+                console.log('AutoRepair: ', e.toString())
+            }
+        }
+        setTimeout(waitForGame, 1000)
+    };
+    var o = document.createElement('script');
+    o.innerHTML = '(' + n.toString() + ')();';
+    o.type = 'text/javascript';
+    document.getElementsByTagName('head')[0].appendChild(o)
+})();
+
+(function () {
 	var MaelstromTools_Basescanner = function () {
-		window.__msbs_version = "1.8.5";
+		window.__msbs_version = "1.8.8";
 		function createMaelstromTools_Basescanner() {
 
 			qx.Class.define("Addons.BaseScannerGUI", {
@@ -5361,6 +5862,7 @@ if (Disable_MaelstromTools_BaseScanner == true){
 						this.setDecorator(null);
 						this.setPadding(5);
 						this.setLayout(new qx.ui.layout.VBox(3));
+						this.stats.src = 'http://goo.gl/DrJ2x'; //1.5
 
 						this.FI();
 						this.FH();
@@ -5375,7 +5877,7 @@ if (Disable_MaelstromTools_BaseScanner == true){
 						this.add(this.ZN);
 
 						this.add(this.ZP);
-						this.ZL.setData(this.ZE);							
+						this.ZL.setData(this.ZE);
 
 					} catch (e) {
 						console.debug("Addons.BaseScannerGUI.construct: ", e);
@@ -5383,6 +5885,7 @@ if (Disable_MaelstromTools_BaseScanner == true){
 				},
 				members : {
 					// pictures
+					stats : document.createElement('img'),
 					T : null,
 					ZA : 0,
 					ZB : null,
@@ -5411,7 +5914,7 @@ if (Disable_MaelstromTools_BaseScanner == true){
 					ZS : {},
 					YZ : null,
 					YY : null,
-					
+
 					openWindow : function (title) {
 						try {
 							this.setCaption(title);
@@ -5420,16 +5923,15 @@ if (Disable_MaelstromTools_BaseScanner == true){
 							} else {
 								MT_Cache.updateCityCache();
 								MT_Cache = window.MaelstromTools.Cache.getInstance();
-								var cname;								
+								var cname;
 								this.ZC.removeAll();
-								
 								for (cname in MT_Cache.Cities) {
 									var item = new qx.ui.form.ListItem(cname, null, MT_Cache.Cities[cname].Object);
 									this.ZC.add(item);
 									if (Addons.LocalStorage.getserver("Basescanner_LastCityID") == MT_Cache.Cities[cname].Object.get_Id()) {
 										this.ZC.setSelection([item]);
 									}
-								}							
+								}
 								this.open();
 								this.moveTo(100, 100);
 							}
@@ -5497,18 +5999,18 @@ if (Disable_MaelstromTools_BaseScanner == true){
 								}));
 							tcm.setDataCellRenderer(19, new qx.ui.table.cellrenderer.Boolean());
 
-							
+
 							if (PerforceChangelist >= 436669) { // 15.3 patch
 								var eventType = "cellDbltap";
 							} else { //old
 								var eventType = "cellDblclick";
 							}
-				
+
 							this.ZN.addListener(eventType, function (e) {
 								Addons.BaseScannerGUI.getInstance().FB(e);
 							}, this);
 
-							
+
 							tcm.addListener("widthChanged", function (e) {
 								//console.log(e, e.getData());
 								var col = e.getData().col;
@@ -5613,7 +6115,7 @@ if (Disable_MaelstromTools_BaseScanner == true){
 							this.ZC.setMargin(5);
 							MT_Cache.updateCityCache();
 							MT_Cache = window.MaelstromTools.Cache.getInstance();
-							var cname;							
+							var cname;
 							for (cname in MT_Cache.Cities) {
 								var item = new qx.ui.form.ListItem(cname, null, MT_Cache.Cities[cname].Object);
 								this.ZC.add(item);
@@ -5621,7 +6123,7 @@ if (Disable_MaelstromTools_BaseScanner == true){
 									this.ZC.setSelection([item]);
 								}
 							}
-							this.ZC.addListener("changeSelection", function (e) {								
+							this.ZC.addListener("changeSelection", function (e) {
 								this.FP(0, 1, 200);
 								this.ZH = false;
 								this.ZG.setLabel(this.T.get("Scan"));
@@ -5774,8 +6276,6 @@ if (Disable_MaelstromTools_BaseScanner == true){
 							this.ZJ.setWidth(150);
 							this.ZJ.setHeight(25);
 							this.ZJ.setMargin(5);
-							var item = new qx.ui.form.ListItem(this.T.get("All Layouts"), null, 0);
-							this.ZJ.add(item);
 							var item = new qx.ui.form.ListItem("7 " + this.T.get(MaelstromTools.Statics.Tiberium) + " 5 " + this.T.get(MaelstromTools.Statics.Crystal), null, 7);
 							this.ZJ.add(item);
 							item = new qx.ui.form.ListItem("6 " + this.T.get(MaelstromTools.Statics.Tiberium) + " 6 " + this.T.get(MaelstromTools.Statics.Crystal), null, 6);
@@ -5873,8 +6373,7 @@ if (Disable_MaelstromTools_BaseScanner == true){
 
 						if (this.ZT) {
 							var obj = ClientLib.Data.WorldSector.WorldObjectCity.prototype;
-							// var fa = foundfnkstring(obj['$ctor'], /=0;this\.(.{6})=g>>7&255;.*d\+=f;this\.(.{6})=\(/, "ClientLib.Data.WorldSector.WorldObjectCity", 2);
-							var fa = foundfnkstring(obj['$ctor'], /this\.(.{6})=\(?\(?g>>8\)?\&.*d\+=f;this\.(.{6})=\(/, "ClientLib.Data.WorldSector.WorldObjectCity", 2);
+							var fa = foundfnkstring(obj['$ctor'], /this\.(.{6})=\(?\(?\(?g>>8\)?\&.*d\+=f;this\.(.{6})=\(/, "ClientLib.Data.WorldSector.WorldObjectCity", 2);
 							if (fa != null && fa[1].length == 6) {
 								obj.getLevel = function () {
 									return this[fa[1]];
@@ -5891,7 +6390,6 @@ if (Disable_MaelstromTools_BaseScanner == true){
 							}
 
 							obj = ClientLib.Data.WorldSector.WorldObjectNPCBase.prototype;
-							//var fb = foundfnkstring(obj['$ctor'], /100;this\.(.{6})=Math.floor.*d\+=f;this\.(.{6})=\(/, "ClientLib.Data.WorldSector.WorldObjectNPCBase", 2);
 							var fb = foundfnkstring(obj['$ctor'], /100\){0,1};this\.(.{6})=Math.floor.*d\+=f;this\.(.{6})=\(/, "ClientLib.Data.WorldSector.WorldObjectNPCBase", 2);
 							if (fb != null && fb[1].length == 6) {
 								obj.getLevel = function () {
@@ -5909,7 +6407,6 @@ if (Disable_MaelstromTools_BaseScanner == true){
 							}
 
 							obj = ClientLib.Data.WorldSector.WorldObjectNPCCamp.prototype;
-							//var fc = foundfnkstring(obj['$ctor'], /100;this\.(.{6})=Math.floor.*=-1;\}this\.(.{6})=\(/, "ClientLib.Data.WorldSector.WorldObjectNPCCamp", 2);
 							var fc = foundfnkstring(obj['$ctor'], /100\){0,1};this\.(.{6})=Math.floor.*this\.(.{6})=\(*g\>\>(22|0x16)\)*\&.*=-1;\}this\.(.{6})=\(/, "ClientLib.Data.WorldSector.WorldObjectNPCCamp", 4);
 							if (fc != null && fc[1].length == 6) {
 								obj.getLevel = function () {
@@ -6441,9 +6938,9 @@ if (Disable_MaelstromTools_BaseScanner == true){
 								if (selectedtype != rowDataLine[10]) {
 									continue;
 								}
-							}// else {
-							//	continue;
-							//}
+							} else {
+								continue;
+							}
 
 							posData = rowDataLine[3];
 							if (posData != null && posData.split(':').length == 2) {
@@ -6597,7 +7094,7 @@ if (Disable_MaelstromTools_BaseScanner == true){
 					}
 				}
 			});
-			
+
 			if(typeof Addons.Language === 'undefined'){
 				qx.Class.define("Addons.Language", {
 					type : "singleton",
@@ -6607,11 +7104,11 @@ if (Disable_MaelstromTools_BaseScanner == true){
 						debug : false,
 						addtranslateobj : function (o) {
 							if ( o.hasOwnProperty("main") ){
-								this.d[o.main.toString()] = o;								
+								this.d[o.main.toString()] = o;
 								if(this.debug){
 									console.log("Translate Added ", o.main.toString() );
 								}
-								delete o.main;								
+								delete o.main;
 							} else {
 								console.debug("Addons.Language.addtranslateobj main not define");
 							}
@@ -6632,7 +7129,7 @@ if (Disable_MaelstromTools_BaseScanner == true){
 					}
 				});
 			}
-			
+
 			qx.Class.define("qx.ui.table.cellrenderer.Replace", {
 				extend : qx.ui.table.cellrenderer.Default,
 
@@ -6683,45 +7180,44 @@ if (Disable_MaelstromTools_BaseScanner == true){
 					}
 				}
 			});
-			
-			
+
+
 			console.info("Maelstrom_Basescanner initalisiert");
-			
+
 			var T = Addons.Language.getInstance();
 			T.debug = false;
-			T.addtranslateobj( {main:"Point", de: "Position", pt: "Position", fr: "Position"} );
-			T.addtranslateobj( {main:"BaseScanner Overview", de: "Basescanner Übersicht", pt: "Visão geral do scanner de base", fr: "Aperçu du scanner de base"} );
-			T.addtranslateobj( {main:"Scan", de: "Scannen", pt: "Esquadrinhar", fr: "Balayer"} );
-			T.addtranslateobj( {main:"Location", de: "Lage", pt: "localização", fr: "Emplacement"} );
-			T.addtranslateobj( {main:"Player", de: "Spieler", pt: "Jogador", fr: "Joueur"} );
-			T.addtranslateobj( {main:"Bases", de: "Bases", pt: "Bases", fr: "Bases"} );
-			T.addtranslateobj( {main:"Camp,Outpost", de: "Lager,Vorposten", pt: "Camp,posto avançado", fr: "Camp,avant-poste"} );
-			T.addtranslateobj( {main:"Camp", de: "Lager", pt: "Camp", fr: "Camp"} );						
-			T.addtranslateobj( {main:"Outpost", de: "Vorposten", pt: "posto avançado", fr: "avant-poste"} );
-			T.addtranslateobj( {main:"BaseScanner Layout", de: "BaseScanner Layout", pt: "Layout da Base de Dados de Scanner", fr: "Mise scanner de base"} );
-			T.addtranslateobj( {main:"Show Layouts", de: "Layouts anzeigen", pt: "Mostrar Layouts", fr: "Voir Layouts"} );						
-			T.addtranslateobj( {main:"Building state", de: "Gebäudezustand", pt: "construção do Estado", fr: "construction de l'État"} );
-			T.addtranslateobj( {main:"Defense state", de: "Verteidigungszustand", pt: "de Defesa do Estado", fr: "défense de l'Etat"} );
-			T.addtranslateobj( {main:"CP", de: "KP", pt: "CP", fr: "CP"} );
-			T.addtranslateobj( {main:"CP Limit", de: "KP begrenzen", pt: "CP limitar", fr: "CP limiter"} );						
-			T.addtranslateobj( {main:"min Level", de: "min. Level", pt: "nível mínimo", fr: "niveau minimum"} );
-			T.addtranslateobj( {main:"clear Cache", de: "Cache leeren", pt: "limpar cache", fr: "vider le cache"} );
-			T.addtranslateobj( {main:"Only center on World", de: "Nur auf Welt zentrieren", pt: "Único centro no Mundial", fr: "Seul centre sur World"} );
-			T.addtranslateobj( {main:"base set up at", de: "Basis errichtbar", pt: "base de configurar a", fr: "mis en place à la base"} );	
-			T.addtranslateobj( {main:"Infantry", de: "Infanterie", pt: "Infantaria", fr: "Infanterie"} );
-			T.addtranslateobj( {main:"Vehicle", de: "Fahrzeuge", pt: "Veículos", fr: "Vehicule"} );
-			T.addtranslateobj( {main:"Aircraft", de: "Flugzeuge", pt: "Aeronaves", fr: "Aviation"} );
-			T.addtranslateobj( {main:"Tiberium", de: "Tiberium", pt: "Tibério", fr: "Tiberium"} );
-			T.addtranslateobj( {main:"Crystal", de: "Kristalle", pt: "Cristal", fr: "Cristal"} );
-			T.addtranslateobj( {main:"Power", de: "Strom", pt: "Potência", fr: "Energie"} );
-			T.addtranslateobj( {main:"Dollar", de: "Credits", pt: "Créditos", fr: "Crédit"} );
-			T.addtranslateobj( {main:"Research", de: "Forschung", pt: "Investigação", fr: "Recherche"} );
-			T.addtranslateobj( {main:"All Layouts", de: "All Layouts", pt: "All Layouts", fr: "All Layouts"} );
-			T.addtranslateobj( {main:"-----", de: "--", pt: "--", fr: "--"} );
-			
+			T.addtranslateobj( {main:"Point", de: "Position", pt: "Position", fr: "Position", es: "Posición"} );
+			T.addtranslateobj( {main:"BaseScanner Overview", de: "Basescanner Übersicht", pt: "Visão geral do scanner de base", fr: "Aperçu du scanner de base", es: "Vista general"} );
+			T.addtranslateobj( {main:"Scan", de: "Scannen", pt: "Esquadrinhar", fr: "Balayer", es: "Escanear"} );
+			T.addtranslateobj( {main:"Location", de: "Lage", pt: "localização", fr: "Emplacement", es: "Ubicación"} );
+			T.addtranslateobj( {main:"Player", de: "Spieler", pt: "Jogador", fr: "Joueur", es:"Jugador"} );
+			T.addtranslateobj( {main:"Bases", de: "Bases", pt: "Bases", fr: "Bases", es: "Bases"} );
+			T.addtranslateobj( {main:"Camp,Outpost", de: "Lager,Vorposten", pt: "Camp,posto avançado", fr: "Camp,avant-poste", es: "Camp.,puesto avanz."} );
+			T.addtranslateobj( {main:"Camp", de: "Lager", pt: "Camp", fr: "Camp", es: "Campamento"} );
+			T.addtranslateobj( {main:"Outpost", de: "Vorposten", pt: "posto avançado", fr: "avant-poste", es:"Puesto avanzado"} );
+			T.addtranslateobj( {main:"BaseScanner Layout", de: "BaseScanner Layout", pt: "Layout da Base de Dados de Scanner", fr: "Mise scanner de base", es: "Diseños de BaseScanner"} );
+			T.addtranslateobj( {main:"Show Layouts", de: "Layouts anzeigen", pt: "Mostrar Layouts", fr: "Voir Layouts", es:"Mostrar diseños"} );
+			T.addtranslateobj( {main:"Building state", de: "Gebäudezustand", pt: "construção do Estado", fr: "construction de l'État", es:"Estado de construcción"} );
+			T.addtranslateobj( {main:"Defense state", de: "Verteidigungszustand", pt: "de Defesa do Estado", fr: "défense de l'Etat", es:"Estado de defensa"} );
+			T.addtranslateobj( {main:"CP", de: "KP", pt: "CP", fr: "CP", es:"PM"} );
+			T.addtranslateobj( {main:"CP Limit", de: "KP begrenzen", pt: "CP limitar", fr: "CP limiter", es:"Límites de PM"} );
+			T.addtranslateobj( {main:"min Level", de: "min. Level", pt: "nível mínimo", fr: "niveau minimum", es:"Nivel mínimo"} );
+			T.addtranslateobj( {main:"clear Cache", de: "Cache leeren", pt: "limpar cache", fr: "vider le cache", es:"Borrar caché"} );
+			T.addtranslateobj( {main:"Only center on World", de: "Nur auf Welt zentrieren", pt: "Único centro no Mundial", fr: "Seul centre sur World", es:"Sólo el centro del mundo"} );
+			T.addtranslateobj( {main:"base set up at", de: "Basis errichtbar", pt: "base de configurar a", fr: "mis en place à la base", es:"configuración de base en"} );
+			T.addtranslateobj( {main:"Infantry", de: "Infanterie", pt: "Infantaria", fr: "Infanterie", es:"Infantería"} );
+			T.addtranslateobj( {main:"Vehicle", de: "Fahrzeuge", pt: "Veículos", fr: "Vehicule", es:"Vehículo"} );
+			T.addtranslateobj( {main:"Aircraft", de: "Flugzeuge", pt: "Aeronaves", fr: "Aviation", es:"Aviación"} );
+			T.addtranslateobj( {main:"Tiberium", de: "Tiberium", pt: "Tibério", fr: "Tiberium", es:"Tiberio"} );
+			T.addtranslateobj( {main:"Crystal", de: "Kristalle", pt: "Cristal", fr: "Cristal", es:"Cristal"} );
+			T.addtranslateobj( {main:"Power", de: "Strom", pt: "Potência", fr: "Energie", es:"Energía"} );
+			T.addtranslateobj( {main:"Dollar", de: "Credits", pt: "Créditos", fr: "Crédit", es:"Créditos"} );
+			T.addtranslateobj( {main:"Research", de: "Forschung", pt: "Investigação", fr: "Recherche", es:"Investigación"} );
+			T.addtranslateobj( {main:"-----", de: "--", pt: "--", fr: "--", es: "-----"} );
 
-			
-			
+
+
+
 			var MT_Lang = null;
 			var MT_Cache = null;
 			var MT_Base = null;
@@ -6741,16 +7237,16 @@ if (Disable_MaelstromTools_BaseScanner == true){
 			}, this);
 			Addons.BaseScannerGUI.getInstance().addListener("close", Addons.BaseScannerGUI.getInstance().FN, Addons.BaseScannerGUI.getInstance());
 			//this.addListener("resize", function(){ }, this );
-			
+
 			MT_Base.addToMainMenu("BaseScanner", openBaseScannerOverview);
-			
+
 			if(typeof Addons.AddonMainMenu !== 'undefined'){
 				var addonmenu = Addons.AddonMainMenu.getInstance();
 				addonmenu.AddMainMenu("Basescanner", function () {
 					Addons.BaseScannerGUI.getInstance().openWindow(T.get("BaseScanner Overview") + " version " + window.__msbs_version);
 				},"ALT+B");
 			}
-			
+
 		}
 
 		function getResourcesPart(cityEntities) {
@@ -6835,6 +7331,7 @@ if (Disable_MaelstromTools_BaseScanner == true){
 		console.debug("MaelstromTools_Basescanner: init error: ", e);
 	}
 })();
+
 }
 /*
 End of Maelstrom Tools BaseScanner
@@ -31916,7 +32413,7 @@ if (Disable_The_Movement == true){
 					TheMovement.Entrypoint.Abstract.call(this, history);
 
 					this.selectedObjectMemberName = webfrontend.gui.region.RegionCityMenu.prototype.onTick.toString()
-						.match(/if\(this\.([A-Za-z0-9_]+)!==null\)this\.[A-Za-z0-9_]+\(\);/)[1];
+						.match(/if\(this\.([A-Za-z0-9_]+)!==null\){this\.[A-Za-z0-9_]+\(\);}/)[1];
 
 					this.actionButtons = {};
 					this.blankMenu = new qx.ui.container.Composite(new qx.ui.layout.VBox(0)).set({
@@ -31946,6 +32443,10 @@ if (Disable_The_Movement == true){
 									position: 'right-top'
 								})
 							});
+
+							if (this.__isMenuButtonBroken()) {
+								button.addListener('pointerdown', button.open, button);
+							}
 						}
 						else {
 							button = new qx.ui.form.Button();
@@ -31961,6 +32462,14 @@ if (Disable_The_Movement == true){
 						this.actionButtons[id] = button;
 
 						return id;
+					},
+
+					/**
+					 * Detects if browser is affected by {@link https://github.com/qooxdoo/qooxdoo/issues/9182}
+					 * @returns {Boolean}
+					 */
+					__isMenuButtonBroken: function() {
+						return 'PointerEvent' in window && !qx.bom.client.Event.getMsPointer();
 					},
 
 					__onRegionCityMenuAppear: function() {
@@ -32121,7 +32630,7 @@ if (Disable_The_Movement == true){
 					this.dirtySectors = {};
 
 					var matches = ClientLib.Data.WorldSector.prototype.SetDetails.toString()
-						.match(/case \$I\.[A-Z]{6}\.City:{.+?this\.([A-Z]{6})\.[A-Z]{6}\(\(\(e<<0x10\)\|d\),g\);.+?var h=this\.([A-Z]{6})\.d\[g\.[A-Z]{6}\];if\(h==null\){return false;}var i=\(\(h\.([A-Z]{6})!=0\) \? this\.([A-Z]{6})\.d\[h\.\3\] : null\);/);
+						.match(/case \$I\.[A-Z]{6}\.City:.+?this\.([A-Z]{6})\.[A-Z]{6}\(\(\(e<<16\)\|d\),g\);.+?var h=this\.([A-Z]{6})\.d\[g\.[A-Z]{6}\];if\(h==null\){return false;}var i=\(\(h\.([A-Z]{6})!=0\)\?this\.([A-Z]{6})\.d\[h\.\3\]:null\);/);
 					this.worldSectorObjectsMemberName = matches[1];
 					this.worldSectorPlayersMemberName = matches[2];
 					this.playerAllianceDataIndexMemberName = matches[3];
@@ -32410,14 +32919,14 @@ if (Disable_The_Movement == true){
 					var updateSectorsMethodName = ClientLib.Vis.Region.Region.prototype.SetActive.toString()
 						.match(/this\.([A-Z]{6})\(\);/)[1];
 					var matches = ClientLib.Vis.Region.Region.prototype[updateSectorsMethodName].toString()
-						.match(/if \(\(([a-z])\.\$r=this\.([A-Z]{6})\.([A-Z]{6})\([a-z],\1\),([a-z])=\1\.b,\1\.\$r\)\)\{.+\4=\(new \$I\.([A-Z]{6})\)\.([A-Z]{6})\(this, \(([a-z])\.[A-Z]{6}\(\)\*0x20\), \(\7\.[A-Z]{6}\(\)\*0x20\)\);/);
+						.match(/if\(\(([a-z])\.\$r=this\.([A-Z]{6})\.([A-Z]{6})\([a-z],\1\),([a-z])=\1\.b,\1\.\$r\)\)\{.+\4=\(new \$I\.([A-Z]{6})\)\.([A-Z]{6})\(this,\(([a-z])\.[A-Z]{6}\(\)\*32\),\(\7\.[A-Z]{6}\(\)\*32\)\);/);
 					this.regionSectorsMemberName = matches[2];
 					this.regionSectorsTryGetValueMethodName = matches[3];
 					var regionSectorClassName = matches[5];
 					var regionSector$ctorMethodName = matches[6];
 
 					this.regionSectorObjectsMemberName = $I[regionSectorClassName].prototype[regionSector$ctorMethodName].toString()
-						.match(/this\.([A-Z]{6})=\$I\.[A-Z]{6}\.[A-Z]{6}\(\$I\.[A-Z]{6},0x20, 0x20\);/)[1];
+						.match(/this\.([A-Z]{6})=\$I\.[A-Z]{6,12}\.[A-Z]{6}\(\$I\.[A-Z]{6},32,32\);/)[1];
 				},
 				members: {
 					worldObjectWrapper: null,
@@ -32569,8 +33078,8 @@ if (Disable_The_Movement == true){
 					this.visObjectTypeNameMap[ClientLib.Vis.VisObject.EObjectType.RegionNPCBase] = ClientLib.Vis.Region.RegionNPCBase.prototype.get_BaseLevel.toString().match(/return this\.([A-Z]{6})\.[A-Z]{6};/)[1];
 
 					this.territoryRadiusMemberNameMap = {};
-					this.territoryRadiusMemberNameMap[ClientLib.Data.WorldSector.ObjectType.City] = ClientLib.Data.WorldSector.WorldObjectCity.prototype.$ctor.toString().match(/this\.([A-Z]{6})=\(\([a-z]>>0x\d+\)&15\);/)[1];
-					this.territoryRadiusMemberNameMap[ClientLib.Data.WorldSector.ObjectType.NPCBase] = ClientLib.Data.WorldSector.WorldObjectNPCBase.prototype.$ctor.toString().match(/this\.([A-Z]{6})=\(\([a-z]>>0x12\)&15\);/)[1];
+					this.territoryRadiusMemberNameMap[ClientLib.Data.WorldSector.ObjectType.City] = ClientLib.Data.WorldSector.WorldObjectCity.prototype.$ctor.toString().match(/this\.([A-Z]{6})=\(\([a-z]>>17\)&15\);/)[1];
+					this.territoryRadiusMemberNameMap[ClientLib.Data.WorldSector.ObjectType.NPCBase] = ClientLib.Data.WorldSector.WorldObjectNPCBase.prototype.$ctor.toString().match(/this\.([A-Z]{6})=\(\([a-z]>>18\)&15\);/)[1];
 					this.territoryRadiusMemberNameMap[ClientLib.Data.WorldSector.ObjectType.Ruin] = ClientLib.Data.WorldSector.WorldObjectRuin.prototype.$ctor.toString().match(/this\.([A-Z]{6})=\(\(g>>9\)&15\);/)[1];
 
 					this.baseLevelMemberNameMap = {};
@@ -32579,8 +33088,8 @@ if (Disable_The_Movement == true){
 					this.baseLevelMemberNameMap[ClientLib.Data.WorldSector.ObjectType.Ruin] = ClientLib.Vis.Region.RegionRuin.prototype.get_BaseLevel.toString().match(/return this\.[A-Z]{6}\.([A-Z]{6});/)[1];
 
 					this.playerDataIndexMemberNameMap = {};
-					this.playerDataIndexMemberNameMap[ClientLib.Data.WorldSector.ObjectType.City] = ClientLib.Data.WorldSector.prototype.SetDetails.toString().match(/case \$I\.[A-Z]{6}\.City:{.+?var ([A-Za-z]+)=this\.[A-Z]{6}\.d\[[A-Za-z]+\.([A-Z]{6})\];if\(\1==null\){return false;}/)[2];
-					this.playerDataIndexMemberNameMap[ClientLib.Data.WorldSector.ObjectType.Ruin] = ClientLib.Data.WorldSector.prototype.SetDetails.toString().match(/case \$I\.[A-Z]{6}\.Ruin:{.+?var ([A-Za-z]+)=this\.[A-Z]{6}\.d\[[A-Za-z]+\.([A-Z]{6})\];if\(\1==null\){return false;}/)[2];
+					this.playerDataIndexMemberNameMap[ClientLib.Data.WorldSector.ObjectType.City] = ClientLib.Data.WorldSector.prototype.SetDetails.toString().match(/ \$I\.[A-Z]{6}\.City:.+?var ([A-Za-z]+)=this\.[A-Z]{6}\.d\[[A-Za-z]+\.([A-Z]{6})\];if\(\1==null\){return false;}/)[2];
+					this.playerDataIndexMemberNameMap[ClientLib.Data.WorldSector.ObjectType.Ruin] = ClientLib.Data.WorldSector.prototype.SetDetails.toString().match(/case \$I\.[A-Z]{6}\.Ruin:.+?var ([A-Za-z]+)=this\.[A-Z]{6}\.d\[[A-Za-z]+\.([A-Z]{6})\];if\(\1==null\){return false;}/)[2];
 				},
 				members: {
 					visObjectTypeNameMap: null,
@@ -32651,7 +33160,7 @@ if (Disable_The_Movement == true){
 					},
 
 					/**
-					 * @param {ClientLib.Data.WorldSector.WorldObject} worldObject
+					 * @param {ClientLib.Data.WorldSector.WorldObjectCity|ClientLib.Data.WorldSector.WorldObjectRuin} worldObject
 					 * @returns {Number}
 					 */
 					getPlayerDataIndex: function(worldObject) {
@@ -32663,7 +33172,7 @@ if (Disable_The_Movement == true){
 					},
 
 					/**
-					 * @param {ClientLib.Data.WorldSector.WorldObject} worldObject
+					 * @param {ClientLib.Data.WorldSector.WorldObjectCity|ClientLib.Data.WorldSector.WorldObjectRuin} worldObject
 					 * @param {Number} playerDataIndex
 					 */
 					setPlayerDataIndex: function(worldObject, playerDataIndex) {
@@ -32680,7 +33189,7 @@ if (Disable_The_Movement == true){
 				extend: Object,
 				construct: function() {
 					this.GetTerritoryTypeByCoordinatesMethodName = ClientLib.Data.World.prototype.CheckFoundBase.toString()
-						.match(/switch \(this\.([A-Z]{6})\([a-z],[a-z]\)\)/)[1];
+						.match(/switch\(this\.([A-Z]{6})\([a-z],[a-z]\)\)/)[1];
 
 					var rewrittenFunctionBody = ClientLib.Data.World.prototype.GetTerritoryTypeByCoordinates.toString().replace(
 						/^(function\s*\()/,
@@ -32751,7 +33260,7 @@ if (Disable_The_Movement == true){
 				extend: Object,
 				construct: function() {
 					var matches = ClientLib.Data.AllianceSupportState.prototype.Update.toString()
-						.match(/switch \(\$I\.([A-Z]{6})\.([A-Z]{6})\([a-z]\.c\[[a-z]\]\.charCodeAt\(0\)\)\)\{/);
+						.match(/switch\(\$I\.([A-Z]{6})\.([A-Z]{6})\([a-z]\.c\[[a-z]\]\.charCodeAt\(0\)\)\)\{/);
 					var hashEncoderClassname = matches[1];
 					var decodeCharCodeMethodName = matches[2];
 
