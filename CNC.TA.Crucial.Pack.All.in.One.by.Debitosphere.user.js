@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        CnC TA: Crucial Pack All in One by DebitoSphere
 // @description Contains every crucial script that is fully functional and updated constantly.
-// @version     1.0.59
+// @version     1.0.60
 // @author      DebitoSphere
 // @homepage    https://www.allyourbasesbelong2us.com
 // @namespace   AllYourBasesbelong2UsCrucialPackAllinOne
@@ -20,7 +20,7 @@
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // This Pack includes all crucial scripts needed to play the game. They are in the correct order to ensure the least amount of script errors.
 // ==/UserScript==
-var CrucialScriptVersion = "1.0.57";
+var CrucialScriptVersion = "1.0.60";
 
 var GM_SuperValue = new function () {
 
@@ -328,7 +328,7 @@ var ScriptAuthors;
     var NoScripts;
 	var ChosenSimulator;
 	var Script01;
-	var ScriptName01 = "MultiSession and AutoLogin - Works on Chrome Only";
+	var ScriptName01 = "MultiSession and AutoLogin - Disabled for now";
 	var ScriptDescription01 = "Allows the player to save login details for multiple accounts on a handy selection window that can be used to automatically log in each account by clicking on the new session button";
 	var ScriptAuthors01 = "jerbri";
 	var Script02;
@@ -1279,6 +1279,7 @@ init2();
 /*
 Start of Multisession Login
 */
+Disable_AutoLoginScript = false;
 if (Disable_AutoLoginScript == true){
 if(navigator.userAgent.indexOf("Chrome") != -1 ) 
 {
@@ -1506,7 +1507,7 @@ End of Multisession login
 							var VerNumb;
 							var ScriptUrl;
 							var DonateUrl = "https://www.allyourbasesbelong2us.com/donate.html";
-							var CrucialScriptVersion = "1.0.59";
+							var CrucialScriptVersion = "1.0.60";
 							function fetchUpdateData(){
 								var xmlhttp = new XMLHttpRequest();
 								var params = "functionname=Updates";                
@@ -30323,8 +30324,8 @@ if (Disable_V2_Sim == true){
 							});
 						this.btnBack.addListener("click", this.onClick_btnBack, this);
 						this.ReportReplayOverlay.add(this.btnBack, {
-							top : 10,
-							right : 540
+							top : 65,
+							right : 560
 						});
 
 						this.btnSkip = new qx.ui.form.Button(qxApp.tr("Skip")).set({
@@ -30335,8 +30336,8 @@ if (Disable_V2_Sim == true){
 							});
 						this.btnSkip.addListener("click", this.onClick_btnSkip, this);
 						this.ReportReplayOverlay.add(this.btnSkip, {
-							top : 10,
-							left : 542
+							top : 65,
+							left : 564
 						});
 					} catch (e) {
 						console.group("Tiberium Alliances Battle Simulator V2");
