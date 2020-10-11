@@ -633,7 +633,7 @@ function init2() {
 
 	} else if (url.search("/games/command-and-conquer/command-and-conquer-tiberium-alliances") != -1) {
 		var width = $(window).width() / 2.5;
-		width = width + 100;
+		width = width - 100;
 		var height = $(window).height() / 3;
 		var selectionList2 = '<select name="CrucialSelectionBox" size="1" style="width: 400px">';
 		var selectionBox3 = '<div id="CrucialSelectionBox" style="width: 400px; height: 120px; border: 4px solid grey; padding: 10px; z-index: 9999; position: absolute; background-color: #17341A; top: 40px; left: 50%; line-height: 20px;  left: '+width+'px; position:absolute;"><font color="#00FF00"><table border="0" width="100%" cellspacing="0" bgcolor="#17341A" cellpadding="3"><tr><td><p align="center"><font color="#00FF00"><b>Crucial Pack<br>All in One<br>Installed</b></font></td><td width="230" align="center"><button type="button" id="CrucialDonate">Donate</button><br><br><button type="button" id="CrucialSettings">Crucial Script Settings</button><br></td></tr></table><p align="center"></font></p></div>';
